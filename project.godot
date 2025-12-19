@@ -13,3 +13,7 @@ config_version=5
 config/name="spector_art"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+KLD="*res://materials/objects/key_lock/key_lock_data.gd"
