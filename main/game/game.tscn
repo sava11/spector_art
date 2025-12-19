@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://ukbdxptj5okt"]
+
+[node name="game" type="Node"]
+
+[node name="world" type="Node2D" parent="."]
+
+[node name="lvls" type="Node2D" parent="world"]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="ui" type="CanvasLayer" parent="."]
