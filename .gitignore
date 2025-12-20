@@ -32,3 +32,5 @@ _*.*
 *.bkp
 .editorconfig
 .gitattributes
+/addons/buff_er/example
+/addons/phantom_camera/examples
