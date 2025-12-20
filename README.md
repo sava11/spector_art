@@ -16,4 +16,6 @@ Spector its like colors. Art is subjective.
 
 - [__Buffer System__](addons/buff_er/README.md) - Input buffering and action timing management for responsive player controls (coyote jump, input buffering, etc.).
 
+- [__Dynamic Expression__](materials/scripts/dynamic_expression/README.md) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
+
 # objects
