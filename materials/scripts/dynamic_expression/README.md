@@ -63,12 +63,12 @@ DynamicExpression automatically resolves NodePath references in the data diction
 ```gdscript
 # NodePath references are converted to actual nodes
 var expr = DynamicExpression.create(
-    "player.health = current_health - damage",
-    {
-        "player": NodePath("../Player"),
-        "current_health": 100,
-        "damage": 25
-    }
+	"player.health = current_health - damage",
+	{
+		"player": NodePath("../Player"),
+		"current_health": 100,
+		"damage": 25
+	}
 )
 ```
 
@@ -93,12 +93,12 @@ var expr = DynamicExpression.create(
 ```gdscript
 # Create expression for damage calculation
 var damage_expr = DynamicExpression.create(
-    "base_damage * multiplier + bonus",
-    {
-        "base_damage": 50,
-        "multiplier": 1.5,
-        "bonus": 10
-    }
+	"base_damage * multiplier + bonus",
+	{
+		"base_damage": 50,
+		"multiplier": 1.5,
+		"bonus": 10
+	}
 )
 
 # Execute the expression
@@ -109,12 +109,12 @@ var final_damage = damage_expr.execute(self)  # Returns 85
 ```gdscript
 # Create expression for game state logic
 var state_expr = DynamicExpression.create(
-    "has_key && (health > 20 || has_shield)",
-    {
-        "has_key": true,
-        "health": 15,
-        "has_shield": true
-    }
+	"has_key && (health > 20 || has_shield)",
+	{
+		"has_key": true,
+		"health": 15,
+		"has_shield": true
+	}
 )
 
 # Evaluate condition
@@ -125,11 +125,11 @@ var can_progress = state_expr.execute(self)  # Returns true
 ```gdscript
 # Create expression that modifies player health
 var health_expr = DynamicExpression.create(
-    "player.health = max(player.health - damage, 0)",
-    {
-        "player": NodePath("../Player"),
-        "damage": 30
-    }
+	"player.health = max(player.health - damage, 0)",
+	{
+		"player": NodePath("../Player"),
+		"damage": 30
+	}
 )
 
 # Execute assignment (modifies actual player node)
@@ -140,12 +140,12 @@ health_expr.execute(self)
 ```gdscript
 # Use in lock expressions for complex key dependencies
 var lock_expr = DynamicExpression.create(
-    "red_key.activated && (blue_key.activated || green_key.activated)",
-    {
-        "red_key": NodePath("../RedKey"),
-        "blue_key": NodePath("../BlueKey"),
-        "green_key": NodePath("../GreenKey")
-    }
+	"red_key.activated && (blue_key.activated || green_key.activated)",
+	{
+		"red_key": NodePath("../RedKey"),
+		"blue_key": NodePath("../BlueKey"),
+		"green_key": NodePath("../GreenKey")
+	}
 )
 
 # Evaluate lock condition
@@ -156,12 +156,12 @@ var is_unlocked = lock_expr.execute(self)
 ```gdscript
 # Dynamic damage calculation based on attacker and defender stats
 var combat_expr = DynamicExpression.create(
-    "attacker.damage * (1.0 - defender.defense / 100.0) * crit_multiplier",
-    {
-        "attacker": NodePath("../Player"),
-        "defender": NodePath("../Enemy"),
-        "crit_multiplier": 1.5  # Set to 1.0 for normal hits
-    }
+	"attacker.damage * (1.0 - defender.defense / 100.0) * crit_multiplier",
+	{
+		"attacker": NodePath("../Player"),
+		"defender": NodePath("../Enemy"),
+		"crit_multiplier": 1.5  # Set to 1.0 for normal hits
+	}
 )
 
 var damage_dealt = combat_expr.execute(self)
