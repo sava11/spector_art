@@ -1,5 +1,4 @@
 extends Node
-class_name Functions
 
 ## Global utility functions and systems for the game.
 ##
