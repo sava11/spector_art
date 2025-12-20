@@ -16,4 +16,4 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-KLD="*res://materials/objects/key_lock/key_lock_data.gd"
+KLD="*res://materials/scripts/key_lock/key_lock_data.gd"
