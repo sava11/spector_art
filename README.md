@@ -1,4 +1,4 @@
-# Specto Art
+# Spector Art
 
 Spector its like colors. Art is subjective.
 
