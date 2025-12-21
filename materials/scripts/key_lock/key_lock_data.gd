@@ -21,7 +21,7 @@ func set_key(uid: String, activated: bool, blocked: bool) -> void:
 		"activated": bool(activated),
 		"blocked": bool(blocked)
 	}
-	emit_signal("key_changed", uid, keys[uid])
+	key_changed.emit(uid, keys[uid])
 
 # Start a timer that will assign result to the uid key when it finishes
 func start_key_timer(uid: String, duration: float, result: bool) -> void:
@@ -51,7 +51,7 @@ func _physics_process(delta: float) -> void:
 			# assign a value without touching blocked (we only change activated)
 			set_key(uid, t.result, cur_blocked)
 			to_remove.append(uid)
-			emit_signal("key_timer_finished", uid)
+			key_timer_finished.emit(uid)
 		t.time_left -= delta
 	# remove completed timers
 	for uid in to_remove:

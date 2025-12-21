@@ -27,13 +27,13 @@ const SPACE:=4
 # =========================================================
 # UI Components
 # =========================================================
-var prompt: PanelContainer         # Help prompt panel
-var prompt_label:Label            # Key binding display
-var prompt_desc_label:Label       # Description text
-var keys_root: Node               # Container for KLKey instances
+var prompt: PanelContainer          # Help prompt panel
+var prompt_label:Label              # Key binding display
+var prompt_desc_label:Label         # Description text
+var keys_root: Node                 # Container for KLKey instances
 var button_container: HBoxContainer # Buttons container
-var collection: PanelContainer    # Main menu panel
-var lock:KLLock                   # Master lock for blocking
+var collection: PanelContainer      # Main menu panel
+var lock:KLLock                     # Master lock for blocking
 
 # =========================================================
 # Input handling
