@@ -5,7 +5,7 @@ class_name KLKey
 # =========================================================
 # Signals
 # =========================================================
-signal activated_changed(active: bool)
+signal active(active: bool)
 signal blocked_changed(blocked: bool)
 signal enabled()
 signal disabled()
@@ -15,7 +15,14 @@ signal error()
 # Exported
 # =========================================================
 @export var uid: String = "@path" : set = _set_uid
-@export var activate_on_ready:bool=false
+# UI preset for activation
+@export var activate:bool=false:
+	set(v):
+		if not Engine.is_editor_hint():
+			trigger()
+			activate=false
+		else:
+			activate=v
 @export var timer: float = 0.0
 
 @export_group("reset")
@@ -70,18 +77,17 @@ func _enter_tree() -> void:
 	# Подписываемся на изменения
 	KLD.key_changed.connect(_on_key_changed)
 
-	# Создаём lock при необходимости
-	if lock_expression.strip_edges() != "":
-		_lock = KLLock.new()
-		_lock.expression = lock_expression
-		_lock.keys = lock_keys
-		_lock.activated.connect(_set_blocked)
-		add_child(_lock)
+	_lock = KLLock.new()
+	_lock.name="lock"
+	_lock.expression = lock_expression
+	_lock.keys = lock_keys
+	_lock.activated.connect(_set_blocked)
+	add_child(_lock)
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	if activate_on_ready:
+	if activate:
 		trigger()
 	_sync_from_autoload()
 	_emit_signal()
@@ -116,7 +122,7 @@ func _set_activated(v: bool) -> void:
 		return
 	activated = v
 	KLD.set_key(uid, activated, blocked)
-	activated_changed.emit(activated)
+	active.emit(activated)
 	_emit_signal()
 
 func _set_blocked(v: bool) -> void:
@@ -129,7 +135,7 @@ func _set_blocked(v: bool) -> void:
 
 	KLD.set_key(uid, activated, blocked)
 	blocked_changed.emit(blocked)
-	activated_changed.emit(activated)
+	active.emit(activated)
 	_emit_signal()
 
 # =========================================================

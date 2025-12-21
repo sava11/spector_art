@@ -18,4 +18,8 @@ Spector its like colors. Art is subjective.
 
 - [__Dynamic Expression__](materials/scripts/dynamic_expression/README.md) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
 
+- [__Input Monitor__](autoload/input_monitor/input_mointor.gd) - Device-aware input display system that automatically detects input devices (keyboard/gamepad) and provides localized button names and images for different platforms (xBox, PlayStation, Nintendo, PC).
+
 # objects
+
+- [__Multichecker__](materials/scripts/multichecker/README.md) - Interactive multi-choice menu system with conditional options, integrated with key-lock mechanics and dynamic expressions for complex game interactions.
