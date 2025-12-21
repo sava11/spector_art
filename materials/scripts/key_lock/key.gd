@@ -1,44 +1,99 @@
-@tool
+## KLKey - Interactive key component for the Key-Lock system.
+##
+## This class represents a key that can be activated/deactivated and blocked/unblocked.
+## Keys are the interactive elements that players manipulate to unlock KLLock instances.
+## Supports timers, blocking conditions, and dynamic expressions for complex game logic.
+## [br][br]
+## [codeblock]
+## # Basic usage:
+## var key = KLKey.new()
+## key.uid = "red_key"
+## key.timer = 10.0  # Auto-deactivate after 10 seconds
+## # Can only activate if any_key_index_in_lock_keys is active
+## key.lock_expression = "any_key_index_in_lock_keys"  
+## key.active.connect(_on_key_activated)
+## add_child(key)
+##
+## # Manual activation
+## key.trigger()  # Toggle the key state
+## [/codeblock]
+
 extends Node
 class_name KLKey
 
-# =========================================================
-# Signals
-# =========================================================
-signal active(active: bool)
-signal blocked_changed(blocked: bool)
+## Emitted when the key's activation state changes.
+## [br][br]
+## [param active] True if the key is activated, false if deactivated
+signal active(activated: bool)
+
+## Emitted when the key's blocked state changes.
+## [br][br]
+## [param blocked] True if the key is blocked, false if unblocked
+signal block(blocked: bool)
+
+## Emitted when the key becomes activated (convenience signal).
 signal enabled()
+
+## Emitted when the key becomes deactivated (convenience signal).
 signal disabled()
+
+## Emitted when the key is blocked or encounters an error (convenience signal).
 signal error()
 
 # =========================================================
 # Exported
 # =========================================================
+
+## Unique identifier for this key in the global key registry.
+## Use "@path" to automatically generate UID based on scene path.
 @export var uid: String = "@path" : set = _set_uid
-# UI preset for activation
-@export var activate:bool=false:
+
+## Editor-only property to manually activate the key during development.
+@export var activate: bool = false:
 	set(v):
 		if not Engine.is_editor_hint():
 			trigger()
-			activate=false
+			activate = false
 		else:
-			activate=v
+			activate = v
+
+## Auto-deactivation timer duration in seconds.
+## When > 0, the key will automatically deactivate after this many seconds.
 @export var timer: float = 0.0
 
+## Reset configuration group.
 @export_group("reset")
+
+## Whether to reset the key's activation state when it becomes blocked.
 @export var reset_when_blocked: bool = false
+
+## The activation state to reset to when blocked (if reset_when_blocked is true).
 @export var reset_value: bool = false
 
+## Lock configuration group - defines blocking conditions.
 @export_group("lock")
-@export var lock_expression: String = ""      # "(0 || 1) & !2"
-@export var lock_keys: Array[String] = []     # key uids
+
+## Boolean expression defining when this key should be blocked.
+## Uses indices to reference lock_keys array: "0" = lock_keys[0], etc.
+@export var lock_expression: String = ""
+
+## Array of key UIDs that can block this key when the lock_expression evaluates true.
+@export var lock_keys: Array[String] = []
 
 # =========================================================
 # Internal state
 # =========================================================
-var activated: bool = false:set=_set_activated
+
+## Current activation state of the key.
+var activated: bool = false: set = _set_activated
+
+## Current blocked state of the key (computed from lock_expression).
 var blocked: bool = false
-enum status{OK, BLOCKED}
+
+## Status enumeration for trigger() return values.
+enum status {OK, BLOCKED}
+
+## Internal KLLock instance that monitors blocking conditions.
 var _lock: KLLock
 
 # =========================================================
@@ -134,7 +189,7 @@ func _set_blocked(v: bool) -> void:
 		activated = reset_value
 
 	KLD.set_key(uid, activated, blocked)
-	blocked_changed.emit(blocked)
+	block.emit(blocked)
 	active.emit(activated)
 	_emit_signal()
 

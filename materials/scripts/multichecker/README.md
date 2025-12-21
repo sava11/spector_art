@@ -152,3 +152,4 @@ Lock expressions use the same syntax as KLLock:
 3. **Performance**: Limit number of items for better UI performance
 4. **Accessibility**: Provide clear visual feedback for locked/unlocked states
 5. **Testing**: Test all lock conditions and edge cases thoroughly
+

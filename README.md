@@ -12,7 +12,7 @@ Spector its like colors. Art is subjective.
 
 - [__Phantom Camera__](addons/phantom_camera) - Advanced camera system with 2D/3D support, multiple camera types, noise effects, and smooth transitions.
 
-- [__Save System__](autoload/saver/README.md) - Comprehensive game state persistence with automatic node tracking, manual checkpoints, and file-based save/load operations.
+- [__Save System__](materials/scripts/saver/README.md) - Comprehensive game state persistence with automatic node tracking, manual checkpoints, and file-based save/load operations.
 
 - [__Buffer System__](addons/buff_er/README.md) - Input buffering and action timing management for responsive player controls (coyote jump, input buffering, etc.).
 
@@ -23,3 +23,28 @@ Spector its like colors. Art is subjective.
 # Objects
 
 - [__Multichecker__](materials/scripts/multichecker/README.md) - Interactive multi-choice menu system with conditional options, integrated with key-lock mechanics and dynamic expressions for complex game interactions.
+
+- [__DynamicExpression__](materials/scripts/dynamic_expression/dynamic_expression.gd) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
+
+
+<details>
+<summary> Key&Lock </summary>
+
+- [__KLKey__](materials/scripts/key_lock/key.gd) - Interactive key component that can be activated/deactivated with timer support, blocking conditions, and dynamic expressions for complex game logic.
+
+- [__KLLock__](materials/scripts/key_lock/lock.gd) - Logical lock that evaluates boolean expressions using key states to determine activation conditions.
+
+</details>
+
+<details>
+<summary> Combat and Collision Boxes </summary>
+
+- [__HitBox__](materials/scripts/boxes/hit_box.gd) - Offensive collision area for dealing damage with configurable detection modes, timers, and single/multi-hit behavior.
+
+- [__HurtBox__](materials/scripts/boxes/hurt_box.gd) - Damageable collision area with health management, invincibility frames, and raycast verification for accurate damage detection.
+
+- [__ParryBox__](materials/scripts/boxes/parry_box.gd) - Defensive collision area for intercepting and parrying HitBox attacks with knockback calculations.
+
+- [__PullBox__](materials/scripts/boxes/pull_box.gd) - Attraction area that pulls physics bodies toward its center with configurable speed and detection modes.
+
+</details>

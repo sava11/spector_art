@@ -34,8 +34,8 @@ Interactive key object that can be activated/deactivated and has various behavio
 - `status`: OK or BLOCKED (returned by trigger method)
 
 **Signals:**
-- `activated_changed(active: bool)`
-- `blocked_changed(blocked: bool)`
+- `active(activated: bool)`
+- `block(blocked: bool)`
 - `enabled()`, `disabled()`, `error()` - for visual feedback
 
 **Usage:**

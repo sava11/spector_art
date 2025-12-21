@@ -21,7 +21,7 @@ KLD="*res://materials/scripts/key_lock/key_lock_data.gd"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 FNC="*res://autoload/functions.gd"
 IM="*res://autoload/input_monitor/input_mointor.gd"
-SLD="*res://autoload/saver/saver.gd"
+SLD="*res://materials/scripts/saver/saver.gd"
 
 [editor_plugins]
 

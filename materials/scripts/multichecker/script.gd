@@ -1,39 +1,89 @@
+## Multichecker - Interactive multi-choice menu system with conditional options.
+##
+## This class creates interactive menus where players can select from multiple options,
+## with each option potentially locked or unlocked based on game state. Integrates deeply
+## with the Key-Lock system for conditional availability and supports dynamic expressions
+## for complex game logic. Includes save/load functionality for menu state persistence.
+## [br][br]
+## [codeblock]
+## # Basic usage:
+## var menu = Multichecker.new()
+## menu.items = [item1, item2, item3]  # MulticheckerItem resources
+## menu.showed = true  # Display the menu
+## menu.current_id_changed.connect(_on_selection_changed)
+## add_child(menu)
+##
+## func _on_selection_changed(selected: bool, id: int):
+##     print("Option ", id, " was selected: ", selected)
+## [/codeblock]
+
 extends Node2D
 class_name Multichecker
 
-# =========================================================
-# Multichecker - Interactive multi-choice menu system
-# Integrates with Key-Lock system for conditional options
-# Supports dynamic expressions and save/load functionality
-# =========================================================
-
-signal current_id_changed(result:bool, id:int)  # Emitted when selection changes
+## Emitted when the current selection changes.
+## [br][br]
+## [param result] Whether the selection was successful (true) or failed (false)
+## [param id] The index of the selected option
+signal current_id_changed(result: bool, id: int)
 
 # =========================================================
 # Configuration
 # =========================================================
-const SPACE:=4
 
-@export var enabled: bool = true: set = set_enabled          # Master enable/disable switch
-@export var blocked: bool = false: set = set_blocked         # External blocking state
-@export var showed: bool = false: set = set_showed           # Menu visibility state
-@export var time_stop: bool = true                           # Pause game time when shown
-@export var close_after_choice:=false                        # Auto-hide menu after selection
-@export var items:Array[MulticheckerItem]                    # Available menu options
-@export var current_id:int                                   # Currently selected option index
-@export var prompt_action:String="ui_accept"                 # Input action for confirmation
-@export var prompt_desc:String="description"                 # Prompt text translation key
+## Spacing constant used for UI layout calculations.
+const SPACE := 4
+
+## Master enable/disable switch for the entire multichecker.
+@export var enabled: bool = true: set = set_enabled
+
+## External blocking state - when true, prevents all interactions.
+@export var blocked: bool = false: set = set_blocked
+
+## Menu visibility state - controls whether the menu is displayed.
+@export var showed: bool = false: set = set_showed
+
+## Whether to pause game time when the menu is shown.
+@export var time_stop: bool = true
+
+## Whether to automatically hide the menu after making a selection.
+@export var close_after_choice: bool = false
+
+## Array of available menu options (MulticheckerItem resources).
+@export var items: Array[MulticheckerItem]
+
+## Currently selected option index (-1 for no selection).
+@export var current_id: int
+
+## Input action name used for menu confirmation/selection.
+@export var prompt_action: String = "ui_accept"
+
+## Translation key for the prompt description text.
+@export var prompt_desc: String = "description"
 
 # =========================================================
 # UI Components
 # =========================================================
-var prompt: PanelContainer          # Help prompt panel
-var prompt_label:Label              # Key binding display
-var prompt_desc_label:Label         # Description text
-var keys_root: Node                 # Container for KLKey instances
-var button_container: HBoxContainer # Buttons container
-var collection: PanelContainer      # Main menu panel
-var lock:KLLock                     # Master lock for blocking
+
+## Help prompt panel showing current key binding and description.
+var prompt: PanelContainer
+
+## Label displaying the current key binding for the prompt action.
+var prompt_label: Label
+
+## Label displaying the translated description text.
+var prompt_desc_label: Label
+
+## Container node holding all KLKey instances for menu options.
+var keys_root: Node
+
+## Horizontal container holding all menu option buttons.
+var button_container: HBoxContainer
+
+## Main menu panel containing the button container.
+var collection: PanelContainer
+
+## Master lock for external blocking control of the entire multichecker.
+var lock: KLLock
 
 # =========================================================
 # Input handling
@@ -49,7 +99,7 @@ func _changed_device():
 	#$collection/mc/vbc/exit.text = tr("UI_EXIT") + ": " \
 		#+ IM.action_to_key(exit_action_name)
 
-# Returns true if multichecker is active and not blocked
+## Returns true if multichecker is active and not blocked
 func is_activated()->bool:
 	return enabled and not blocked
 
@@ -150,9 +200,9 @@ func _update_focus() -> void:
 # Button Management
 # =========================================================
 
-# CRITICAL: Builds UI buttons from MulticheckerItem array
-# Creates KLKey instances for each item with lock integration
-# Handles save/load for toggle buttons
+## Build UI buttons from the MulticheckerItem array.
+## CRITICAL: Creates KLKey instances for each item with lock integration and handles save/load for toggle buttons.
+## This method is the heart of the multichecker system - it transforms data into interactive UI elements.
 func _build_buttons() -> void:
 	# Clear existing buttons
 	for b in button_container.get_children():
@@ -203,8 +253,13 @@ func _build_buttons() -> void:
 				return
 			btn.button_pressed=false)
 
-# CRITICAL: Handles key activation from KLKey system
-# Executes dynamic expressions and manages menu visibility
+## Handle key activation from the KLKey system.
+## CRITICAL: Executes dynamic expressions and manages menu visibility based on selection results.
+## This is where the multichecker's core interaction logic happens.
+## [br][br]
+## [param result] Whether the key activation was successful
+## [param data] The MulticheckerItem that was activated
+## [param index] The index of the activated item
 func _on_key_active(result: bool, data: MulticheckerItem, index: int) -> void:
 	if not is_activated(): return
 
@@ -228,8 +283,7 @@ func _on_key_active(result: bool, data: MulticheckerItem, index: int) -> void:
 	if close_after_choice:
 		FNC.set_pause(false)
 
-# Finds nearest visible button to given index
-# Used for focus management in menu navigation
+## Finds nearest visible button to given index. Used for focus management in menu navigation
 func get_nearest_visible_button_id(id:int=0) -> int:
 	var count := button_container.get_child_count()
 
