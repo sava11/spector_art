@@ -20,6 +20,9 @@ Spector its like colors. Art is subjective.
 
 - [__Input Visualizer__](autoload/input_visualizer/input_visualizer.gd) - Device-aware input display system that automatically detects input devices (keyboard/gamepad) and provides localized button names and images for different platforms (xBox, PlayStation, Nintendo, PC).
 
+- [__Waypoint System__](materials/scripts/waypoint/README.md) - Screen-space visual navigation indicators that show direction to their own positions in 2D and 3D space, always visible on screen with icon-based styling.
+
+
 # Objects
 
 - [__Multichecker__](materials/scripts/multichecker/README.md) - Interactive multi-choice menu system with conditional options, integrated with key-lock mechanics and dynamic expressions for complex game interactions.
@@ -32,6 +35,15 @@ Spector its like colors. Art is subjective.
 - [__KLKey__](materials/scripts/key_lock/key.gd) - Interactive key component that can be activated/deactivated with timer support, blocking conditions, and dynamic expressions for complex game logic.
 
 - [__KLLock__](materials/scripts/key_lock/lock.gd) - Logical lock that evaluates boolean expressions using key states to determine activation conditions.
+
+</details>
+
+<details>
+<summary> Waypoint System </summary>
+
+- [__Waypoint2D__](materials/scripts/waypoint_2d.gd) - Screen-space visual direction indicator for 2D navigation that shows direction to its own world position, always visible on screen with icon-based visualization.
+
+- [__Waypoint3D__](materials/scripts/waypoint_3d.gd) - Screen-space visual direction indicator for 3D navigation that shows direction to its own world position using camera projection, always visible on screen with icon-based visualization.
 
 </details>
 
