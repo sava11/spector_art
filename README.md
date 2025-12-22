@@ -38,14 +38,34 @@ Spector its like colors. Art is subjective.
 <details>
 <summary> Combat and Collision Boxes </summary>
 
-- [__CustomDetectionBox__](materials/scripts/boxes/custom_detection_box.gd) - Interactive detection area that executes dynamic expressions on body enter/exit events for creating triggers and event systems.
+<details>
+<summary> 2D </summary>
 
-- [__HitBox__](materials/scripts/boxes/hit_box.gd) - Offensive collision area for dealing damage with configurable detection modes, timers, and single/multi-hit behavior.
+- [__CustomDetectionBox2D__](materials/scripts/boxes/2d/custom_detection_box.gd) - Interactive 2D detection area that executes dynamic expressions on body enter/exit events for creating triggers and event systems.
 
-- [__HurtBox__](materials/scripts/boxes/hurt_box.gd) - Damageable collision area with health management, invincibility frames, and raycast verification for accurate damage detection.
+- [__HitBox2D__](materials/scripts/boxes/2d/hit_box.gd) - Offensive 2D collision area for dealing damage with configurable detection modes, timers, and single/multi-hit behavior.
 
-- [__ParryBox__](materials/scripts/boxes/parry_box.gd) - Defensive collision area for intercepting and parrying HitBox attacks with knockback calculations.
+- [__HurtBox2D__](materials/scripts/boxes/2d/hurt_box.gd) - Damageable 2D collision area with health management, invincibility frames, and raycast verification for accurate damage detection.
 
-- [__PullBox__](materials/scripts/boxes/pull_box.gd) - Attraction area that pulls physics bodies toward its center with configurable speed and detection modes.
+- [__ParryBox2D__](materials/scripts/boxes/2d/parry_box.gd) - Defensive 2D collision area for intercepting and parrying HitBox2D attacks with knockback calculations.
+
+- [__PullBox2D__](materials/scripts/boxes/2d/pull_box.gd) - 2D attraction area that pulls physics bodies toward its center with configurable speed and detection modes.
+
+</details>
+
+<details>
+<summary> 3D </summary>
+
+- [__CustomDetectionBox3D__](materials/scripts/boxes/3d/custom_detection_box.gd) - Interactive 3D detection area that executes dynamic expressions on body enter/exit events for creating triggers and event systems.
+
+- [__HitBox3D__](materials/scripts/boxes/3d/hit_box.gd) - Offensive 3D collision area for dealing damage with configurable detection modes, timers, and single/multi-hit behavior.
+
+- [__HurtBox3D__](materials/scripts/boxes/3d/hurt_box.gd) - Damageable 3D collision area with health management, invincibility frames, and raycast verification for accurate damage detection.
+
+- [__ParryBox3D__](materials/scripts/boxes/3d/parry_box.gd) - Defensive 3D collision area for intercepting and parrying HitBox3D attacks with knockback calculations.
+
+- [__PullBox3D__](materials/scripts/boxes/3d/pull_box.gd) - 3D attraction area that pulls physics bodies toward its center with configurable speed and detection modes.
+
+</details>
 
 </details>

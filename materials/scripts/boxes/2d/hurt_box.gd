@@ -1,12 +1,13 @@
-## HurtBox - Damageable collision area that receives damage from HitBoxes.
+## HurtBox2D - Damageable collision area that receives damage from HitBox2D entities in 2D space.
 ##
-## This class defines damageable collision areas that can receive damage from HitBox attacks.
+## This class defines damageable collision areas that can receive damage from HitBox2D attacks.
 ## Manages health, invincibility frames, and various damage detection modes. Supports
-## raycast verification, single-hit detection, and automatic invincibility timers.
+## 2D raycast verification, single-hit detection, and automatic invincibility timers.
+## Designed for 2D game environments with comprehensive health management.
 ## [br][br]
 ## [codeblock]
 ## # Basic usage:
-## var hurt_box = HurtBox.new()
+## var hurt_box = HurtBox2D.new()
 ## hurt_box.max_health = 100.0
 ## hurt_box.tspeed = 0.5  # 0.5 second invincibility frames
 ## hurt_box.health_changed.connect(_on_health_changed)
@@ -17,7 +18,7 @@
 ##     health_bar.value = value
 ## [/codeblock]
 
-class_name HurtBox
+class_name HurtBox2D
 extends Area2D
 
 ## Emitted when invincibility frames begin.
@@ -43,13 +44,16 @@ signal health_changed(value: float, delta: float)
 ## [param delta] The change in maximum health
 signal max_health_changed(value: float, delta: float)
 
-## Physics layer flags for raycast collision detection.
-## Used when detect_by_ray is enabled on HitBoxes to determine what layers to check.
+## Physics layer flags for 2D raycast collision detection.
+## Used when detect_by_ray is enabled on HitBox2D instances to determine
+## what layers to check during line-of-sight verification in 2D space.
 @export_flags_2d_physics() var flags: int = 0
 
-## Array of HitBox exceptions that should be ignored for damage.
+## Array of HitBox2D exceptions that should be ignored for damage.
+## Useful for preventing self-damage or friendly fire scenarios.
+## Add HitBox2D instances to this array to exclude them from damage calculations.
 ## Useful for preventing self-damage or friendly fire.
-@export var exceptions: Array[HitBox]
+@export var exceptions: Array[HitBox2D]
 
 ## Default duration for invincibility frames in seconds.
 @export var tspeed: float = 1.0
@@ -69,7 +73,8 @@ var health: float = max_health: set = set_health
 ## Internal alive state flag. True when health > 0.
 var _alive: bool = false: set = set_alive
 
-## Internal array storing currently colliding HitBoxes (for continuous damage).
+## Internal array storing currently colliding HitBox2D collision shapes.
+## Used for continuous damage tracking from overlapping HitBox2D instances.
 var bs: Array = []
 
 ## Set the maximum health value and scale current health proportionally.
@@ -144,7 +149,8 @@ func _ready():
 	if tspeed > 0:
 		t.wait_time = tspeed
 
-## Physics process for handling continuous damage from colliding HitBoxes.
+## Physics process for handling continuous damage from colliding HitBox2D entities.
+## This method manages ongoing damage application and cleanup of invalid exceptions.
 ## Cleans up invalid exceptions and applies damage from all active collisions.
 ## [br][br]
 ## [param delta] Time elapsed since the last physics frame
@@ -155,13 +161,13 @@ func _physics_process(delta: float) -> void:
 	for area_col in bs:
 		_change_health_by_area(area_col, delta)
 
-## Process damage from a specific HitBox collision, with optional raycast verification.
-## Performs line-of-sight check if the HitBox requires raycast detection.
+## Process damage from a specific HitBox2D collision, with optional 2D raycast verification.
+## This method handles individual collision damage with line-of-sight checking.
 ## [br][br]
 ## [param area_col] The CollisionShape2D that triggered the collision
 ## [param delta] Time delta for damage calculation
 func _change_health_by_area(area_col, delta: float = 1.0):
-	var area: HitBox = area_col.get_parent()
+	var area: HitBox2D = area_col.get_parent()
 	if area.detect_by_ray:
 		var length: float = 100
 		var dir: Vector2 = area_col.global_position.direction_to(global_position)
@@ -173,7 +179,7 @@ func _change_health_by_area(area_col, delta: float = 1.0):
 		params.collision_mask = flags
 		params.collide_with_areas = true
 		var result = space.intersect_ray(params)
-		if result.is_empty() or result.get("collider") == null or result.get("collider") is HitBox:
+		if result.is_empty() or result.get("collider") == null or result.get("collider") is HitBox2D:
 			_apply_dmg(area.damage, delta)
 	else:
 		_apply_dmg(area.damage, delta)
@@ -186,14 +192,14 @@ func _apply_dmg(damage, delta):
 	health -= damage * delta
 	start_invincible()
 
-## Handle HitBox exiting the collision area.
-## Removes the HitBox from active collision tracking and manages single-detect exceptions.
+## Handle HitBox2D exiting the collision area.
+## This method manages collision cleanup and single-detect exception handling.
 ## [br][br]
 ## [param _area_rid] The RID of the exiting area (unused)
-## [param area] The HitBox that exited
-## [param area_shape_index] The shape index of the exiting HitBox
+## [param area] The HitBox2D that exited
+## [param area_shape_index] The shape index of the exiting HitBox2D
 ## [param _local_shape_index] The local shape index (unused)
-func _on_area_shape_exited(_area_rid: RID, area: HitBox, area_shape_index: int, _local_shape_index: int) -> void:
+func _on_area_shape_exited(_area_rid: RID, area: HitBox2D, area_shape_index: int, _local_shape_index: int) -> void:
 	if not is_instance_valid(area) and area == null:
 		return
 	if area in exceptions and area.single_detect and not invincible:
@@ -203,14 +209,14 @@ func _on_area_shape_exited(_area_rid: RID, area: HitBox, area_shape_index: int, 
 	if bs.find(area_col) >= 0:
 		bs.erase(area_col)
 
-## Handle HitBox entering the collision area.
-## Adds valid HitBoxes to collision tracking and applies immediate damage if needed.
+## Handle HitBox2D entering the collision area.
+## This method processes new collisions and initiates damage application.
 ## [br][br]
 ## [param _area_rid] The RID of the entering area (unused)
-## [param area] The HitBox that entered
-## [param area_shape_index] The shape index of the entering HitBox
+## [param area] The HitBox2D that entered
+## [param area_shape_index] The shape index of the entering HitBox2D
 ## [param _local_shape_index] The local shape index (unused)
-func _on_area_shape_entered(_area_rid: RID, area: HitBox, area_shape_index: int, _local_shape_index: int) -> void:
+func _on_area_shape_entered(_area_rid: RID, area: HitBox2D, area_shape_index: int, _local_shape_index: int) -> void:
 	if !(area in exceptions) and health > 0:
 		var other_shape_owner = area.shape_find_owner(area_shape_index)
 		var area_col = area.shape_owner_get_owner(other_shape_owner)
