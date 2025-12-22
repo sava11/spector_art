@@ -78,6 +78,27 @@ Base attack component that deals damage to HurtBox components.
 
 ---
 
+### CustomDetectionArea2D
+Interactive detection area that executes dynamic expressions when bodies enter or exit.
+
+**Key Features:**
+- Executes configurable dynamic expressions on body collision events
+- Supports multiple callbacks for complex trigger behaviors
+- Integrates with DynamicExpression system for flexible event handling
+- Automatic NodePath resolution for expression variables
+
+**Properties:**
+- `body_entered_callbacks`: Array of expressions executed when bodies enter
+- `body_exited_callbacks`: Array of expressions executed when bodies exit
+
+**Usage:**
+- Attach to create interactive zones without writing code
+- Configure expressions for sounds, animations, or state changes
+- Use with DynamicExpression for complex event logic
+- Combine with other boxes for layered interactions
+
+---
+
 ### PullBox
 Physics-based pulling/pushing system for moving entities.
 
@@ -106,6 +127,7 @@ All components work together through Godot's Area2D collision system:
 - HitBox components deal damage to HurtBox components
 - ParryBox can intercept HitBox collisions before they reach HurtBox
 - PullBox affects physics bodies independently
+- CustomDetectionArea2D provides event-driven callbacks for interactive zones
 - Components can be layered and combined for complex interactions
 
 ## Common Patterns

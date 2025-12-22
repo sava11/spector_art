@@ -26,6 +26,8 @@ Spector its like colors. Art is subjective.
 
 - [__DynamicExpression__](materials/scripts/dynamic_expression/dynamic_expression.gd) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
 
+- [__CustomDetectionBox__](materials/scripts/boxes/custom_detection_box.gd) - Interactive detection area that executes dynamic expressions on body enter/exit events for creating triggers and event systems.
+
 
 <details>
 <summary> Keys and Locks </summary>

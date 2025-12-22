@@ -18,14 +18,14 @@ metadata/_custom_type_script = "uid://p0unqgsqck4h"
 [node name="lvls" type="Node2D" parent="world"]
 unique_name_in_owner = true
 
-[node name="CustomDetectingArea2D" type="Area2D" parent="world/lvls"]
+[node name="CustomDetectionBox" type="Area2D" parent="world/lvls"]
 script = ExtResource("1_gpuo4")
 metadata/_custom_type_script = "uid://djl3lwr8ieepq"
 
-[node name="c" type="CollisionShape2D" parent="world/lvls/CustomDetectingArea2D"]
+[node name="c" type="CollisionShape2D" parent="world/lvls/CustomDetectionBox"]
 shape = SubResource("RectangleShape2D_5mlo5")
 
-[node name="Multichecker" type="Node" parent="world/lvls/CustomDetectingArea2D"]
+[node name="Multichecker" type="Node" parent="world/lvls/CustomDetectionBox"]
 script = ExtResource("1_3epdo")
 enabled = false
 items = Array[ExtResource("2_3ni26")]([SubResource("Resource_458dk")])
