@@ -155,7 +155,7 @@ func _ready() -> void:
 	prompt_desc_label.name="desc"
 	prompt_desc_label.text=tr(prompt_desc)
 	hbc.add_child(prompt_desc_label)
-	ui_container.add_child(prompt)
+	ui_container.add_child.call_deferred(prompt)
 	prompt.position=-prompt.size/2
 	#endregion
 	
@@ -180,7 +180,7 @@ func _ready() -> void:
 	button_container.set("theme_override_constants/separation",SPACE)
 	_build_buttons()
 	sc.add_child(button_container)
-	ui_container.add_child(collection)
+	ui_container.add_child.call_deferred(collection)
 	collection.position=-collection.size/2
 	#endregion
 	
@@ -189,7 +189,6 @@ func _ready() -> void:
 	_visual()
 	_changed_device()
 	IV.input_changed.connect(_changed_device)
-	button_container.get_child(get_nearest_visible_button_id(current_id)).grab_focus()
 
 func _update_focus() -> void:
 	if button_container and button_container.get_child_count() > 0 and collection and collection.visible:
