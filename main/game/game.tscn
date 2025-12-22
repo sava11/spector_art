@@ -1,4 +1,15 @@
-[gd_scene format=3 uid="uid://ukbdxptj5okt"]
+[gd_scene load_steps=7 format=3 uid="uid://ukbdxptj5okt"]
+
+[ext_resource type="Script" uid="uid://ch61te2oscel0" path="res://materials/scripts/multichecker/script.gd" id="1_3epdo"]
+[ext_resource type="Script" uid="uid://djl3lwr8ieepq" path="res://materials/scripts/boxes/custom_detection_box.gd" id="1_gpuo4"]
+[ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="2_3ni26"]
+[ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="3_gpuo4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5mlo5"]
+
+[sub_resource type="Resource" id="Resource_458dk"]
+script = ExtResource("2_3ni26")
+metadata/_custom_type_script = "uid://p0unqgsqck4h"
 
 [node name="game" type="Node"]
 
@@ -6,6 +17,20 @@
 
 [node name="lvls" type="Node2D" parent="world"]
 unique_name_in_owner = true
+
+[node name="CustomDetectingArea2D" type="Area2D" parent="world/lvls"]
+script = ExtResource("1_gpuo4")
+metadata/_custom_type_script = "uid://djl3lwr8ieepq"
+
+[node name="c" type="CollisionShape2D" parent="world/lvls/CustomDetectingArea2D"]
+shape = SubResource("RectangleShape2D_5mlo5")
+
+[node name="Multichecker" type="Node" parent="world/lvls/CustomDetectingArea2D"]
+script = ExtResource("1_3epdo")
+enabled = false
+items = Array[ExtResource("2_3ni26")]([SubResource("Resource_458dk")])
+ui_container_path = NodePath("..")
+metadata/_custom_type_script = "uid://ch61te2oscel0"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 

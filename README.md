@@ -28,7 +28,7 @@ Spector its like colors. Art is subjective.
 
 
 <details>
-<summary> Key&Lock </summary>
+<summary> Keys and Locks </summary>
 
 - [__KLKey__](materials/scripts/key_lock/key.gd) - Interactive key component that can be activated/deactivated with timer support, blocking conditions, and dynamic expressions for complex game logic.
 

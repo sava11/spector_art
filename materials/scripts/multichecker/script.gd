@@ -17,7 +17,7 @@
 ##     print("Option ", id, " was selected: ", selected)
 ## [/codeblock]
 
-extends Node2D
+extends Node
 class_name Multichecker
 
 ## Emitted when the current selection changes.
@@ -54,7 +54,10 @@ const SPACE := 4
 ## Currently selected option index (-1 for no selection).
 @export var current_id: int
 
-## Input action name used for menu confirmation/selection.
+## Container path for UI elements
+@export var ui_container_path := NodePath(".")
+
+## Input action name used for menu activation.
 @export var prompt_action: String = "ui_accept"
 
 ## Translation key for the prompt description text.
@@ -91,13 +94,7 @@ var lock: KLLock
 
 # Updates displayed key binding when input device changes
 func _changed_device():
-	prompt_label.text = IM.action_to_key(prompt_action)
-	#$collection/mc/vbc/choice.text = tr("UI_ACCEPT") + ": " \
-		#+ (IM.action_to_key("ui_accept") 
-			#if button_container.get_child_count()>1 
-			#else IM.action_to_key(prompt_action))
-	#$collection/mc/vbc/exit.text = tr("UI_EXIT") + ": " \
-		#+ IM.action_to_key(exit_action_name)
+	prompt_label.text = IV.action_to_key(prompt_action)
 
 ## Returns true if multichecker is active and not blocked
 func is_activated()->bool:
@@ -111,6 +108,10 @@ func _enter_tree() -> void:
 	process_mode=Node.PROCESS_MODE_ALWAYS
 
 func _ready() -> void:
+	
+	# Container for UI elements
+	var ui_container = get_node(ui_container_path)
+	
 	# Create container for key-lock system
 	keys_root=Node.new()
 	keys_root.name="keys"
@@ -154,7 +155,7 @@ func _ready() -> void:
 	prompt_desc_label.name="desc"
 	prompt_desc_label.text=tr(prompt_desc)
 	hbc.add_child(prompt_desc_label)
-	add_child(prompt)
+	ui_container.add_child(prompt)
 	prompt.position=-prompt.size/2
 	#endregion
 	
@@ -179,7 +180,7 @@ func _ready() -> void:
 	button_container.set("theme_override_constants/separation",SPACE)
 	_build_buttons()
 	sc.add_child(button_container)
-	add_child(collection)
+	ui_container.add_child(collection)
 	collection.position=-collection.size/2
 	#endregion
 	
@@ -187,7 +188,7 @@ func _ready() -> void:
 	set_showed(showed)
 	_visual()
 	_changed_device()
-	IM.input_changed.connect(_changed_device)
+	IV.input_changed.connect(_changed_device)
 	button_container.get_child(get_nearest_visible_button_id(current_id)).grab_focus()
 
 func _update_focus() -> void:
