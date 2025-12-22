@@ -91,14 +91,15 @@ floor_constant_speed = true
 [node name="c" type="CollisionShape3D" parent="world/CharacterBody3D"]
 shape = SubResource("SphereShape3D_36fbw")
 
-[node name="player" type="Marker3D" parent="world/CharacterBody3D"]
+[node name="base" type="Marker3D" parent="world/CharacterBody3D"]
 
 [node name="PhantomCamera3D" type="Node3D" parent="." node_paths=PackedStringArray("follow_target")]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 4.523487, 4.9925475)
+top_level = true
 script = ExtResource("5_u7x3r")
 priority = 5
 follow_mode = 2
-follow_target = NodePath("../world/CharacterBody3D/player")
+follow_target = NodePath("../world/CharacterBody3D/base")
 tween_resource = SubResource("Resource_2wwl3")
 camera_3d_resource = SubResource("Resource_q786k")
 follow_offset = Vector3(0, 4, 4)
