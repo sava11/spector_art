@@ -18,7 +18,7 @@ Spector its like colors. Art is subjective.
 
 - [__Dynamic Expression__](materials/scripts/dynamic_expression/README.md) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
 
-- [__Input Monitor__](autoload/input_monitor/input_mointor.gd) - Device-aware input display system that automatically detects input devices (keyboard/gamepad) and provides localized button names and images for different platforms (xBox, PlayStation, Nintendo, PC).
+- [__Input Visualizer__](autoload/input_visualizer/input_visualizer.gd) - Device-aware input display system that automatically detects input devices (keyboard/gamepad) and provides localized button names and images for different platforms (xBox, PlayStation, Nintendo, PC).
 
 # Objects
 
@@ -26,7 +26,7 @@ Spector its like colors. Art is subjective.
 
 - [__DynamicExpression__](materials/scripts/dynamic_expression/dynamic_expression.gd) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
 
-- [__CustomDetectionBox__](materials/scripts/boxes/custom_detection_box.gd) - Interactive detection area that executes dynamic expressions on body enter/exit events for creating triggers and event systems.
+- [__Custom Detection Box__](materials/scripts/boxes/custom_detection_box.gd) - Interactive detection area that executes dynamic expressions on body enter/exit events for creating triggers and event systems.
 
 
 <details>

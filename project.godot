@@ -20,7 +20,7 @@ config/icon="res://icon.svg"
 KLD="*res://materials/scripts/key_lock/key_lock_data.gd"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 FNC="*res://autoload/functions.gd"
-IV="*res://autoload/input_monitor/input_visualizer.gd"
+IV="*res://autoload/input_visualizer/input_visualizer.gd"
 SLD="*res://materials/scripts/saver/saver.gd"
 
 [editor_plugins]

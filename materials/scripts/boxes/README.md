@@ -78,7 +78,7 @@ Base attack component that deals damage to HurtBox components.
 
 ---
 
-### CustomDetectionArea2D
+### CustomDetectionBox
 Interactive detection area that executes dynamic expressions when bodies enter or exit.
 
 **Key Features:**
