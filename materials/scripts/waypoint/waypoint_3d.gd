@@ -73,7 +73,8 @@ var _camera: Camera3D
 func _ready() -> void:
 	_create_visual_elements()
 	_update_visual()
-	_find_camera()
+	# Look for Camera3D in the scene
+	_camera = get_viewport().get_camera_3d()
 
 ## Main update loop for waypoint screen-space positioning and visual updates.
 ## This method calculates target position in screen space, determines if target is in camera frustum,
@@ -94,7 +95,8 @@ func _process(_delta: float) -> void:
 
 	# Update camera reference if needed
 	if _camera == null or not is_instance_valid(_camera):
-		_find_camera()
+		# Look for Camera3D in the scene
+		_camera = get_viewport().get_camera_3d()
 		if _camera == null:
 			if _canvas_layer:
 				_canvas_layer.visible = false
@@ -193,7 +195,7 @@ func _process(_delta: float) -> void:
 		# Rotate icon to point toward waypoint
 		# Invert Y for screen coordinates (screen has Y growing downward)
 		var angle = atan2(-direction.y, direction.x)
-		_icon.rotation = angle
+		_icon.rotation = angle-PI/2.0
 
 	# Apply final position
 	_icon.position = final_pos
@@ -238,35 +240,3 @@ func _update_visual() -> void:
 	_icon.texture = icon_texture
 	_icon.scale = Vector2(size, size)
 	_icon.modulate = icon_color
-
-## Find the active camera in the scene for screen space calculations.
-## This method searches for Camera3D nodes in the scene tree to determine
-## the current viewport and camera settings for accurate screen positioning.
-func _find_camera() -> void:
-	# Try to find camera in current scene
-	var tree = get_tree()
-	if tree == null:
-		return
-
-	# Look for Camera3D in the scene
-	_camera = get_viewport().get_camera_3d()
-
-	# Fallback: find any Camera3D
-	var root = tree.get_root()
-	_camera = _find_camera_recursive(root)
-
-## Recursively search for Camera3D in the scene tree.
-## [param node] The node to start searching from
-## [return] Camera3D node if found, null otherwise
-func _find_camera_recursive(node: Node) -> Camera3D:
-	# Check current node
-	if node is Camera3D and node.is_current():
-		return node
-
-	# Check children
-	for child in node.get_children():
-		var camera = _find_camera_recursive(child)
-		if camera != null:
-			return camera
-
-	return null

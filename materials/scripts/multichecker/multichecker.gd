@@ -155,8 +155,8 @@ func _ready() -> void:
 	prompt_desc_label.name="desc"
 	prompt_desc_label.text=tr(prompt_desc)
 	hbc.add_child(prompt_desc_label)
-	ui_container.add_child.call_deferred(prompt)
-	prompt.position=-prompt.size/2
+	ui_container.add_child(prompt)
+	prompt.position=get_viewport().get_visible_rect().size/2-prompt.size/2
 	#endregion
 	
 	# Build main menu collection UI
@@ -180,8 +180,8 @@ func _ready() -> void:
 	button_container.set("theme_override_constants/separation",SPACE)
 	_build_buttons()
 	sc.add_child(button_container)
-	ui_container.add_child.call_deferred(collection)
-	collection.position=-collection.size/2
+	ui_container.add_child(collection)
+	collection.position=get_viewport().get_visible_rect().size/2-collection.size/2
 	#endregion
 	
 	# polishing
