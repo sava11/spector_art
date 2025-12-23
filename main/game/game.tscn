@@ -1,17 +1,14 @@
-[gd_scene load_steps=24 format=3 uid="uid://ukbdxptj5okt"]
+[gd_scene load_steps=20 format=3 uid="uid://ukbdxptj5okt"]
 
-[ext_resource type="Script" uid="uid://dafvgv7urgyql" path="res://materials/scripts/multichecker/multichecker.gd" id="1_3epdo"]
 [ext_resource type="Script" uid="uid://ba1ew1pw3sudy" path="res://materials/scripts/boxes/3d/custom_detection_box.gd" id="1_en41u"]
 [ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="2_3ni26"]
 [ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="3_gpuo4"]
-[ext_resource type="Script" uid="uid://c3n7yap2m8k4q" path="res://materials/scripts/waypoint/waypoint_3d.gd" id="5_6lqia"]
+[ext_resource type="Script" uid="uid://ciaekacdop5h2" path="res://materials/scripts/multicheckerV2/multicheckerV2.gd" id="3_u7x3r"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="5_u7x3r"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="6_u71ym"]
-[ext_resource type="Texture2D" uid="uid://cw80dim2ixfpf" path="res://materials/images/waypoint_markers/waypoint_pin_black.svg" id="6_yo04u"]
 [ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="7_u71ym"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_yo04u"]
-[ext_resource type="Script" uid="uid://byiamg8a085w6" path="res://materials/scripts/multichecker/multichecker_ui.gd" id="12_yo04u"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6lqia"]
 
@@ -23,29 +20,27 @@ process_mode = 1
 background_mode = 2
 sky = SubResource("Sky_u71ym")
 
-[sub_resource type="Resource" id="Resource_gpuo4"]
+[sub_resource type="Resource" id="Resource_6lqia"]
 script = ExtResource("3_gpuo4")
 expression = "m.enabled=true"
 data = Dictionary[String, Variant]({
-"m": NodePath("Multichecker")
+"m": NodePath("MulticheckerV2")
 })
 metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
 
-[sub_resource type="Resource" id="Resource_ux4xf"]
+[sub_resource type="Resource" id="Resource_u71ym"]
 script = ExtResource("3_gpuo4")
 expression = "m.enabled=false"
 data = Dictionary[String, Variant]({
-"m": NodePath("Multichecker")
+"m": NodePath("MulticheckerV2")
 })
 metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_5xupx"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_yo04u"]
 
-[sub_resource type="Resource" id="Resource_6lqia"]
+[sub_resource type="Resource" id="Resource_en41u"]
 script = ExtResource("2_3ni26")
 metadata/_custom_type_script = "uid://p0unqgsqck4h"
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_u71ym"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_36fbw"]
 radius = 0.1
@@ -69,32 +64,6 @@ unique_name_in_owner = true
 
 [node name="test_lvl1" type="Node3D" parent="world/lvls"]
 
-[node name="CustomDetectionBox2D" type="Area3D" parent="world/lvls/test_lvl1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0865276, 0.5488434, 0.13119256)
-collision_layer = 0
-script = ExtResource("1_en41u")
-body_entered_callbacks = Array[ExtResource("3_gpuo4")]([SubResource("Resource_gpuo4")])
-body_exited_callbacks = Array[ExtResource("3_gpuo4")]([SubResource("Resource_ux4xf")])
-metadata/_custom_type_script = "uid://ba1ew1pw3sudy"
-
-[node name="c" type="CollisionShape3D" parent="world/lvls/test_lvl1/CustomDetectionBox2D"]
-shape = SubResource("SphereShape3D_5xupx")
-
-[node name="Multichecker" type="Node" parent="world/lvls/test_lvl1/CustomDetectionBox2D"]
-script = ExtResource("1_3epdo")
-enabled = false
-items = Array[ExtResource("2_3ni26")]([SubResource("Resource_6lqia")])
-ui_container_path = NodePath("/root/game/ui")
-metadata/_custom_type_script = "uid://dafvgv7urgyql"
-
-[node name="Waypoint3D" type="Node3D" parent="world/lvls/test_lvl1/CustomDetectionBox2D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-script = ExtResource("5_6lqia")
-fade_distance = 0.0
-screen_offset = Vector2(0, -18)
-icon_texture = ExtResource("6_yo04u")
-metadata/_custom_type_script = "uid://c3n7yap2m8k4q"
-
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="world/lvls/test_lvl1"]
 use_collision = true
 
@@ -110,14 +79,25 @@ size = Vector3(5, 0.5, 4.5)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4993837, 1.146, -3.518)
 size = Vector3(5.000244, 0.5, 2.8632813)
 
-[node name="RigidBody3D" type="RigidBody3D" parent="world/lvls/test_lvl1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0303419, 2.6994028, -1.533927)
+[node name="CustomDetectionBox3D" type="Area3D" parent="world/lvls/test_lvl1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3035944, 0.49625564, 0)
+script = ExtResource("1_en41u")
+body_entered_callbacks = Array[ExtResource("3_gpuo4")]([SubResource("Resource_6lqia")])
+body_exited_callbacks = Array[ExtResource("3_gpuo4")]([SubResource("Resource_u71ym")])
+metadata/_custom_type_script = "uid://ba1ew1pw3sudy"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="world/lvls/test_lvl1/RigidBody3D"]
-shape = SubResource("SphereShape3D_u71ym")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="world/lvls/test_lvl1/CustomDetectionBox3D"]
+shape = SubResource("SphereShape3D_yo04u")
+
+[node name="MulticheckerV2" type="Node" parent="world/lvls/test_lvl1/CustomDetectionBox3D"]
+script = ExtResource("3_u7x3r")
+enabled = false
+time_stop = false
+items = Array[ExtResource("2_3ni26")]([SubResource("Resource_en41u")])
+metadata/_custom_type_script = "uid://ciaekacdop5h2"
 
 [node name="pupet" type="CharacterBody3D" parent="world"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.5234873, 3.0380192)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.5234873, 0.08731747)
 floor_constant_speed = true
 
 [node name="c" type="CollisionShape3D" parent="world/pupet"]
@@ -131,7 +111,7 @@ billboard = 1
 texture = ExtResource("6_u71ym")
 
 [node name="PhantomCamera3D" type="Node3D" parent="." node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.2588188, 0.96592486, 0, -0.96592486, 0.2588188, -1.0271327, 5.523487, 4.288019)
+transform = Transform3D(1, 0, 0, 0, 0.2588188, 0.96592486, 0, -0.96592486, 0.2588188, -1.0271327, 5.523487, 1.3373175)
 top_level = true
 script = ExtResource("5_u7x3r")
 priority = 5
@@ -144,7 +124,7 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera2D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.2588188, 0.96592486, 0, -0.96592486, 0.2588188, -1.0271327, 5.523487, 4.288019)
+transform = Transform3D(1, 0, 0, 0, 0.2588188, 0.96592486, 0, -0.96592486, 0.2588188, -1.0271327, 5.523487, 1.3373175)
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D"]
 process_priority = 300
@@ -153,52 +133,3 @@ script = ExtResource("8_yo04u")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="ui" type="CanvasLayer" parent="."]
-
-[node name="multichecker_ui" type="PanelContainer" parent="ui"]
-offset_left = 917.0
-offset_top = 489.5
-offset_right = 917.0
-offset_bottom = 489.5
-script = ExtResource("12_yo04u")
-
-[node name="mc" type="MarginContainer" parent="ui/multichecker_ui"]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="hbc" type="HBoxContainer" parent="ui/multichecker_ui/mc"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="img" type="TextureRect" parent="ui/multichecker_ui/mc/hbc"]
-visible = false
-layout_mode = 2
-
-[node name="key" type="Label" parent="ui/multichecker_ui/mc/hbc"]
-layout_mode = 2
-text = "Enter"
-
-[node name="desc" type="Label" parent="ui/multichecker_ui/mc/hbc"]
-layout_mode = 2
-text = "description"
-
-[node name="sc" type="ScrollContainer" parent="ui/multichecker_ui/mc"]
-visible = false
-custom_minimum_size = Vector2(196, 32)
-layout_mode = 2
-draw_focus_border = true
-vertical_scroll_mode = 0
-
-[node name="hbc" type="HBoxContainer" parent="ui/multichecker_ui/mc/sc"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="Button_capability_name" type="Button" parent="ui/multichecker_ui/mc/sc/hbc"]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-mouse_filter = 2
-text = "capability_name"

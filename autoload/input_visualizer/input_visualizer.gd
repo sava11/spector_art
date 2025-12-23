@@ -26,55 +26,55 @@ var device_name: String = "Keyboard"  # "xBox", "PlayStation", "Nintendo", "Unkn
 # Integration note: Used by UI systems that need to display control hints, similar to how
 const BUTTON_NAMES := {
 	"xBox": {
-		0: {"text": "A", "image": "res://autoload/input_monitor/xBox/a.svg"},
-		1: {"text": "B", "image": "res://autoload/input_monitor/xBox/b.svg"},
-		2: {"text": "X", "image": "res://autoload/input_monitor/xBox/x.svg"},
-		3: {"text": "Y", "image": "res://autoload/input_monitor/xBox/y.svg"},
-		4: {"text": "Back", "image": "res://autoload/input_monitor/xBox/back.svg"},
-		5: {"text": "Guide", "image": "res://autoload/input_monitor/xBox/guide.svg"},
-		6: {"text": "Start", "image": "res://autoload/input_monitor/xBox/start.svg"},
-		7: {"text": "L3", "image": "res://autoload/input_monitor/xBox/l3.svg"},
-		8: {"text": "R3", "image": "res://autoload/input_monitor/xBox/r3.svg"},
-		9: {"text": "LB", "image": "res://autoload/input_monitor/xBox/lb.svg"},
-		10: {"text": "RB", "image": "res://autoload/input_monitor/xBox/rb.svg"},
-		11: {"text": "Up", "image": "res://autoload/input_monitor/xBox/up.svg"},
-		12: {"text": "Down", "image": "res://autoload/input_monitor/xBox/down.svg"},
-		13: {"text": "Left", "image": "res://autoload/input_monitor/xBox/left.svg"},
-		14: {"text": "Right", "image": "res://autoload/input_monitor/xBox/right.svg"}
+		0: {"text": "A", "image": "res://autoload/input_visualizer/xBox/a.svg"},
+		1: {"text": "B", "image": "res://autoload/input_visualizer/xBox/b.svg"},
+		2: {"text": "X", "image": "res://autoload/input_visualizer/xBox/x.svg"},
+		3: {"text": "Y", "image": "res://autoload/input_visualizer/xBox/y.svg"},
+		4: {"text": "Back", "image": "res://autoload/input_visualizer/xBox/back.svg"},
+		5: {"text": "Guide", "image": "res://autoload/input_visualizer/xBox/guide.svg"},
+		6: {"text": "Start", "image": "res://autoload/input_visualizer/xBox/start.svg"},
+		7: {"text": "L3", "image": "res://autoload/input_visualizer/xBox/l3.svg"},
+		8: {"text": "R3", "image": "res://autoload/input_visualizer/xBox/r3.svg"},
+		9: {"text": "LB", "image": "res://autoload/input_visualizer/xBox/lb.svg"},
+		10: {"text": "RB", "image": "res://autoload/input_visualizer/xBox/rb.svg"},
+		11: {"text": "Up", "image": "res://autoload/input_visualizer/xBox/up.svg"},
+		12: {"text": "Down", "image": "res://autoload/input_visualizer/xBox/down.svg"},
+		13: {"text": "Left", "image": "res://autoload/input_visualizer/xBox/left.svg"},
+		14: {"text": "Right", "image": "res://autoload/input_visualizer/xBox/right.svg"}
 	},
 	"PlayStation": {
-		0: {"text": "Cross", "image": "res://autoload/input_monitor/PlayStation/cross.svg"},
-		1: {"text": "Circle", "image": "res://autoload/input_monitor/PlayStation/circle.svg"},
-		2: {"text": "Square", "image": "res://autoload/input_monitor/PlayStation/square.svg"},
-		3: {"text": "Triangle", "image": "res://autoload/input_monitor/PlayStation/triangle.svg"},
-		4: {"text": "Share", "image": "res://autoload/input_monitor/PlayStation/share.svg"},
-		5: {"text": "PS", "image": "res://autoload/input_monitor/PlayStation/ps.svg"},
-		6: {"text": "Options", "image": "res://autoload/input_monitor/PlayStation/options.svg"},
-		7: {"text": "L3", "image": "res://autoload/input_monitor/PlayStation/l3.svg"},
-		8: {"text": "R3", "image": "res://autoload/input_monitor/PlayStation/r3.svg"},
-		9: {"text": "L1", "image": "res://autoload/input_monitor/PlayStation/l1.svg"},
-		10: {"text": "R1", "image": "res://autoload/input_monitor/PlayStation/r1.svg"},
-		11: {"text": "Up", "image": "res://autoload/input_monitor/PlayStation/up.svg"},
-		12: {"text": "Down", "image": "res://autoload/input_monitor/PlayStation/down.svg"},
-		13: {"text": "Left", "image": "res://autoload/input_monitor/PlayStation/left.svg"},
-		14: {"text": "Right", "image": "res://autoload/input_monitor/PlayStation/right.svg"}
+		0: {"text": "Cross", "image": "res://autoload/input_visualizer/PlayStation/cross.svg"},
+		1: {"text": "Circle", "image": "res://autoload/input_visualizer/PlayStation/circle.svg"},
+		2: {"text": "Square", "image": "res://autoload/input_visualizer/PlayStation/square.svg"},
+		3: {"text": "Triangle", "image": "res://autoload/input_visualizer/PlayStation/triangle.svg"},
+		4: {"text": "Share", "image": "res://autoload/input_visualizer/PlayStation/share.svg"},
+		5: {"text": "PS", "image": "res://autoload/input_visualizer/PlayStation/ps.svg"},
+		6: {"text": "Options", "image": "res://autoload/input_visualizer/PlayStation/options.svg"},
+		7: {"text": "L3", "image": "res://autoload/input_visualizer/PlayStation/l3.svg"},
+		8: {"text": "R3", "image": "res://autoload/input_visualizer/PlayStation/r3.svg"},
+		9: {"text": "L1", "image": "res://autoload/input_visualizer/PlayStation/l1.svg"},
+		10: {"text": "R1", "image": "res://autoload/input_visualizer/PlayStation/r1.svg"},
+		11: {"text": "Up", "image": "res://autoload/input_visualizer/PlayStation/up.svg"},
+		12: {"text": "Down", "image": "res://autoload/input_visualizer/PlayStation/down.svg"},
+		13: {"text": "Left", "image": "res://autoload/input_visualizer/PlayStation/left.svg"},
+		14: {"text": "Right", "image": "res://autoload/input_visualizer/PlayStation/right.svg"}
 	},
 	"Nintendo": {
-		0: {"text": "B", "image": "res://autoload/input_monitor/Nintendo/b.svg"},
-		1: {"text": "A", "image": "res://autoload/input_monitor/Nintendo/a.svg"},
-		2: {"text": "Y", "image": "res://autoload/input_monitor/Nintendo/y.svg"},
-		3: {"text": "X", "image": "res://autoload/input_monitor/Nintendo/x.svg"},
-		4: {"text": "-", "image": "res://autoload/input_monitor/Nintendo/minus.svg"},
-		5: {"text": "Home", "image": "res://autoload/input_monitor/Nintendo/home.svg"},
-		6: {"text": "+", "image": "res://autoload/input_monitor/Nintendo/plus.svg"},
-		7: {"text": "LStick", "image": "res://autoload/input_monitor/Nintendo/lstick.svg"},
-		8: {"text": "RStick", "image": "res://autoload/input_monitor/Nintendo/rstick.svg"},
-		9: {"text": "L", "image": "res://autoload/input_monitor/Nintendo/l.svg"},
-		10: {"text": "R", "image": "res://autoload/input_monitor/Nintendo/r.svg"},
-		11: {"text": "Up", "image": "res://autoload/input_monitor/Nintendo/up.svg"},
-		12: {"text": "Down", "image": "res://autoload/input_monitor/Nintendo/down.svg"},
-		13: {"text": "Left", "image": "res://autoload/input_monitor/Nintendo/left.svg"},
-		14: {"text": "Right", "image": "res://autoload/input_monitor/Nintendo/right.svg"}
+		0: {"text": "B", "image": "res://autoload/input_visualizer/Nintendo/b.svg"},
+		1: {"text": "A", "image": "res://autoload/input_visualizer/Nintendo/a.svg"},
+		2: {"text": "Y", "image": "res://autoload/input_visualizer/Nintendo/y.svg"},
+		3: {"text": "X", "image": "res://autoload/input_visualizer/Nintendo/x.svg"},
+		4: {"text": "-", "image": "res://autoload/input_visualizer/Nintendo/minus.svg"},
+		5: {"text": "Home", "image": "res://autoload/input_visualizer/Nintendo/home.svg"},
+		6: {"text": "+", "image": "res://autoload/input_visualizer/Nintendo/plus.svg"},
+		7: {"text": "LStick", "image": "res://autoload/input_visualizer/Nintendo/lstick.svg"},
+		8: {"text": "RStick", "image": "res://autoload/input_visualizer/Nintendo/rstick.svg"},
+		9: {"text": "L", "image": "res://autoload/input_visualizer/Nintendo/l.svg"},
+		10: {"text": "R", "image": "res://autoload/input_visualizer/Nintendo/r.svg"},
+		11: {"text": "Up", "image": "res://autoload/input_visualizer/Nintendo/up.svg"},
+		12: {"text": "Down", "image": "res://autoload/input_visualizer/Nintendo/down.svg"},
+		13: {"text": "Left", "image": "res://autoload/input_visualizer/Nintendo/left.svg"},
+		14: {"text": "Right", "image": "res://autoload/input_visualizer/Nintendo/right.svg"}
 	},
 	"Unknown": {}  # Fallback - uses raw SDL numbering
 }
@@ -230,7 +230,6 @@ func _joy_button_name(button_idx: int) -> String:
 	# FALLBACK PATH: Generate SDL-standard description for unmapped buttons
 	# CRITICAL: Must set button_index before calling as_text() to get correct name
 	var fallback_event := InputEventJoypadButton.new()
-	fallback_event.button_index = button_idx  # This was the critical bug - missing assignment
 	return fallback_event.as_text()  # Returns "Button 0", "Button 1", etc.
 
 # ====================================================================================
@@ -296,7 +295,6 @@ func _get_key_display_name(key_event: InputEventKey) -> String:
 # @return: Full image path string, or empty string if unavailable
 func action_to_button_image(action_name: String) -> String:
 	var events := InputMap.action_get_events(action_name)
-
 	# CRITICAL: Input validation prevents crashes from invalid actions
 	if events.is_empty():
 		push_warning("InputMonitor: Action '%s' not found in InputMap" % action_name)
@@ -318,7 +316,6 @@ func action_to_button_image(action_name: String) -> String:
 			return _get_key_image_path(event)
 		elif device_id != 0 and event is InputEventJoypadButton:
 			return _joy_button_image(event.button_index)
-
 	return ""  # Graceful degradation - no image available
 
 # Converts SDL button index to platform-specific button image path.
@@ -346,19 +343,19 @@ func _get_key_image_path(key_event: InputEventKey) -> String:
 	var key_name := _get_key_display_name(key_event).to_lower()
 	# Map common key names to image files
 	var key_mappings := {
-		"space": "res://autoload/input_monitor/PC/space.svg",
-		"enter": "res://autoload/input_monitor/PC/enter.svg",
-		"escape": "res://autoload/input_monitor/PC/escape.svg",
-		"w": "res://autoload/input_monitor/PC/w.svg",
-		"a": "res://autoload/input_monitor/PC/a.svg",
-		"s": "res://autoload/input_monitor/PC/s.svg",
-		"d": "res://autoload/input_monitor/PC/d.svg",
-		"shift": "res://autoload/input_monitor/PC/shift.svg",
-		"ctrl": "res://autoload/input_monitor/PC/ctrl.svg",
-		"up": "res://autoload/input_monitor/PC/up.svg",
-		"down": "res://autoload/input_monitor/PC/down.svg",
-		"left": "res://autoload/input_monitor/PC/left.svg",
-		"right": "res://autoload/input_monitor/PC/right.svg"
+		"space": "res://autoload/input_visualizer/PC/space.svg",
+		"enter": "res://autoload/input_visualizer/PC/enter.svg",
+		"escape": "res://autoload/input_visualizer/PC/escape.svg",
+		"w": "res://autoload/input_visualizer/PC/w.svg",
+		"a": "res://autoload/input_visualizer/PC/a.svg",
+		"s": "res://autoload/input_visualizer/PC/s.svg",
+		"d": "res://autoload/input_visualizer/PC/d.svg",
+		"shift": "res://autoload/input_visualizer/PC/shift.svg",
+		"ctrl": "res://autoload/input_visualizer/PC/ctrl.svg",
+		"up": "res://autoload/input_visualizer/PC/up.svg",
+		"down": "res://autoload/input_visualizer/PC/down.svg",
+		"left": "res://autoload/input_visualizer/PC/left.svg",
+		"right": "res://autoload/input_visualizer/PC/right.svg"
 	}
 
 	return key_mappings.get(key_name, "")
@@ -487,7 +484,7 @@ func force_device(device_type: int) -> void:
 # - Small file sizes
 # - Consistent visual quality
 #
-# ORGANIZATION: autoload/input_monitor/{platform}/
+# ORGANIZATION: autoload/input_visualizer/{platform}/
 # - xBox/: Microsoft-style button icons
 # - PlayStation/: Sony-style button icons
 # - Nintendo/: Nintendo-style button icons

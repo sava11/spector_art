@@ -22,6 +22,7 @@ PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_came
 FNC="*res://autoload/functions.gd"
 IV="*res://autoload/input_visualizer/input_visualizer.gd"
 SLD="*res://materials/scripts/saver/saver.gd"
+MUI="*res://materials/scripts/multicheckerV2/multichecker_ui.gd"
 
 [editor_plugins]
 
