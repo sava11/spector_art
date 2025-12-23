@@ -3,13 +3,15 @@ extends PanelContainer
 ## Spacing constant used for UI layout calculations.
 const SPACE := 4
 
-signal multichecker_changed(to:MulticheckerV2)
+signal multichecker_changed(to:Multichecker)
 
 ## Input action name used for menu activation.
 const prompt_action: String = "ui_accept"
 
 ## Menu visibility state - controls whether the menu is displayed.
-var showed: bool = false: set = set_showed
+var showed: bool = false : set = set_showed
+
+var main_container: MarginContainer
 
 ## Help prompt panel showing current key binding and description.
 var prompt: HBoxContainer
@@ -29,7 +31,8 @@ var prompt_desc_label: Label
 ## Horizontal container holding all menu option buttons.
 var button_container: HBoxContainer
 
-var current_multichecker:MulticheckerV2=null:set=set_multichecker
+## Current multichecker instance being displayed.
+var current_multichecker: Multichecker = null : set = set_multichecker
 
 func _enter_tree() -> void:
 	process_mode=Node.PROCESS_MODE_ALWAYS
@@ -37,17 +40,17 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	# Build help prompt UI
 	#region prompt
-	var mc:=MarginContainer.new()
-	mc.name="mc"
-	mc.set("theme_override_constants/margin_top",SPACE)
-	mc.set("theme_override_constants/margin_left",SPACE)
-	mc.set("theme_override_constants/margin_right",SPACE)
-	mc.set("theme_override_constants/margin_bottom",SPACE)
-	add_child(mc)
+	main_container = MarginContainer.new()
+	main_container.name="mc"
+	main_container.set("theme_override_constants/margin_top",SPACE)
+	main_container.set("theme_override_constants/margin_left",SPACE)
+	main_container.set("theme_override_constants/margin_right",SPACE)
+	main_container.set("theme_override_constants/margin_bottom",SPACE)
+	add_child(main_container)
 	prompt=HBoxContainer.new()
 	prompt.name="prompt"
 	prompt.set("theme_override_constants/separation",SPACE)
-	mc.add_child(prompt)
+	main_container.add_child(prompt)
 	prompt_key_image=TextureRect.new()
 	prompt_key_image.name="img"
 	prompt_key_image.hide()
@@ -68,29 +71,29 @@ func _ready() -> void:
 	collection.custom_minimum_size=Vector2(196,32)
 	collection.draw_focus_border=true
 	collection.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
-	mc.add_child(collection)
+	main_container.add_child(collection)
 	button_container=HBoxContainer.new()
 	button_container.name="button_container"
 	button_container.set("theme_override_constants/separation",SPACE)
 	collection.add_child(button_container)
 	collection.hide()
 	#endregion
-	
-	for b in button_container.get_children():
-		b.queue_free()
-	
+
 	_changed_device()
 	IV.input_changed.connect(_changed_device)
 
-func _is_avalible():
-	return current_multichecker!=null and current_multichecker.is_activated()
+func _is_available() -> bool:
+	return current_multichecker != null and current_multichecker.is_activated()
 
-func set_multichecker(multichecker:MulticheckerV2):
-	current_multichecker=multichecker
+func set_multichecker(multichecker: Multichecker) -> void:
+	current_multichecker = multichecker
 	multichecker_changed.emit(current_multichecker)
+
+	# Clear existing buttons efficiently
 	if button_container:
-		for b in button_container.get_children():
-			b.queue_free()
+		for child in button_container.get_children():
+			child.queue_free()
+
 	if multichecker:
 		_build_buttons(current_multichecker.items)
 		_set_prompt_desc(multichecker.prompt_desc)
@@ -98,7 +101,7 @@ func set_multichecker(multichecker:MulticheckerV2):
 		prompt.show()
 		show()
 	else:
-		showed=false
+		showed = false
 		hide()
 
 # Updates displayed key binding when input device changes
@@ -116,65 +119,93 @@ func _set_prompt_action():
 		prompt_label.show()
 		prompt_key_image.hide()
 
-func _set_prompt_desc(desc:String):
-	prompt_desc_label.text=tr(desc)
+func _set_prompt_desc(desc: String) -> void:
+	prompt_desc_label.text = tr(desc)
 
-func _build_buttons(items:Array[MulticheckerItem]):
-	
+func _build_buttons(items: Array[MulticheckerItem]) -> void:
+	if not current_multichecker:
+		push_error("Cannot build buttons: current_multichecker is null")
+		return
+
+	if not button_container:
+		push_error("Cannot build buttons: button_container is null")
+		return
+
 	for data in items:
-		
-		var key:KLKey = current_multichecker.keys_root.get_node("Key_%s" % [data.name.replace(" ","_")])
-		
-		var btn = Button.new()
-		btn.name = "Button_%s" % [data.name.replace(" ","_")]
+		if not data:
+			push_warning("Skipping null MulticheckerItem")
+			continue
+
+		var key_name := "Key_%s" % [data.name.replace(" ", "_")]
+		var key: KLKey = current_multichecker.keys_root.get_node_or_null(key_name)
+
+		if not key:
+			push_warning("KLKey '%s' not found for MulticheckerItem '%s'" % [key_name, data.name])
+			continue
+
+		var btn := Button.new()
+		btn.name = "Button_%s" % [data.name.replace(" ", "_")]
 		btn.text = tr(data.name)
-		btn.custom_minimum_size.y=32
+		btn.custom_minimum_size.y = 32
 		btn.toggle_mode = data.toggled
 		btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		
+
 		# Connect visibility changes
-		data.visible_changed.connect(func(value):btn.visible = value)
+		data.visible_changed.connect(func(value: bool) -> void: btn.visible = value)
 		btn.visible = data.visible
 		button_container.add_child(btn)
-		
-		if data.toggled:
-			btn.button_pressed=key.activated
-		
-		multichecker_changed.connect(
-			func(_to):
-				for s in key.get_signal_connection_list("active").filter(
-					func(x:Dictionary):
-						return x.callable==_on_ui_key_active):
-					key.active.disconnect(s.callable)
-				)
-		
-		key.active.connect(_on_ui_key_active)
-		
-		# Connect lock state to button disability
-		key._lock.activated.connect(func(b): btn.disabled = b)
-		
-		# Handle button press - trigger key if activated
-		btn.pressed.connect(func():
-			if current_multichecker.is_activated():
-				key.trigger()
-				return
-			btn.button_pressed=false)
 
-func _on_ui_key_active(items:Array[MulticheckerItem]):
+		if data.toggled:
+			btn.button_pressed = key.activated
+			# Connect key activation to button state
+			key.active.connect(func(activated: bool) -> void:
+				if data.toggled:
+					btn.button_pressed = activated
+			)
+
+		# Store reference to the bound callable for later disconnection
+		var bound_callable := _on_ui_key_active.bind(items)
+
+		# Handle multichecker changes - disconnect old connections
+		multichecker_changed.connect(
+			func(_to: Multichecker) -> void:
+				if key.active.is_connected(bound_callable):
+					key.active.disconnect(bound_callable)
+		)
+
+		key.active.connect(bound_callable)
+
+		# Connect lock state to button disability
+		key.block.connect(func(blocked: bool) -> void: btn.disabled = blocked)
+
+		# Handle button press - trigger key if activated
+		btn.pressed.connect(func() -> void:
+			if current_multichecker and current_multichecker.is_activated():
+				key.trigger()
+			else:
+				btn.button_pressed = false
+		)
+
+func _on_ui_key_active(_activated: bool, items: Array[MulticheckerItem]) -> void:
 	if not current_multichecker:
-		push_error("MulticheckerV2 is't exists")
+		push_error("Multichecker doesn't exist")
 		return
-	
-	if not current_multichecker.is_activated(): return
-	
+
+	if not current_multichecker.is_activated():
+		return
+
+	if not items or items.size() == 0:
+		push_warning("_on_ui_key_active called with empty items array")
+		return
+
 	# Manage UI visibility for multi-choice menus
 	if items.size() > 1:
 		collection.visible = not current_multichecker.close_after_choice
 		prompt.visible = current_multichecker.close_after_choice
-	
-		# Auto-close behavior
-		if current_multichecker.close_after_choice:
-			FNC.set_pause(false)
+
+	# Auto-close behavior
+	if current_multichecker.close_after_choice:
+		FNC.set_pause(false)
 
 ## Finds nearest visible button to given index. Used for focus management in menu navigation
 func _get_nearest_visible_button_id(id:int=0) -> int:
@@ -206,20 +237,20 @@ func _get_nearest_visible_button_id(id:int=0) -> int:
 	# No visible button found
 	return -1
 
-func _update_focus(current_id:int) -> void:
+func _update_focus(current_id: int) -> void:
 	if button_container and button_container.get_child_count() > 0 and collection and collection.visible:
 		var nearest_button_id = _get_nearest_visible_button_id(current_id)
 		if nearest_button_id >= 0:
 			button_container.get_child(nearest_button_id).grab_focus()
 
 # Controls menu visibility and pause state
-func set_showed(value: bool):
-	showed=value and current_multichecker!=null
-	
+func set_showed(value: bool) -> void:
+	showed = value and current_multichecker != null
+
 	if is_node_ready():
 		if showed:
 			_update_focus(current_multichecker.current_id)
-		collection.visible=showed and _is_avalible()
-		if current_multichecker!=null and current_multichecker.time_stop:
+		collection.visible = showed and _is_available()
+		if current_multichecker != null and current_multichecker.time_stop:
 			FNC.set_pause(value)
-		prompt.visible=not showed
+		prompt.visible = not showed

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ba1ew1pw3sudy" path="res://materials/scripts/boxes/3d/custom_detection_box.gd" id="1_en41u"]
 [ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="2_3ni26"]
 [ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="3_gpuo4"]
-[ext_resource type="Script" uid="uid://ciaekacdop5h2" path="res://materials/scripts/multicheckerV2/multicheckerV2.gd" id="3_u7x3r"]
+[ext_resource type="Script" uid="uid://dafvgv7urgyql" path="res://materials/scripts/multichecker/multichecker.gd" id="3_u7x3r"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="5_u7x3r"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="6_u71ym"]
@@ -92,8 +92,12 @@ shape = SubResource("SphereShape3D_yo04u")
 [node name="MulticheckerV2" type="Node" parent="world/lvls/test_lvl1/CustomDetectionBox3D"]
 script = ExtResource("3_u7x3r")
 enabled = false
+blocked = null
 time_stop = false
+close_after_choice = null
 items = Array[ExtResource("2_3ni26")]([SubResource("Resource_en41u")])
+current_id = null
+prompt_desc = null
 metadata/_custom_type_script = "uid://ciaekacdop5h2"
 
 [node name="pupet" type="CharacterBody3D" parent="world"]
