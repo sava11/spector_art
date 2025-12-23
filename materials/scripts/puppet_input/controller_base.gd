@@ -2,7 +2,7 @@ extends Node
 class_name BaseController
 
 @export var enabled:=true
-@export var puppet:Puppet
+@export var puppet:Pawn
 
 var input_direction: Vector2
 var jump_held: bool

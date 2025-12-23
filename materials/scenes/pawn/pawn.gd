@@ -1,5 +1,5 @@
 extends CharacterBody3D
-class_name Puppet
+class_name Pawn
 
 signal jump_count_max_changed(count: int)
 

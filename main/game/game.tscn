@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://ukbdxptj5okt"]
 
 [ext_resource type="PackedScene" uid="uid://c0ngdihkjv7pj" path="res://main/levels/test_lvl_1.tscn" id="1_ux4xf"]
-[ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/puppet/pupet.tscn" id="2_ej72j"]
+[ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/pawn/pawn.tscn" id="2_ej72j"]
 [ext_resource type="Script" uid="uid://1q1hjchwqfq7" path="res://materials/scripts/puppet_input/player_controller.gd" id="3_ej72j"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="5_u7x3r"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
