@@ -1,11 +1,20 @@
+## MulticheckerItem - Configuration resource for individual menu options in multichecker systems.
+##
+## This resource defines the complete behavior, appearance, and logic for each choice in a multichecker menu.
+## Supports conditional visibility, Key-Lock integration for access control, toggle/push-button modes,
+## and dynamic expression execution for complex game logic. Acts as the bridge between UI presentation
+## and game state management through the Key-Lock system.
+## [br][br]
+## [b]Key Features:[/b]
+## - Conditional visibility based on game state or external factors
+## - Full Key-Lock system integration for complex access conditions
+## - Dynamic expression execution on activation/deactivation
+## - Toggle mode for persistent state changes (on/off switches)
+## - Auto-reset functionality with configurable timers
+## - Translation-ready text display with key-based localization
+
 extends Resource
 class_name MulticheckerItem
-
-# =========================================================
-# MulticheckerItem - Configuration for menu options
-# Defines behavior, locking, and actions for each choice
-# Integrates with KLKey system and DynamicExpression
-# =========================================================
 
 signal visible_changed(result:bool)
 
