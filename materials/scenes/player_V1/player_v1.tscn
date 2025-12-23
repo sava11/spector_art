@@ -1,0 +1,265 @@
+[gd_scene load_steps=17 format=3 uid="uid://0hdbtnnnxe4g"]
+
+[ext_resource type="Script" uid="uid://b3m5l44pipiue" path="res://materials/scripts/boxes/2d/hurt_box.gd" id="1_38f4b"]
+[ext_resource type="Script" uid="uid://hhdsdn37vuf2" path="res://materials/scenes/player_V1/player_v4.gd" id="1_bbqkj"]
+[ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="3_746xe"]
+[ext_resource type="Script" uid="uid://de7yek0vi8d8f" path="res://materials/scripts/boxes/2d/hit_box.gd" id="4_b3bno"]
+
+[sub_resource type="Curve" id="Curve_bbqkj"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.10001, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 0), 0.0, 0.0, 0, 0, Vector2(0.20001, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(0.30001, 0), 0.0, 0.0, 0, 0, Vector2(0.4, 0), 0.0, 0.0, 0, 0, Vector2(0.40001, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(0.50001, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0), 0.0, 0.0, 0, 0, Vector2(0.60001, 1), 0.0, 0.0, 0, 0, Vector2(0.7, 1), 0.0, 0.0, 0, 0, Vector2(0.70001, 0), 0.0, 0.0, 0, 0, Vector2(0.8, 0), 0.0, 0.0, 0, 0, Vector2(0.80001, 1), 0.0, 0.0, 0, 0, Vector2(0.9, 1), 0.0, 0.0, 0, 0, Vector2(0.90001, 0), 0.0, 0.0, 0, 0]
+point_count = 20
+metadata/_snap_enabled = true
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dktqy"]
+radius = 16.0
+height = 32.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dktqy"]
+size = Vector2(56, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bbqkj"]
+size = Vector2(64, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6o1ej"]
+size = Vector2(64, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c651c"]
+size = Vector2(32, 32)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e8elu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_746xe"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.172833, 0.172833, 0.172833, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b3bno"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="Theme" id="Theme_dktqy"]
+ProgressBar/styles/background = SubResource("StyleBoxFlat_746xe")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_b3bno")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sjpqg"]
+radius = 256.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l0q1j"]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 32
+collision_mask = 35
+floor_constant_speed = true
+floor_snap_length = 16.0
+script = ExtResource("1_bbqkj")
+zip_enabled = false
+ground_accel = 1500.0
+ground_decel = 1800.0
+air_accel = 1000.0
+air_decel = 1200.0
+air_turn_accel = 1500.0
+cling_enabled = false
+cling_up = 1500.0
+cling_fall = 256.0
+drop_down_enabled = true
+drop_down_time = 0.25
+jump_distance = 256.0
+dash_count_max = 0
+dash_distance = 256.0
+hit_curve = SubResource("Curve_bbqkj")
+sb_velocity_influence = 3.0
+sb_directional_stretch = 3.0
+sb_neighbor_stiffness = 0.0
+sb_max_point_vel = 250.0
+
+[node name="c" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_dktqy")
+
+[node name="SaveLoaderV2" type="Node" parent="."]
+script = ExtResource("3_746xe")
+properties = Array[String](["can_input", "can_move", "zip_enabled", "cling_enabled", "cling_control", "jump_count_max", "dash_count_max", "dash_cooldown_timer", "dash_count", "dash_time", "last_input_dir_x", "global_position", "hited", "hit_animation_timer"])
+auto_update = false
+
+[node name="hitboxes" type="Node2D" parent="."]
+
+[node name="HitBox" type="Area2D" parent="hitboxes"]
+visible = false
+collision_layer = 16
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("4_b3bno")
+single_detect = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitboxes/HitBox"]
+position = Vector2(28, 0)
+shape = SubResource("RectangleShape2D_dktqy")
+
+[node name="HitBox2" type="Area2D" parent="hitboxes"]
+visible = false
+collision_layer = 16
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("4_b3bno")
+single_detect = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitboxes/HitBox2"]
+position = Vector2(32, -4)
+shape = SubResource("RectangleShape2D_bbqkj")
+
+[node name="HitBox3" type="Area2D" parent="hitboxes"]
+visible = false
+collision_layer = 16
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("4_b3bno")
+damage = 2.0
+single_detect = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitboxes/HitBox3"]
+position = Vector2(32, -4)
+shape = SubResource("RectangleShape2D_6o1ej")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("1_38f4b")
+flags = 17
+max_health = 3.0
+
+[node name="c" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_c651c")
+
+[node name="SaveLoaderV2" type="Node" parent="HurtBox"]
+script = ExtResource("3_746xe")
+properties = Array[String](["max_health", "health"])
+auto_update = false
+
+[node name="get_up_r" type="RayCast2D" parent="."]
+position = Vector2(24, -24)
+target_position = Vector2(0, 24)
+collision_mask = 3
+
+[node name="not_get_up" type="RayCast2D" parent="get_up_r"]
+position = Vector2(0, 24)
+target_position = Vector2(0, -32)
+
+[node name="get_up_l" type="RayCast2D" parent="get_up_r"]
+position = Vector2(-48, 0)
+target_position = Vector2(0, 24)
+collision_mask = 3
+
+[node name="visual" type="Node2D" parent="."]
+
+[node name="skin" type="Polygon2D" parent="visual"]
+material = SubResource("ShaderMaterial_e8elu")
+color = Color(0, 0.75, 0.25, 1)
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+uv = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+metadata/_edit_group_ = true
+
+[node name="eye" type="ColorRect" parent="visual/skin"]
+offset_left = 8.0
+offset_top = -4.0
+offset_right = 16.0
+offset_bottom = 4.0
+pivot_offset = Vector2(4, 4)
+
+[node name="hit" type="ColorRect" parent="visual/skin"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="vbc" type="VBoxContainer" parent="visual"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_top = 24.0
+offset_right = 16.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="dash_container" type="HFlowContainer" parent="visual/vbc"]
+modulate = Color(0, 1, 1, 1)
+layout_mode = 2
+theme = SubResource("Theme_dktqy")
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+
+[node name="detectors" type="Node2D" parent="."]
+
+[node name="climb" type="RayCast2D" parent="detectors"]
+target_position = Vector2(24, 0)
+collision_mask = 4
+hit_from_inside = true
+
+[node name="wall_det" type="RayCast2D" parent="detectors"]
+target_position = Vector2(24, 0)
+collision_mask = 3
+
+[node name="zip_zone" type="Area2D" parent="detectors"]
+collision_layer = 0
+collision_mask = 259
+
+[node name="c" type="CollisionShape2D" parent="detectors/zip_zone"]
+visible = false
+shape = SubResource("CircleShape2D_sjpqg")
+
+[node name="visual" type="ColorRect" parent="detectors/zip_zone"]
+visible = false
+material = SubResource("ShaderMaterial_l0q1j")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -510.0
+offset_top = -510.0
+offset_right = 514.0
+offset_bottom = 514.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="not_grab" type="RayCast2D" parent="detectors"]
+position = Vector2(0, -24)
+target_position = Vector2(24, 0)
+collision_mask = 3
+hit_from_inside = true
+
+[node name="marks" type="Node2D" parent="."]
+visible = false
+
+[node name="zip" type="Marker2D" parent="marks"]
+
+[node name="base" type="Marker2D" parent="marks"]
+position = Vector2(0, -96)
+
+[connection signal="health_changed" from="HurtBox" to="." method="_on_hurt_box_health_changed"]

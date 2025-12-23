@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://c0ngdihkjv7pj"]
+
+[ext_resource type="Script" uid="uid://ba1ew1pw3sudy" path="res://materials/scripts/boxes/3d/custom_detection_box.gd" id="1_28g4p"]
+[ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="2_pyyvj"]
+[ext_resource type="Script" uid="uid://ciaekacdop5h2" path="res://materials/scripts/multichecker/multichecker.gd" id="3_mtvmc"]
+[ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="4_x8b6i"]
+
+[sub_resource type="Resource" id="Resource_6lqia"]
+script = ExtResource("2_pyyvj")
+expression = "m.enabled=true"
+data = Dictionary[String, Variant]({
+"m": NodePath("Multichecker")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_u71ym"]
+script = ExtResource("2_pyyvj")
+expression = "m.enabled=false"
+data = Dictionary[String, Variant]({
+"m": NodePath("Multichecker")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yo04u"]
+
+[sub_resource type="Resource" id="Resource_8jny7"]
+script = ExtResource("4_x8b6i")
+metadata/_custom_type_script = "uid://p0unqgsqck4h"
+
+[node name="test_lvl1" type="Node3D"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2529297, 0)
+size = Vector3(10, 0.5, 10)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 0.9481075, -0.31795007, 0, 0.31795007, 0.9481075, 2.498, 0.444, -0.034)
+size = Vector3(5, 0.5, 4.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4993837, 1.146, -3.518)
+size = Vector3(5.000244, 0.5, 2.8632813)
+
+[node name="CustomDetectionBox3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3035944, 0.49625564, 0)
+script = ExtResource("1_28g4p")
+body_entered_callbacks = Array[ExtResource("2_pyyvj")]([SubResource("Resource_6lqia")])
+body_exited_callbacks = Array[ExtResource("2_pyyvj")]([SubResource("Resource_u71ym")])
+metadata/_custom_type_script = "uid://ba1ew1pw3sudy"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CustomDetectionBox3D"]
+shape = SubResource("SphereShape3D_yo04u")
+
+[node name="Multichecker" type="Node" parent="CustomDetectionBox3D"]
+script = ExtResource("3_mtvmc")
+enabled = false
+items = Array[ExtResource("4_x8b6i")]([SubResource("Resource_8jny7")])
+metadata/_custom_type_script = "uid://ciaekacdop5h2"
