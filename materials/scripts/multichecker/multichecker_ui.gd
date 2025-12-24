@@ -111,6 +111,7 @@ func _ready() -> void:
 	# Setup input device detection and visual feedback
 	_changed_device()  # Initial device detection
 	IV.input_changed.connect(_changed_device)  # Monitor device changes
+	hide()
 
 func _is_available() -> bool:
 	return current_multichecker != null and current_multichecker.is_activated()

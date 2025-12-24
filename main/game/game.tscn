@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ukbdxptj5okt"]
+[gd_scene load_steps=14 format=3 uid="uid://ukbdxptj5okt"]
 
 [ext_resource type="PackedScene" uid="uid://c0ngdihkjv7pj" path="res://main/levels/test_lvl_1.tscn" id="1_ux4xf"]
 [ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/pawn/pawn.tscn" id="2_ej72j"]
@@ -18,17 +18,30 @@ process_mode = 1
 background_mode = 2
 sky = SubResource("Sky_u71ym")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_ej72j"]
+radius = 2.7635505
+
 [sub_resource type="Resource" id="Resource_2wwl3"]
 script = ExtResource("6_6lqia")
 
 [sub_resource type="Resource" id="Resource_q786k"]
 script = ExtResource("7_u71ym")
+size = 8.0
 metadata/_custom_type_script = "uid://b8hhnqsugykly"
 
 [node name="game" type="Node"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_yo04u")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.99050957, 0.13744454, 6.007892e-09, 0.045981668, 0.33137202, 0.94237906, 0.12952484, 0.9334355, -0.3345471, 0, 6.359629, 0.3744433)
+light_bake_mode = 1
+shadow_enabled = true
+directional_shadow_split_1 = 0.105
+
+[node name="fade_target" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.072512865, 0.08731747)
 
 [node name="world" type="Node3D" parent="."]
 
@@ -37,29 +50,47 @@ unique_name_in_owner = true
 
 [node name="test_lvl1" parent="world/lvls" instance=ExtResource("1_ux4xf")]
 
+[node name="pupet" parent="world/lvls/test_lvl1" instance=ExtResource("2_ej72j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.295188, 2.6829638, 0)
+
 [node name="player" parent="world" instance=ExtResource("2_ej72j")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.5234873, 0.08731747)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.072512865, 0.08731747)
+jump_count_max = 2
+jump_height = 0.75
+jump_distance = 1.25
 
 [node name="PlayerController" type="Node" parent="world/player" node_paths=PackedStringArray("puppet")]
 script = ExtResource("3_ej72j")
 puppet = NodePath("..")
 metadata/_custom_type_script = "uid://1q1hjchwqfq7"
 
+[node name="rt" type="RemoteTransform3D" parent="world/player"]
+remote_path = NodePath("../../../fade_target")
+update_rotation = false
+update_scale = false
+
+[node name="visible" type="Area3D" parent="world/player"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="world/player/visible"]
+shape = SubResource("SphereShape3D_ej72j")
+
 [node name="PhantomCamera3D" type="Node3D" parent="." node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.2588188, 0.96592486, 0, -0.96592486, 0.2588188, -1.0271327, 5.6234875, 1.3373175)
+transform = Transform3D(1, 0, 0, 0, 0.25881848, 0.9659236, 0, -0.9659236, 0.25881848, -1.0271327, 5.172513, 1.0873175)
 top_level = true
 script = ExtResource("5_u7x3r")
 priority = 5
 follow_mode = 2
 follow_target = NodePath("../world/player/markers/base")
 tween_resource = SubResource("Resource_2wwl3")
+tween_on_load = false
 camera_3d_resource = SubResource("Resource_q786k")
-follow_offset = Vector3(0, 5, 1.25)
+follow_offset = Vector3(0, 5, 1)
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera2D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.2588188, 0.96592486, 0, -0.96592486, 0.2588188, -1.0271327, 5.6234875, 1.3373175)
+transform = Transform3D(1, 0, 0, 0, 0.25881848, 0.9659236, 0, -0.9659236, 0.25881848, -1.0271327, 5.172513, 1.0873175)
+size = 8.0
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D"]
 process_priority = 300

@@ -1,9 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://c0ngdihkjv7pj"]
+[gd_scene load_steps=13 format=3 uid="uid://c0ngdihkjv7pj"]
 
 [ext_resource type="Script" uid="uid://ba1ew1pw3sudy" path="res://materials/scripts/boxes/3d/custom_detection_box.gd" id="1_28g4p"]
+[ext_resource type="Shader" uid="uid://815bkawl8lqa" path="res://materials/extra/fade/height_fade_shader.gdshader" id="1_mtvmc"]
+[ext_resource type="Script" uid="uid://bvhi7f64inlsp" path="res://materials/extra/fade/fade_controller.gd" id="1_pyyvj"]
 [ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="2_pyyvj"]
 [ext_resource type="Script" uid="uid://ciaekacdop5h2" path="res://materials/scripts/multichecker/multichecker.gd" id="3_mtvmc"]
 [ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="4_x8b6i"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x8b6i"]
+render_priority = 0
+shader = ExtResource("1_mtvmc")
+shader_parameter/base_position = Vector3(0, 0, 0)
+shader_parameter/fade_start_height = 1.0
+shader_parameter/fade_end_height = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_x8b6i"]
 
 [sub_resource type="Resource" id="Resource_6lqia"]
 script = ExtResource("2_pyyvj")
@@ -29,6 +40,11 @@ metadata/_custom_type_script = "uid://p0unqgsqck4h"
 
 [node name="test_lvl1" type="Node3D"]
 
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.723709, 1.7572932, 1.6374819)
+material_override = SubResource("ShaderMaterial_x8b6i")
+mesh = SubResource("BoxMesh_x8b6i")
+
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true
 
@@ -43,6 +59,16 @@ size = Vector3(5, 0.5, 4.5)
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4993837, 1.146, -3.518)
 size = Vector3(5.000244, 0.5, 2.8632813)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.244, 2.372, -1.193)
+size = Vector3(5.000244, 0.5, 2.8632813)
+
+[node name="FadeController" type="Node" parent="CSGCombiner3D"]
+script = ExtResource("1_pyyvj")
+target_node_path = NodePath("/root/game/fade_target")
+fade_end_height = 1.5
+metadata/_custom_type_script = "uid://bvhi7f64inlsp"
 
 [node name="CustomDetectionBox3D" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3035944, 0.49625564, 0)
@@ -59,3 +85,6 @@ script = ExtResource("3_mtvmc")
 enabled = false
 items = Array[ExtResource("4_x8b6i")]([SubResource("Resource_8jny7")])
 metadata/_custom_type_script = "uid://ciaekacdop5h2"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7516737, 0.37941396, 0)

@@ -25,12 +25,10 @@ Spector its like colors. Art is subjective.
 
 # Objects
 
-- [__Multichecker__](materials/scripts/multichecker/README.md) - Advanced interactive multi-choice menu system with conditional options, deep Key-Lock integration, and dynamic expression execution for complex game interactions.
-
 - [__DynamicExpression__](materials/scripts/dynamic_expression/dynamic_expression.gd) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
 
 <details>
-<summary> Multichecker System </summary>
+<summary> Multichecker </summary>
 
 - [__Multichecker__](materials/scripts/multichecker/multichecker.gd) - Core menu controller managing UI generation, Key-Lock integration, and user interaction processing.
 
