@@ -1,6 +1,21 @@
 extends Node
 class_name FadeController
 
+@export var albedo_texture:Texture2D:
+	set(value):
+		albedo_texture = value
+		_update_shader_params()
+
+@export var roughness_texture:Texture2D:
+	set(value):
+		roughness_texture = value
+		_update_shader_params()
+
+@export var metallic_texture:Texture2D:
+	set(value):
+		metallic_texture = value
+		_update_shader_params()
+
 @export var target_node_path:=NodePath(".."):
 	set(value):
 		target_node_path=value
@@ -34,7 +49,10 @@ func _update_shader_params():
 		_shader_material.render_priority=-1
 		_shader_material.set_shader_parameter("base_position", target_node.global_position)
 		_shader_material.set_shader_parameter("fade_start_height", fade_start_height)
-		_shader_material.set_shader_parameter("fade_end_height", fade_end_height) 
+		_shader_material.set_shader_parameter("fade_end_height", fade_end_height)
+		_shader_material.set_shader_parameter("albedo_texture", albedo_texture)
+		_shader_material.set_shader_parameter("roughness_texture", roughness_texture)
+		_shader_material.set_shader_parameter("metallic_texture", metallic_texture)
 		_update_position()
 
 func _process(_delta: float) -> void:
@@ -43,3 +61,4 @@ func _process(_delta: float) -> void:
 func _update_position():
 	if _shader_material:
 		_shader_material.set_shader_parameter("base_position", target_node.global_position)
+		print(_shader_material.get_shader_parameter("base_position"))

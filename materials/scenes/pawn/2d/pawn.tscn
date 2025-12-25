@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://cjh8wcsw8xgmt"]
+
+[ext_resource type="Script" uid="uid://b3m5l44pipiue" path="res://materials/scripts/boxes/2d/hurt_box.gd" id="1_0jrok"]
+[ext_resource type="Script" uid="uid://dh2pcjdltiqxi" path="res://materials/scenes/pawn/2d/pawn.gd" id="1_yws7l"]
+[ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="3_80ugj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yws7l"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_80ugj"]
+radius = 16.0
+
+[node name="pawn" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_yws7l")
+move_max_speed = 500.0
+move_decel = 1000.0
+move_turn_accel = 1200.0
+dash_distance = 500.0
+
+[node name="c" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_yws7l")
+
+[node name="hb" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("1_0jrok")
+flags = 9
+metadata/_custom_type_script = "uid://b3m5l44pipiue"
+
+[node name="c" type="CollisionShape2D" parent="hb"]
+shape = SubResource("CircleShape2D_80ugj")
+
+[node name="img" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_80ugj")
+
+[node name="markers" type="Node2D" parent="."]
+
+[node name="base" type="Marker2D" parent="markers"]

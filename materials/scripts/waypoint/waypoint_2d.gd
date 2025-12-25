@@ -73,7 +73,9 @@ var _camera: Camera2D
 func _ready() -> void:
 	_create_visual_elements()
 	_update_visual()
-	_find_camera()
+	
+	# Look for Camera2D in the scene
+	_camera = get_viewport().get_camera_2d()
 
 ## Main update loop for waypoint screen-space positioning and visual updates.
 ## This method calculates target position in screen space, determines if target is on screen,
@@ -95,7 +97,8 @@ func _process(_delta: float) -> void:
 
 	# Update camera reference if needed
 	if _camera == null or not is_instance_valid(_camera):
-		_find_camera()
+		# Look for Camera2D in the scene
+		_camera = get_viewport().get_camera_2d()
 		if _camera == null:
 			if _canvas_layer:
 				_canvas_layer.visible = false
@@ -145,10 +148,10 @@ func _process(_delta: float) -> void:
 			# Calculate scale factors to reach each edge
 			var scale_x = half_width / abs_x
 			var scale_y = half_height / abs_y
-			var scale = min(scale_x, scale_y)
+			var _scale = min(scale_x, scale_y)
 
 			# Position on the edge that would be hit first
-			edge_pos = center + direction * scale
+			edge_pos = center + direction * _scale
 		else:
 			# Handle edge cases where direction is aligned with axes
 			if abs_x > abs_y:
@@ -211,38 +214,3 @@ func _update_visual() -> void:
 	_icon.texture = icon_texture
 	_icon.scale = Vector2(size, size)
 	_icon.modulate = icon_color
-
-## Find the active camera in the scene for screen space calculations.
-## This method searches for Camera2D nodes in the scene tree to determine
-## the current viewport and camera settings for accurate screen positioning.
-func _find_camera() -> void:
-	# Try to find camera in current scene
-	var tree = get_tree()
-	if tree == null:
-		return
-
-	# Look for Camera2D in the scene
-	var cameras = tree.get_nodes_in_group("camera")
-	if cameras.size() > 0:
-		_camera = cameras[0]
-		return
-
-	# Fallback: find any Camera2D
-	var root = tree.get_root()
-	_camera = _find_camera_recursive(root)
-
-## Recursively search for Camera2D in the scene tree.
-## [param node] The node to start searching from
-## [return] Camera2D node if found, null otherwise
-func _find_camera_recursive(node: Node) -> Camera2D:
-	# Check current node
-	if node is Camera2D and node.is_current():
-		return node
-
-	# Check children
-	for child in node.get_children():
-		var camera = _find_camera_recursive(child)
-		if camera != null:
-			return camera
-
-	return null

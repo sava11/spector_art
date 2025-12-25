@@ -22,6 +22,9 @@ signal multichecker_changed(to:Multichecker)
 ## Input action name used for menu activation.
 const prompt_action: String = "ui_accept"
 
+## Input action name used for menu deactivation.
+const menu_exit: String = "ui_cancel"
+
 ## Menu visibility state - controls whether the menu is displayed.
 var showed: bool = false : set = set_showed
 
@@ -50,6 +53,7 @@ var current_multichecker: Multichecker = null : set = set_multichecker
 
 func _enter_tree() -> void:
 	process_mode=Node.PROCESS_MODE_ALWAYS
+	set_physics_process(false)
 
 ## Initialize the UI components when entering the scene tree.
 ## CRITICAL: Builds the complete UI structure for menu display and input visualization.
@@ -60,11 +64,11 @@ func _ready() -> void:
 	#region prompt
 	main_container = MarginContainer.new()
 	main_container.name = "mc"
+	main_container.set("theme_override_constants/margin_top", SPACE*int(!showed))
+	main_container.set("theme_override_constants/margin_left", SPACE*int(!showed))
+	main_container.set("theme_override_constants/margin_right", SPACE*int(!showed))
+	main_container.set("theme_override_constants/margin_bottom", SPACE*int(!showed))
 	# Apply consistent spacing margins around the entire interface
-	main_container.set("theme_override_constants/margin_top", SPACE)
-	main_container.set("theme_override_constants/margin_left", SPACE)
-	main_container.set("theme_override_constants/margin_right", SPACE)
-	main_container.set("theme_override_constants/margin_bottom", SPACE)
 	add_child(main_container)
 
 	prompt = HBoxContainer.new()
@@ -112,6 +116,8 @@ func _ready() -> void:
 	_changed_device()  # Initial device detection
 	IV.input_changed.connect(_changed_device)  # Monitor device changes
 	hide()
+	set_physics_process(current_multichecker!=null)
+	ready.connect(func():get_parent().move_child.call_deferred(self,get_parent().get_child_count()-1))
 
 func _is_available() -> bool:
 	return current_multichecker != null and current_multichecker.is_activated()
@@ -142,6 +148,7 @@ func set_multichecker(multichecker: Multichecker) -> void:
 		# Clear multichecker - hide everything
 		showed = false
 		hide()
+	set_physics_process(multichecker!=null)
 
 # Updates displayed key binding when input device changes
 func _changed_device():
@@ -315,11 +322,13 @@ func _update_focus(current_id: int) -> void:
 func set_showed(value: bool) -> void:
 	showed = value and current_multichecker != null  # Only show if multichecker exists
 
-	if is_node_ready():
-		if showed:
-			# Set initial focus when showing menu
-			_update_focus(current_multichecker.current_id)
+	if main_container:
+		main_container.set("theme_override_constants/margin_top", SPACE*int(!showed))
+		main_container.set("theme_override_constants/margin_left", SPACE*int(!showed))
+		main_container.set("theme_override_constants/margin_right", SPACE*int(!showed))
+		main_container.set("theme_override_constants/margin_bottom", SPACE*int(!showed))
 
+	if is_node_ready():
 		# Show/hide the main menu collection
 		collection.visible = showed and _is_available()
 
@@ -327,5 +336,27 @@ func set_showed(value: bool) -> void:
 		if current_multichecker != null and current_multichecker.time_stop:
 			FNC.set_pause(value)  # Pause/unpause game time
 
+		size=Vector2.ZERO
+		if showed:
+			_update_position()
+			# Set initial focus when showing menu
+			_update_focus(current_multichecker.current_id)
+
 		# Show help prompt when menu is hidden, hide it when menu is shown
 		prompt.visible = not showed
+
+func _physics_process(_delta: float) -> void:
+	_update_position()
+	if Input.is_action_just_pressed(menu_exit) and showed:
+		showed=false
+	if Input.is_action_just_pressed(prompt_action) and not showed:
+		showed=true
+
+func _update_position():
+	var pn:=current_multichecker.get_parent()
+	var pos:Vector2=get_viewport_rect().size/2
+	if pn is Node3D:
+		pos=get_viewport().get_camera_3d().unproject_position(pn.global_position)
+	elif pn is Node2D:
+		pos=pn.global_position - get_viewport().get_camera_2d().global_position
+	position=pos-size/2

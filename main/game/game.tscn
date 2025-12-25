@@ -1,101 +1,119 @@
-[gd_scene load_steps=14 format=3 uid="uid://ukbdxptj5okt"]
+[gd_scene load_steps=19 format=3 uid="uid://ukbdxptj5okt"]
 
-[ext_resource type="PackedScene" uid="uid://c0ngdihkjv7pj" path="res://main/levels/test_lvl_1.tscn" id="1_ux4xf"]
-[ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/pawn/pawn.tscn" id="2_ej72j"]
+[ext_resource type="Script" uid="uid://sapoe0n5j21" path="res://main/game/game.gd" id="1_en41u"]
+[ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="2_ej72j"]
+[ext_resource type="PackedScene" uid="uid://cjh8wcsw8xgmt" path="res://materials/scenes/pawn/2d/pawn.tscn" id="2_ux4xf"]
 [ext_resource type="Script" uid="uid://1q1hjchwqfq7" path="res://materials/scripts/puppet_input/player_controller.gd" id="3_ej72j"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="5_u7x3r"]
+[ext_resource type="Script" uid="uid://bkw2x8n4m3h7p" path="res://materials/scripts/waypoint/waypoint_2d.gd" id="3_u7x3r"]
+[ext_resource type="Texture2D" uid="uid://cy5uuopjis5ow" path="res://materials/images/waypoint_markers/waypoint_circle_medium.svg" id="4_6lqia"]
+[ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="4_ej72j"]
+[ext_resource type="Script" uid="uid://djl3lwr8ieepq" path="res://materials/scripts/boxes/2d/custom_detection_box.gd" id="5_5xupx"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
-[ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="7_u71ym"]
+[ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="6_36fbw"]
+[ext_resource type="Script" uid="uid://ciaekacdop5h2" path="res://materials/scripts/multichecker/multichecker.gd" id="7_2wwl3"]
+[ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="8_q786k"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_yo04u"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6lqia"]
+[sub_resource type="Resource" id="Resource_5pgop"]
+script = ExtResource("6_36fbw")
+expression = "m.enabled=true"
+data = Dictionary[String, Variant]({
+"m": NodePath("Multichecker")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
 
-[sub_resource type="Sky" id="Sky_u71ym"]
-sky_material = SubResource("ProceduralSkyMaterial_6lqia")
-process_mode = 1
+[sub_resource type="Resource" id="Resource_y4tkr"]
+script = ExtResource("6_36fbw")
+expression = "m.enabled=false"
+data = Dictionary[String, Variant]({
+"m": NodePath("Multichecker")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
 
-[sub_resource type="Environment" id="Environment_yo04u"]
-background_mode = 2
-sky = SubResource("Sky_u71ym")
+[sub_resource type="CircleShape2D" id="CircleShape2D_812s6"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_ej72j"]
-radius = 2.7635505
+[sub_resource type="Resource" id="Resource_2m71s"]
+script = ExtResource("8_q786k")
+metadata/_custom_type_script = "uid://p0unqgsqck4h"
 
 [sub_resource type="Resource" id="Resource_2wwl3"]
 script = ExtResource("6_6lqia")
 
-[sub_resource type="Resource" id="Resource_q786k"]
-script = ExtResource("7_u71ym")
-size = 8.0
-metadata/_custom_type_script = "uid://b8hhnqsugykly"
-
 [node name="game" type="Node"]
+script = ExtResource("1_en41u")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_yo04u")
+[node name="world" type="Node" parent="."]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.99050957, 0.13744454, 6.007892e-09, 0.045981668, 0.33137202, 0.94237906, 0.12952484, 0.9334355, -0.3345471, 0, 6.359629, 0.3744433)
-light_bake_mode = 1
-shadow_enabled = true
-directional_shadow_split_1 = 0.105
-
-[node name="fade_target" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.072512865, 0.08731747)
-
-[node name="world" type="Node3D" parent="."]
-
-[node name="lvls" type="Node3D" parent="world"]
+[node name="lvls" type="Node" parent="world"]
 unique_name_in_owner = true
 
-[node name="test_lvl1" parent="world/lvls" instance=ExtResource("1_ux4xf")]
+[node name="lvl1" type="Node2D" parent="world/lvls"]
 
-[node name="pupet" parent="world/lvls/test_lvl1" instance=ExtResource("2_ej72j")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.295188, 2.6829638, 0)
+[node name="img" type="Sprite2D" parent="world/lvls/lvl1"]
+texture = ExtResource("2_ej72j")
 
-[node name="player" parent="world" instance=ExtResource("2_ej72j")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0271327, 0.072512865, 0.08731747)
-jump_count_max = 2
-jump_height = 0.75
-jump_distance = 1.25
+[node name="WayPoint2D" type="Node2D" parent="world/lvls/lvl1"]
+position = Vector2(974, 31)
+script = ExtResource("3_u7x3r")
+fade_distance = 384.0
+screen_offset = Vector2(0, 16)
+icon_texture = ExtResource("4_6lqia")
+screen_margin = 16.0
+metadata/_custom_type_script = "uid://bkw2x8n4m3h7p"
 
-[node name="PlayerController" type="Node" parent="world/player" node_paths=PackedStringArray("puppet")]
+[node name="CustomDetectionBox2D" type="Area2D" parent="world/lvls/lvl1"]
+script = ExtResource("5_5xupx")
+body_entered_callbacks = Array[ExtResource("6_36fbw")]([SubResource("Resource_5pgop")])
+body_exited_callbacks = Array[ExtResource("6_36fbw")]([SubResource("Resource_y4tkr")])
+metadata/_custom_type_script = "uid://djl3lwr8ieepq"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="world/lvls/lvl1/CustomDetectionBox2D"]
+shape = SubResource("CircleShape2D_812s6")
+
+[node name="Multichecker" type="Node" parent="world/lvls/lvl1/CustomDetectionBox2D"]
+script = ExtResource("7_2wwl3")
+enabled = false
+items = Array[ExtResource("8_q786k")]([SubResource("Resource_2m71s")])
+metadata/_custom_type_script = "uid://ciaekacdop5h2"
+
+[node name="pawn" parent="world" instance=ExtResource("2_ux4xf")]
+
+[node name="PlayerController" type="Node" parent="world/pawn" node_paths=PackedStringArray("puppet_pawn")]
 script = ExtResource("3_ej72j")
-puppet = NodePath("..")
+puppet_pawn = NodePath("..")
 metadata/_custom_type_script = "uid://1q1hjchwqfq7"
 
-[node name="rt" type="RemoteTransform3D" parent="world/player"]
-remote_path = NodePath("../../../fade_target")
-update_rotation = false
-update_scale = false
-
-[node name="visible" type="Area3D" parent="world/player"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="world/player/visible"]
-shape = SubResource("SphereShape3D_ej72j")
-
-[node name="PhantomCamera3D" type="Node3D" parent="." node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.25881848, 0.9659236, 0, -0.9659236, 0.25881848, -1.0271327, 5.172513, 1.0873175)
+[node name="PhantomCamera" type="Node2D" parent="." node_paths=PackedStringArray("follow_target")]
 top_level = true
-script = ExtResource("5_u7x3r")
+scale = Vector2(0.49955347, 0.9683723)
+skew = 0.4629854
+script = ExtResource("4_ej72j")
 priority = 5
 follow_mode = 2
-follow_target = NodePath("../world/player/markers/base")
+follow_target = NodePath("../world/pawn/markers/base")
 tween_resource = SubResource("Resource_2wwl3")
 tween_on_load = false
-camera_3d_resource = SubResource("Resource_q786k")
-follow_offset = Vector3(0, 5, 1)
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+follow_damping = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
-[node name="Camera2D" type="Camera3D" parent="."]
+[node name="Camera" type="Camera2D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.25881848, 0.9659236, 0, -0.9659236, 0.25881848, -1.0271327, 5.172513, 1.0873175)
-size = 8.0
 
-[node name="PhantomCameraHost" type="Node" parent="Camera2D"]
+[node name="PhantomCameraHost" type="Node" parent="Camera"]
 process_priority = 300
 process_physics_priority = 300
 script = ExtResource("8_yo04u")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="ui" type="CanvasLayer" parent="."]
+
+[node name="debug" type="Control" parent="ui"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="fps" type="Label" parent="ui/debug"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0

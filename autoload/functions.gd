@@ -37,7 +37,7 @@ func _ready() -> void:
 ## var angle = angle(Vector2(0, 1))  # Returns 90
 ## var angle = angle(Vector2(-1, 0)) # Returns 180
 ## [/codeblock]
-static func angle(V:Vector2)->float:
+func angle(V:Vector2)->float:
 	return rad_to_deg(-atan2(-V.y,V.x))
 
 ## Rotate a vector by a given angle in degrees.
@@ -48,7 +48,7 @@ static func angle(V:Vector2)->float:
 ## [codeblock]
 ## var rotated = rotate_vec(Vector2(1, 0), 90)  # Returns Vector2(0, 1)
 ## [/codeblock]
-static func rotate_vec(vec:Vector2,ang:float)->Vector2:
+func rotate_vec(vec:Vector2,ang:float)->Vector2:
 	return move(rad_to_deg(angle(vec))+ang)*Vector2.ZERO.distance_to(vec)
 
 ## Create a unit vector from an angle in degrees.
@@ -61,7 +61,7 @@ static func rotate_vec(vec:Vector2,ang:float)->Vector2:
 ## var up = move(90)      # Returns Vector2(0, 1)
 ## var left = move(180)   # Returns Vector2(-1, 0)
 ## [/codeblock]
-static func move(ang)->Vector2:
+func move(ang)->Vector2:
 	return Vector2(cos(deg_to_rad(ang)),sin(deg_to_rad(ang)))
 
 ## Calculate the sum of all elements in an array.
@@ -72,7 +72,7 @@ static func move(ang)->Vector2:
 ## [codeblock]
 ## var total = sum([1, 2, 3, 4])  # Returns 10.0
 ## [/codeblock]
-static func sum(array) -> float:
+func sum(array) -> float:
 	var _sum = 0.0
 	for element in array:
 		_sum += element
@@ -88,7 +88,7 @@ static func sum(array) -> float:
 ## var index = i_search(["a", "b", "c"], "b")  # Returns 1
 ## var index = i_search(["a", "b", "c"], "z")  # Returns -1
 ## [/codeblock]
-static func i_search(array,i):
+func i_search(array,i):
 	var inte=0
 	for k in array:
 		if k==i:
@@ -161,7 +161,7 @@ func has_darked()->bool:
 ## for polygon in polygons:
 ##     draw_polygon(polygon, [Color.WHITE])  # Debug visualization
 ## [/codeblock]
-static func get_area_polygons(area: Area2D) -> Array:
+func get_area_polygons(area: Area2D) -> Array:
 	var result := []
 	for child in area.get_children():
 		var shape: Shape2D

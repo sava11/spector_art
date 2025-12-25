@@ -1,5 +1,5 @@
 extends CharacterBody3D
-class_name Pawn
+class_name Pawn3D
 
 signal jump_count_max_changed(count: int)
 
@@ -64,8 +64,21 @@ func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 
 	update_ground_and_timers(delta)
+
 	# Move the character
 	move_and_slide()
+
+#var target_speed = input_dir.x * max_speed
+
+#var accel = ground_accel if _on_ground else air_accel
+#var decel = ground_decel if _on_ground else air_decel
+#var turn_accel = ground_turn_accel if _on_ground else air_turn_accel
+
+#var rate: float = accel if (sign(velocity.x) == sign(target_speed) or target_speed == 0) else turn_accel
+#if target_speed != 0 and can_move and not _climb and (snapped(abs(velocity.x), 0.1) <= snapped(abs(target_speed), 0.1)):
+	#velocity.x = move_toward(velocity.x, target_speed, rate * delta)
+#else:
+	#if _on_ground: velocity.x = move_toward(velocity.x, 0, decel * delta)
 
 ## Process horizontal movement based on input direction
 func process_horizontal(delta: float) -> void:
@@ -78,19 +91,17 @@ func process_horizontal(delta: float) -> void:
 
 	# Handle X axis movement
 	var rate_x: float = accel if (sign(velocity.x) == sign(target_speed_x) or target_speed_x == 0) else turn_accel
-	if target_speed_x != 0 and abs(velocity.x) <= abs(target_speed_x):
+	if target_speed_x != 0.0 and (snapped(abs(velocity.x), 0.1) <= snapped(abs(target_speed_x), 0.1)):
 		velocity.x = move_toward(velocity.x, target_speed_x, rate_x * delta)
 	else:
-		if _on_ground:
-			velocity.x = move_toward(velocity.x, 0, decel * delta)
+		if _on_ground: velocity.x = move_toward(velocity.x, 0, decel * delta)
 
 	# Handle Z axis movement
 	var rate_z: float = accel if (sign(velocity.z) == sign(target_speed_z) or target_speed_z == 0) else turn_accel
-	if target_speed_z != 0 and abs(velocity.z) <= abs(target_speed_z):
+	if target_speed_z != 0.0 and snapped(abs(velocity.z), 0.1) <= snapped(abs(target_speed_z), 0.1):
 		velocity.z = move_toward(velocity.z, target_speed_z, rate_z * delta)
 	else:
-		if _on_ground:
-			velocity.z = move_toward(velocity.z, 0, decel * delta)
+		if _on_ground: velocity.z = move_toward(velocity.z, 0, decel * delta)
 
 ## Process jumping based on jump_pressed input
 func process_jumping() -> void:

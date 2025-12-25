@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cp8ff3a01itg3"]
 
-[ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/pawn.gd" id="1_65n5b"]
+[ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_o6cr0"]
 [ext_resource type="Script" uid="uid://c8oaw2k6m3f1p" path="res://materials/scripts/boxes/3d/hurt_box.gd" id="2_vkh0a"]
 
@@ -37,6 +37,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
 [node name="sp" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+sorting_use_aabb_center = false
 pixel_size = 0.0025
 billboard = 1
 texture = ExtResource("1_o6cr0")
