@@ -5,18 +5,20 @@
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="3_80ugj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yws7l"]
-radius = 16.0
+radius = 8.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_80ugj"]
-radius = 16.0
+radius = 8.0
 
 [node name="pawn" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_yws7l")
-move_max_speed = 500.0
-move_decel = 1000.0
-move_turn_accel = 1200.0
-dash_distance = 500.0
+move_max_speed = 300.0
+move_accel = 600.0
+move_decel = 600.0
+move_turn_accel = 400.0
+dash_distance = 250.0
+dash_cooldown = 1.0
 
 [node name="c" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_yws7l")
@@ -32,7 +34,7 @@ metadata/_custom_type_script = "uid://b3m5l44pipiue"
 shape = SubResource("CircleShape2D_80ugj")
 
 [node name="img" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.15, 0.15)
 texture = ExtResource("3_80ugj")
 
 [node name="markers" type="Node2D" parent="."]

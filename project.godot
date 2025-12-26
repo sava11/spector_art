@@ -24,6 +24,11 @@ IV="*res://autoload/input_visualizer/input_visualizer.gd"
 SLD="*res://materials/scripts/saver/saver.gd"
 MUI="*res://materials/scripts/multichecker/multichecker_ui.gd"
 
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_height"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/buff_er/plugin.cfg", "res://addons/phantom_camera/plugin.cfg")

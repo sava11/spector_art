@@ -118,7 +118,7 @@ func _process(_delta: float) -> void:
 
 	# Convert waypoint world position to screen space
 	var viewport_size = get_viewport().get_visible_rect().size
-	var screen_pos = (waypoint_pos - camera_pos) / _camera.zoom + viewport_size / 2
+	var screen_pos = (waypoint_pos - camera_pos) * _camera.zoom + viewport_size / 2
 
 	# Check if waypoint is on screen (within viewport bounds)
 	var is_on_screen = (screen_pos.x >= 0 and screen_pos.x <= viewport_size.x and

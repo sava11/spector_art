@@ -12,7 +12,7 @@
 ## - Pause state integration with game time control
 ## - Toggle and single-action button support
 
-extends PanelContainer
+extends CanvasLayer
 
 ## UI layout spacing constant used throughout the interface.
 const SPACE := 4
@@ -27,6 +27,8 @@ const menu_exit: String = "ui_cancel"
 
 ## Menu visibility state - controls whether the menu is displayed.
 var showed: bool = false : set = set_showed
+
+var panel_container: PanelContainer
 
 var main_container: MarginContainer
 
@@ -62,6 +64,9 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	# Build the help prompt UI (shows current key binding and description)
 	#region prompt
+	panel_container=PanelContainer.new()
+	panel_container.name="pc"
+	add_child(panel_container)
 	main_container = MarginContainer.new()
 	main_container.name = "mc"
 	main_container.set("theme_override_constants/margin_top", SPACE*int(!showed))
@@ -69,7 +74,7 @@ func _ready() -> void:
 	main_container.set("theme_override_constants/margin_right", SPACE*int(!showed))
 	main_container.set("theme_override_constants/margin_bottom", SPACE*int(!showed))
 	# Apply consistent spacing margins around the entire interface
-	add_child(main_container)
+	panel_container.add_child(main_container)
 
 	prompt = HBoxContainer.new()
 	prompt.name = "prompt"
@@ -336,7 +341,7 @@ func set_showed(value: bool) -> void:
 		if current_multichecker != null and current_multichecker.time_stop:
 			FNC.set_pause(value)  # Pause/unpause game time
 
-		size=Vector2.ZERO
+		panel_container.size=Vector2.ZERO
 		if showed:
 			_update_position()
 			# Set initial focus when showing menu
@@ -354,9 +359,12 @@ func _physics_process(_delta: float) -> void:
 
 func _update_position():
 	var pn:=current_multichecker.get_parent()
-	var pos:Vector2=get_viewport_rect().size/2
+	var half_size:=panel_container.get_viewport_rect().size/2
+	var pos:Vector2=half_size
 	if pn is Node3D:
-		pos=get_viewport().get_camera_3d().unproject_position(pn.global_position)
+		var cam:=get_viewport().get_camera_3d()
+		pos=cam.unproject_position(pn.global_position)
 	elif pn is Node2D:
-		pos=pn.global_position - get_viewport().get_camera_2d().global_position
-	position=pos-size/2
+		var cam:=panel_container.get_viewport().get_camera_2d()
+		pos=pn.global_position - cam.global_position
+	panel_container.position=pos+half_size-panel_container.size/2
