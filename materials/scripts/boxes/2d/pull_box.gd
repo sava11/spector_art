@@ -18,7 +18,11 @@ extends Area2D
 
 ## Whether the pull effect is currently active in 2D space.
 ## When disabled, no pulling forces are applied to entering bodies.
-@export var enabled: bool = true
+@export var enabled: bool = true:
+	set(v):
+		enabled=v
+		monitorable=v
+		monitoring=v
 
 ## Speed at which bodies are pulled toward the center (units per second).
 ## This value determines the magnitude of the attraction force in 2D space.
@@ -75,7 +79,7 @@ func _on_body_exited(body: Node2D) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if !(body in exceptions):
 		if single_detect:
-			_update(body)
+			_update(body,1)
 		else:
 			bs.append(body)
 
@@ -86,11 +90,11 @@ func _on_body_entered(body: Node2D) -> void:
 ## - Removes null references from exceptions array
 ## - Applies pull force to all tracked bodies each physics frame
 ## - Ensures continuous attraction for overlapping bodies
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	for i in exceptions.size():
 		if exceptions[i] == null:
 			exceptions.remove_at(i)
-	for i in bs: _update(i)
+	for i in bs: _update(i,delta)
 
 ## Applies the pull force to a specific 2D body based on PullBox2D rotation and speed.
 ## This method calculates and applies attraction forces in 2D space.
@@ -102,13 +106,12 @@ func _physics_process(_delta: float) -> void:
 ## - Applies velocity directly for immediate attraction effect
 ##
 ## [param body] The 2D body to apply the pull force to
-func _update(body: Node2D):
-	if enabled:
-		var vec := _move(global_rotation_degrees) * speed
-		if body is CharacterBody2D:
-			body.velocity = vec
-		elif body is RigidBody2D:
-			body.linear_velocity = vec
+func _update(body: Node2D,delta:float):
+	var vec := _move(global_rotation_degrees) * speed * delta
+	if body is CharacterBody2D:
+		body.velocity += vec
+	elif body is RigidBody2D:
+		body.linear_velocity += vec
 
 ## Creates a unit vector in the direction of the given 2D rotation.
 ## This method converts Euler angles to a normalized direction vector.

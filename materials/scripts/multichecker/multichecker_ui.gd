@@ -366,5 +366,5 @@ func _update_position():
 		pos=cam.unproject_position(pn.global_position)
 	elif pn is Node2D:
 		var cam:=panel_container.get_viewport().get_camera_2d()
-		pos=pn.global_position - cam.global_position
-	panel_container.position=pos+half_size-panel_container.size/2
+		pos=pn.global_position - cam.global_position+half_size
+	panel_container.position=pos-panel_container.size/2

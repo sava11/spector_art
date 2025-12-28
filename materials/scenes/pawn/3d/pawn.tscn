@@ -1,8 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://cp8ff3a01itg3"]
+[gd_scene load_steps=40 format=3 uid="uid://cp8ff3a01itg3"]
 
 [ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_o6cr0"]
 [ext_resource type="Script" uid="uid://c8oaw2k6m3f1p" path="res://materials/scripts/boxes/3d/hurt_box.gd" id="2_vkh0a"]
+[ext_resource type="Script" uid="uid://bqm8x7j4p2v5h" path="res://materials/scripts/boxes/3d/hit_box.gd" id="4_nvtwl"]
+[ext_resource type="Script" uid="uid://6n36u8kkqu5m" path="res://materials/scenes/pawn/3d/actions/move_action.gd" id="4_qe3wy"]
+[ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="5_e1sod"]
+[ext_resource type="Script" uid="uid://cmjhvc6vg2da3" path="res://materials/scenes/pawn/3d/actions/gravity_action.gd" id="6_rqqau"]
+[ext_resource type="Script" uid="uid://d1hgqxlmr21nn" path="res://materials/scenes/pawn/3d/actions/jump_action.gd" id="7_xf1x3"]
+[ext_resource type="Script" uid="uid://4dt668vlm888" path="res://materials/scenes/pawn/3d/actions/dash_action.gd" id="8_10urh"]
+[ext_resource type="Script" uid="uid://bux4aa7bxdp1y" path="res://materials/scenes/pawn/3d/actions/attack_action.gd" id="8_xf1x3"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_36fbw"]
 radius = 0.15
@@ -10,17 +17,261 @@ radius = 0.15
 [sub_resource type="SphereShape3D" id="SphereShape3D_65n5b"]
 radius = 0.15
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_q266n"]
+size = Vector3(0.5, 0.3, 0.3)
+
+[sub_resource type="Resource" id="Resource_q8p8d"]
+script = ExtResource("5_e1sod")
+expression = "not d.dashing and not a.attacking"
+data = Dictionary[String, Variant]({
+"a": NodePath("../AttackAction3D"),
+"d": NodePath("../DashAction3D"),
+"n": NodePath("../..")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_rqqau"]
+script = ExtResource("5_e1sod")
+expression = "n.input_direction=mn.input_direction"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_xf1x3"]
+script = ExtResource("5_e1sod")
+expression = "n.velocity=mn.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_mvjja"]
+script = ExtResource("5_e1sod")
+expression = "n._on_ground=mn._on_ground"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_10urh"]
+script = ExtResource("5_e1sod")
+expression = "mn.velocity = n.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_nvtwl"]
+script = ExtResource("5_e1sod")
+expression = "j.is_jumping and mn.velocity.y < 0"
+data = Dictionary[String, Variant]({
+"j": NodePath("../JumpAction3D"),
+"mn": NodePath("../..")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_q266n"]
+script = ExtResource("5_e1sod")
+expression = "n.velocity = mn.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_iygdc"]
+script = ExtResource("5_e1sod")
+expression = "mn.velocity = n.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_2prhi"]
+script = ExtResource("5_e1sod")
+expression = "not a.attacking and not d.dashing"
+data = Dictionary[String, Variant]({
+"a": NodePath("../AttackAction3D"),
+"d": NodePath("../DashAction3D")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_ppka6"]
+script = ExtResource("5_e1sod")
+expression = "n.velocity=mn.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_lh1re"]
+script = ExtResource("5_e1sod")
+expression = "n.last_input_direction = mn.last_input_direction"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_lmyoi"]
+script = ExtResource("5_e1sod")
+expression = "n.want_jump = mn.want_jump"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_bccol"]
+script = ExtResource("5_e1sod")
+expression = "n._on_ground = mn._on_ground"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_mquij"]
+script = ExtResource("5_e1sod")
+expression = "n.jump_count = mn.jump_count"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_ujga8"]
+script = ExtResource("5_e1sod")
+expression = "n.is_jumping = mn.is_jumping"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_hqopx"]
+script = ExtResource("5_e1sod")
+expression = "mn.velocity=n.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_627or"]
+script = ExtResource("5_e1sod")
+expression = "mn._on_ground = n._on_ground"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_ucxnn"]
+script = ExtResource("5_e1sod")
+expression = "mn.jump_count = n.jump_count"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_tck0p"]
+script = ExtResource("5_e1sod")
+expression = "mn.is_jumping = n.is_jumping"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_w7s3y"]
+script = ExtResource("5_e1sod")
+expression = "not a.attacking"
+data = Dictionary[String, Variant]({
+"a": NodePath("../AttackAction3D")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_aab3r"]
+script = ExtResource("5_e1sod")
+expression = "n.velocity=mn.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_yrce0"]
+script = ExtResource("5_e1sod")
+expression = "n.last_input_direction = mn.last_input_direction"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_qg2ln"]
+script = ExtResource("5_e1sod")
+expression = "n.want_dash = mn.want_dash"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_xxygn"]
+script = ExtResource("5_e1sod")
+expression = "mn.velocity=n.velocity"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_fv45d"]
+script = ExtResource("5_e1sod")
+expression = "not d.dashing "
+data = Dictionary[String, Variant]({
+"d": NodePath("../DashAction3D")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
+[sub_resource type="Resource" id="Resource_pbog1"]
+script = ExtResource("5_e1sod")
+expression = "n.want_attack = mn.want_attack"
+data = Dictionary[String, Variant]({
+"mn": NodePath("../.."),
+"n": NodePath(".")
+})
+metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
+
 [node name="pupet" type="CharacterBody3D"]
+collision_layer = 33
+collision_mask = 33
 floor_constant_speed = true
-floor_snap_length = 16.0
 script = ExtResource("1_65n5b")
 
+[node name="sp" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+sorting_use_aabb_center = false
+pixel_size = 0.0023
+billboard = 1
+texture = ExtResource("1_o6cr0")
+
 [node name="c" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 shape = SubResource("SphereShape3D_36fbw")
 
 [node name="hb" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("2_vkh0a")
@@ -30,14 +281,68 @@ metadata/_custom_type_script = "uid://c8oaw2k6m3f1p"
 [node name="c" type="CollisionShape3D" parent="hb"]
 shape = SubResource("SphereShape3D_65n5b")
 
+[node name="hits" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+visible = false
+
+[node name="HitBox3D" type="Area3D" parent="hits"]
+visible = false
+script = ExtResource("4_nvtwl")
+metadata/_custom_type_script = "uid://bqm8x7j4p2v5h"
+
+[node name="c" type="CollisionShape3D" parent="hits/HitBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
+visible = false
+shape = SubResource("BoxShape3D_q266n")
+
 [node name="markers" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
 [node name="base" type="Marker3D" parent="markers"]
 
-[node name="sp" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-sorting_use_aabb_center = false
-pixel_size = 0.0025
-billboard = 1
-texture = ExtResource("1_o6cr0")
+[node name="state" type="Node" parent="."]
+
+[node name="MoveAction3D" type="Node" parent="state"]
+script = ExtResource("4_qe3wy")
+max_speed = 10.0
+ground_accel = 10.0
+ground_decel = 10.0
+executable_expression = SubResource("Resource_q8p8d")
+pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_rqqau"), SubResource("Resource_xf1x3"), SubResource("Resource_mvjja")])
+post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_10urh")])
+metadata/_custom_type_script = "uid://6n36u8kkqu5m"
+
+[node name="GravityAction3D" type="Node" parent="state"]
+script = ExtResource("6_rqqau")
+executable_expression = SubResource("Resource_nvtwl")
+pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_q266n")])
+post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_iygdc")])
+metadata/_custom_type_script = "uid://cmjhvc6vg2da3"
+
+[node name="JumpAction3D" type="Node" parent="state"]
+script = ExtResource("7_xf1x3")
+height = 1.0
+distance = 2.0
+executable_expression = SubResource("Resource_2prhi")
+pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_ppka6"), SubResource("Resource_lh1re"), SubResource("Resource_lmyoi"), SubResource("Resource_bccol"), SubResource("Resource_mquij"), SubResource("Resource_ujga8")])
+post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_hqopx"), SubResource("Resource_627or"), SubResource("Resource_ucxnn"), SubResource("Resource_tck0p")])
+metadata/_custom_type_script = "uid://d1hgqxlmr21nn"
+
+[node name="DashAction3D" type="Node" parent="state"]
+script = ExtResource("8_10urh")
+speed = 20.0
+distance = 2.0
+executable_expression = SubResource("Resource_w7s3y")
+pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_aab3r"), SubResource("Resource_yrce0"), SubResource("Resource_qg2ln")])
+post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_xxygn")])
+metadata/_custom_type_script = "uid://4dt668vlm888"
+
+[node name="AttackAction3D" type="Node" parent="state" node_paths=PackedStringArray("attacks_paths")]
+script = ExtResource("8_xf1x3")
+attacks_paths = [NodePath("../../hits/HitBox3D")]
+attacks = Dictionary[int, float]({
+0: 0.1
+})
+executable_expression = SubResource("Resource_fv45d")
+pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_pbog1")])
+metadata/_custom_type_script = "uid://bux4aa7bxdp1y"

@@ -106,9 +106,9 @@ func _update(body: Node3D):
 	if enabled:
 		var vec := _move(global_rotation) * speed
 		if body is CharacterBody3D:
-			body.velocity = vec
+			body.velocity += vec
 		elif body is RigidBody3D:
-			body.linear_velocity = vec
+			body.linear_velocity += vec
 
 ## Creates a unit vector in the direction of the given 3D rotation.
 ## This method converts Euler angles to a normalized direction vector.

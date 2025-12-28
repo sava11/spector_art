@@ -162,6 +162,9 @@ func _process_expression_for_execution() -> String:
 	# If expression doesn't contain assignment, return as is
 	if not expr.contains("="):
 		return expr
+	#if not (expr.contains("=") or expr.contains("!=") or expr.contains("<=") or \
+		#expr.contains(">=")):
+		#return expr
 
 	# CRITICAL: Parse assignment into parts
 	# Example: "player.health = damage * 2" -> ["player.health ", " damage * 2"]
