@@ -151,9 +151,8 @@ func _physics_process(delta: float) -> void:
 	if not input_direction.is_zero_approx():
 		last_input_direction = input_direction.normalized()
 
-	# Optional: Rotate hit boxes to face look direction
-	# var angle = look_direction.angle()
-	# $hits.rotation = Vector3(sin(angle), 0, cos(angle))
+	#var angle = look_direction.angle()
+	$hits.look_at(Vector3(look_direction.x,0,look_direction.y),Vector3(0,1,0),true)
 
 	# Update ground state and timers
 	update_ground_and_timers(delta)
