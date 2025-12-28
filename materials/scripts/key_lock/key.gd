@@ -129,7 +129,7 @@ func _enter_tree() -> void:
 	if not KLD.keys.has(uid):
 		KLD.set_key(uid, false, false)
 
-	# Подписываемся на изменения
+	# Subscribe to key changes
 	KLD.key_changed.connect(_on_key_changed)
 
 	_lock = KLLock.new()

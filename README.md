@@ -27,6 +27,33 @@ Spector its like colors. Art is subjective.
 
 - [__DynamicExpression__](materials/scripts/dynamic_expression/dynamic_expression.gd) - Flexible expression evaluation system for mathematical calculations, logical conditions, and property assignments with NodePath resolution.
 
+- [__Pawn2D__](materials/scenes/pawn/2d/pawn.gd) - 2D pawn character with physics-based movement and action system integration.
+
+- [__Pawn3D__](materials/scenes/pawn/3d/pawn.gd) - 3D pawn character with physics-based movement and action system integration.
+
+- [__Action__](materials/scenes/pawn/action.gd) - Abstract base class for pawn actions with conditional execution and dynamic expressions.
+
+
+<details>
+<summary> Save Load System </summary>
+
+- [__SaveSystemBase__](materials/scripts/saver/saver_base.gd) - Base class for save system implementations providing core file I/O functionality and data serialization.
+
+- [__SaveCheckpoint__](materials/scripts/saver/checkpoint.gd) - Checkpoint system for saving specific game states with predefined node configurations and automatic save management.
+
+- [__SaveLoader__](materials/scripts/saver/node_data_registrator.gd) - Node registration system for automatic save/load tracking with property monitoring and state persistence.
+
+</details>
+
+<details>
+<summary> Controllers </summary>
+
+- [__BaseController__](materials/scripts/puppet_input/controller_base.gd) - Base class for input controllers providing common functionality and state management for player controls.
+
+- [__PlayerController__](materials/scripts/puppet_input/player_controller.gd) - Player input controller implementing movement, actions, and state management with buffer systems.
+
+</details>
+
 <details>
 <summary> Multichecker </summary>
 
@@ -35,6 +62,40 @@ Spector its like colors. Art is subjective.
 - [__MulticheckerUI__](materials/scripts/multichecker/multichecker_ui.gd) - User interface handler for menu display, input device detection, and focus management.
 
 - [__MulticheckerItem__](materials/scripts/multichecker/item.gd) - Configuration resource defining individual menu options with conditional behavior and action bindings.
+
+</details>
+
+<details>
+<summary> Pawn Actions </summary>
+
+- [__Action__](materials/scenes/pawn/action.gd) - Abstract base class for pawn actions with conditional execution and dynamic expressions.
+
+
+<details>
+<summary> 2D </summary>
+
+- [__AttackAction2D__](materials/scenes/pawn/2d/actions/attack_action.gd) - 2D attack action system for pawn characters with sequential combo chains, configurable HitBox2D components, and input buffering.
+
+- [__MoveAction2D__](materials/scenes/pawn/2d/actions/move_action.gd) - 2D movement action handling horizontal movement with acceleration and deceleration.
+
+- [__DashAction2D__](materials/scenes/pawn/2d/actions/dash_action.gd) - 2D dash action providing quick directional movement bursts.
+
+</details>
+
+<details>
+<summary> 3D </summary>
+
+- [__AttackAction3D__](materials/scenes/pawn/3d/actions/attack_action.gd) - 3D attack action system for pawn characters with sequential combo chains and HitBox3D components.
+
+- [__MoveAction3D__](materials/scenes/pawn/3d/actions/move_action.gd) - 3D movement action handling horizontal movement with acceleration and deceleration.
+
+- [__DashAction3D__](materials/scenes/pawn/3d/actions/dash_action.gd) - 3D dash action providing quick directional movement bursts.
+
+- [__JumpAction3D__](materials/scenes/pawn/3d/actions/jump_action.gd) - 3D jump action handling vertical movement and jump physics.
+
+- [__GravityAction3D__](materials/scenes/pawn/3d/actions/gravity_action.gd) - 3D gravity action applying downward acceleration to pawns.
+
+</details>
 
 </details>
 
@@ -50,9 +111,9 @@ Spector its like colors. Art is subjective.
 <details>
 <summary> Waypoint System </summary>
 
-- [__Waypoint2D__](materials/scripts/waypoint_2d.gd) - Screen-space visual direction indicator for 2D navigation that shows direction to its own world position, always visible on screen with icon-based visualization.
+- [__WayPoint2D__](materials/scripts/waypoint/waypoint_2d.gd) - Screen-space visual direction indicator for 2D navigation that shows direction to its own world position, always visible on screen with icon-based visualization.
 
-- [__Waypoint3D__](materials/scripts/waypoint_3d.gd) - Screen-space visual direction indicator for 3D navigation that shows direction to its own world position using camera projection, always visible on screen with icon-based visualization.
+- [__WayPoint3D__](materials/scripts/waypoint/waypoint_3d.gd) - Screen-space visual direction indicator for 3D navigation that shows direction to its own world position using camera projection, always visible on screen with icon-based visualization.
 
 </details>
 

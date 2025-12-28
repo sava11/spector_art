@@ -33,7 +33,6 @@ extends Area2D
 @export var single_detect: bool = false
 
 ## Internal flag for single_detect logic.
-## Internal flag for single_detect logic.
 ## Tracks whether this HitBox2D has already interacted with a HurtBox2D.
 ## This flag is automatically managed and should not be modified directly.
 var stepped: bool = true
