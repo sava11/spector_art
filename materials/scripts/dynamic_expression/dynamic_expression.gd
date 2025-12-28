@@ -159,12 +159,9 @@ func execute(from_what: Node) -> Variant:
 func _process_expression_for_execution() -> String:
 	var expr := expression.strip_edges()
 
-	# If expression doesn't contain assignment, return as is
-	if not expr.contains("="):
+	# If expression doesn't contain assignment operator (not part of comparison operators), return as is
+	if not _contains_assignment_operator(expr):
 		return expr
-	#if not (expr.contains("=") or expr.contains("!=") or expr.contains("<=") or \
-		#expr.contains(">=")):
-		#return expr
 
 	# CRITICAL: Parse assignment into parts
 	# Example: "player.health = damage * 2" -> ["player.health ", " damage * 2"]
@@ -191,6 +188,39 @@ func _process_expression_for_execution() -> String:
 	var setter_call := "%s.set(\"%s\", %s)" % [object_name, property_name, value]
 
 	return setter_call
+
+## Checks if expression contains assignment operator (=) not part of comparison operators
+## @param expr: Expression to check
+## @return: true if contains assignment operator
+func _contains_assignment_operator(expr: String) -> bool:
+	# Check if expression contains '='
+	if not expr.contains("="):
+		return false
+
+	# Check each '=' to see if it's an assignment operator
+	var i := 0
+	while i < expr.length():
+		if expr[i] == "=":
+			# Check if this is part of comparison operator
+			var is_comparison := false
+
+			# Check for == (two equals)
+			if i < expr.length() - 1 and expr[i + 1] == "=":
+				is_comparison = true
+			# Check for !=, <=, >= (equals after !, <, >)
+			elif i > 0 and (expr[i - 1] == "!" or expr[i - 1] == "<" or expr[i - 1] == ">"):
+				is_comparison = true
+
+			# Skip if it's a comparison operator
+			if is_comparison:
+				i += 1
+				continue
+
+			# If we reach here, this is an assignment operator
+			return true
+		i += 1
+
+	return false
 
 ## Creates a new dynamic expression
 ## @param expr: Expression string
