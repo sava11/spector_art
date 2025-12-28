@@ -1,5 +1,6 @@
 extends Action
 class_name AttackAction3D
+
 @export var attacks_paths:Array[HitBox3D]
 @export var attacks:Dictionary[int,float]
 

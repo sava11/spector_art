@@ -1,7 +1,8 @@
-[gd_scene load_steps=40 format=3 uid="uid://cp8ff3a01itg3"]
+[gd_scene load_steps=41 format=3 uid="uid://cp8ff3a01itg3"]
 
 [ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_o6cr0"]
+[ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_q266n"]
 [ext_resource type="Script" uid="uid://c8oaw2k6m3f1p" path="res://materials/scripts/boxes/3d/hurt_box.gd" id="2_vkh0a"]
 [ext_resource type="Script" uid="uid://bqm8x7j4p2v5h" path="res://materials/scripts/boxes/3d/hit_box.gd" id="4_nvtwl"]
 [ext_resource type="Script" uid="uid://6n36u8kkqu5m" path="res://materials/scenes/pawn/3d/actions/move_action.gd" id="4_qe3wy"]
@@ -113,7 +114,7 @@ metadata/_custom_type_script = "uid://dq7yfu2kd83wh"
 
 [sub_resource type="Resource" id="Resource_lh1re"]
 script = ExtResource("5_e1sod")
-expression = "n.last_input_direction = mn.last_input_direction"
+expression = "n.input_direction = mn.input_direction"
 data = Dictionary[String, Variant]({
 "mn": NodePath("../.."),
 "n": NodePath(".")
@@ -259,6 +260,11 @@ collision_mask = 33
 floor_constant_speed = true
 script = ExtResource("1_65n5b")
 
+[node name="SaveLoader" type="Node" parent="."]
+script = ExtResource("2_q266n")
+properties = Array[String](["last_input_direction", "_on_ground", "jump_count", "global_position", "velocity"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"
+
 [node name="sp" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 sorting_use_aabb_center = false
@@ -309,6 +315,11 @@ pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_rqqau"), 
 post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_10urh")])
 metadata/_custom_type_script = "uid://6n36u8kkqu5m"
 
+[node name="SaveLoader" type="Node" parent="state/MoveAction3D"]
+script = ExtResource("2_q266n")
+properties = Array[String](["max_speed", "ground_accel", "ground_decel", "ground_turn_accel", "air_accel", "air_decel", "air_turn_accel"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"
+
 [node name="GravityAction3D" type="Node" parent="state"]
 script = ExtResource("6_rqqau")
 executable_expression = SubResource("Resource_nvtwl")
@@ -316,14 +327,24 @@ pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_q266n")])
 post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_iygdc")])
 metadata/_custom_type_script = "uid://cmjhvc6vg2da3"
 
+[node name="SaveLoader" type="Node" parent="state/GravityAction3D"]
+script = ExtResource("2_q266n")
+properties = Array[String](["apex", "fall"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"
+
 [node name="JumpAction3D" type="Node" parent="state"]
 script = ExtResource("7_xf1x3")
 height = 1.0
-distance = 2.0
+distance = 2.5
 executable_expression = SubResource("Resource_2prhi")
 pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_ppka6"), SubResource("Resource_lh1re"), SubResource("Resource_lmyoi"), SubResource("Resource_bccol"), SubResource("Resource_mquij"), SubResource("Resource_ujga8")])
 post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_hqopx"), SubResource("Resource_627or"), SubResource("Resource_ucxnn"), SubResource("Resource_tck0p")])
 metadata/_custom_type_script = "uid://d1hgqxlmr21nn"
+
+[node name="SaveLoader" type="Node" parent="state/JumpAction3D"]
+script = ExtResource("2_q266n")
+properties = Array[String](["jump_count_max", "height", "distance", "time_to_apex", "time_to_land", "jump_velocity"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"
 
 [node name="DashAction3D" type="Node" parent="state"]
 script = ExtResource("8_10urh")
@@ -334,6 +355,11 @@ pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_aab3r"), 
 post_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_xxygn")])
 metadata/_custom_type_script = "uid://4dt668vlm888"
 
+[node name="SaveLoader" type="Node" parent="state/DashAction3D"]
+script = ExtResource("2_q266n")
+properties = Array[String](["speed", "count_max", "distance", "cooldown", "duration", "cooldown_timer", "timer", "dashing", "last_velocity"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"
+
 [node name="AttackAction3D" type="Node" parent="state" node_paths=PackedStringArray("attacks_paths")]
 script = ExtResource("8_xf1x3")
 attacks_paths = [NodePath("../../hits/HitBox3D")]
@@ -343,3 +369,8 @@ attacks = Dictionary[int, float]({
 executable_expression = SubResource("Resource_fv45d")
 pre_expressions = Array[ExtResource("5_e1sod")]([SubResource("Resource_pbog1")])
 metadata/_custom_type_script = "uid://bux4aa7bxdp1y"
+
+[node name="SaveLoader" type="Node" parent="state/AttackAction3D"]
+script = ExtResource("2_q266n")
+properties = Array[String](["cur_att", "current_time", "current_timer", "attacking"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"

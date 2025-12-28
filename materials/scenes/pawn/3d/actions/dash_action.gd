@@ -15,6 +15,7 @@ signal count_max_changed(count: int)
 	set(v):
 		distance=v
 		duration=distance/speed
+
 @export var cooldown := 0.75
 
 var want_dash:bool=false
@@ -23,7 +24,7 @@ var last_input_direction:Vector2
 var velocity:Vector3
 var last_velocity:Vector3
 
-var buffer := Buffer.new(0.2, 0.2)
+var buffer := Buffer.new(0.1, 0.1)
 var dashing: bool = false
 var tween: Tween
 var cooldown_timer: float = 0
@@ -44,7 +45,7 @@ func _action(delta:float) -> void:
 	if dashing:
 		timer += delta
 		if timer > duration:
-			velocity=last_velocity
+			velocity=velocity.normalized()*last_velocity.length()
 			dashing = false
 			timer = 0
 

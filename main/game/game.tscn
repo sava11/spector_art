@@ -1,12 +1,16 @@
-[gd_scene load_steps=12 format=3 uid="uid://ukbdxptj5okt"]
+[gd_scene load_steps=13 format=3 uid="uid://ukbdxptj5okt"]
 
 [ext_resource type="Script" uid="uid://sapoe0n5j21" path="res://main/game/game.gd" id="1_en41u"]
 [ext_resource type="PackedScene" uid="uid://c0ngdihkjv7pj" path="res://main/levels/test_lvl_1.tscn" id="2_ej72j"]
+[ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_en41u"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_458dk"]
 [ext_resource type="Script" uid="uid://1q1hjchwqfq7" path="res://materials/scripts/puppet_input/player_controller.gd" id="3_ej72j"]
 [ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/pawn/3d/pawn.tscn" id="3_en41u"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_yo04u"]
+
+[sub_resource type="Resource" id="Resource_2wwl3"]
+script = ExtResource("6_6lqia")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ej72j"]
 
@@ -17,11 +21,13 @@ sky_material = SubResource("ProceduralSkyMaterial_ej72j")
 background_mode = 2
 sky = SubResource("Sky_en41u")
 
-[sub_resource type="Resource" id="Resource_2wwl3"]
-script = ExtResource("6_6lqia")
-
 [node name="game" type="Node"]
 script = ExtResource("1_en41u")
+
+[node name="SaveLoader" type="Node" parent="."]
+script = ExtResource("2_en41u")
+properties = Array[String](["current_levels", "current_location_name"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"
 
 [node name="world" type="Node" parent="."]
 
@@ -30,20 +36,13 @@ unique_name_in_owner = true
 
 [node name="test_lvl1" parent="world/lvls" instance=ExtResource("2_ej72j")]
 
-[node name="pupet" parent="world/lvls" instance=ExtResource("3_en41u")]
+[node name="player" parent="world" instance=ExtResource("3_en41u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0629542, 0, 0)
 
-[node name="PlayerController" type="Node" parent="world/lvls/pupet" node_paths=PackedStringArray("puppet_pawn")]
+[node name="PlayerController" type="Node" parent="world/player" node_paths=PackedStringArray("puppet_pawn")]
 script = ExtResource("3_ej72j")
 puppet_pawn = NodePath("..")
 metadata/_custom_type_script = "uid://1q1hjchwqfq7"
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="world"]
-environment = SubResource("Environment_u7x3r")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="world"]
-transform = Transform3D(1, 0, 0, 0, 0.7036056, 0.7105907, 0, -0.7105907, 0.7036056, 0, 5.014892, 0)
-shadow_enabled = true
 
 [node name="ui" type="CanvasLayer" parent="."]
 
@@ -66,9 +65,9 @@ top_level = true
 script = ExtResource("3_458dk")
 priority = 5
 follow_mode = 2
-follow_target = NodePath("../world/lvls/pupet/markers/base")
+follow_target = NodePath("../world/player/markers/base")
 look_at_mode = 2
-look_at_target = NodePath("../world/lvls/pupet/markers/base")
+look_at_target = NodePath("../world/player/markers/base")
 tween_resource = SubResource("Resource_2wwl3")
 tween_on_load = false
 follow_offset = Vector3(0, 3, 2)
@@ -84,3 +83,10 @@ process_priority = 300
 process_physics_priority = 300
 script = ExtResource("8_yo04u")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_u7x3r")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.7036056, 0.7105907, 0, -0.7105907, 0.7036056, 0, 5.014892, 0)
+shadow_enabled = true

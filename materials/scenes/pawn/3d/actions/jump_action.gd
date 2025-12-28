@@ -12,7 +12,7 @@ signal jump_count_max_changed(jump_count: int)
 @export_range(0.001, 2, 0.001, "or_greater") var time_to_apex: float = 0.35
 @export_range(0.001, 2, 0.001, "or_greater") var time_to_land: float = 0.35
 
-var buffer := Buffer.new(0.2, 0.2)
+var buffer := Buffer.new(0.1, 0.1)
 var jump_velocity: float
 var jump_count:int=0
 var is_jumping: bool = false

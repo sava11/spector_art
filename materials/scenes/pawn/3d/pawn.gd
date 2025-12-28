@@ -113,19 +113,15 @@ func _ready() -> void:
 	var move_action = $state/MoveAction3D
 
 	# Calculate gravity acceleration for jump apex (rising)
-	# Formula: gravity = 2 * height / (time_to_apex)^2
 	gravity_action.apex = (2 * jump_action.height) / pow(jump_action.time_to_apex, 2)
 
 	# Calculate gravity acceleration for fall (descending)
-	# Formula: gravity = 2 * height / (time_to_land)^2
 	gravity_action.fall = (2 * jump_action.height) / pow(jump_action.time_to_land, 2)
 
 	# Calculate jump velocity based on gravity and time to apex
-	# Formula: velocity = gravity * time_to_apex
 	jump_action.jump_velocity = gravity_action.apex * jump_action.time_to_apex
 
 	# Calculate maximum movement speed based on jump distance
-	# Formula: speed = distance / (time_to_apex + time_to_land)
 	move_action.max_speed = jump_action.distance / (jump_action.time_to_apex + jump_action.time_to_land)
 
 ## Main physics process for pawn movement and state updates.

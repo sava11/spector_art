@@ -49,7 +49,7 @@ func angle(V:Vector2)->float:
 ## var rotated = rotate_vec(Vector2(1, 0), 90)  # Returns Vector2(0, 1)
 ## [/codeblock]
 func rotate_vec(vec:Vector2,ang:float)->Vector2:
-	return move(rad_to_deg(angle(vec))+ang)*Vector2.ZERO.distance_to(vec)
+	return move(angle(vec)+ang)*vec.length()
 
 ## Create a unit vector from an angle in degrees.
 ## This is equivalent to [method Vector2.from_angle] but uses degrees instead of radians.

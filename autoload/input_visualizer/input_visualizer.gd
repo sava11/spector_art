@@ -1,29 +1,34 @@
 extends Node
 
-# ====================================================================================
-# Input Visualizer - System for displaying input device-specific button names
-# ====================================================================================
-# This system automatically detects the current input device (keyboard/mouse or gamepad)
-# and provides localized button names for different gamepad brands (xBox, PlayStation, Nintendo).
-# Used by UI systems to show context-sensitive control hints to players.
+## Input Visualizer - System for displaying input device-specific button names and images.
+##
+## This system automatically detects the current input device (keyboard/mouse or gamepad)
+## and provides localized button names and images for different gamepad brands
+## (xBox, PlayStation, Nintendo, PC). Used by UI systems to show context-sensitive
+## control hints to players with proper platform-specific labels and visual prompts.
+##
+## [codeblock]
+## # Basic usage:
+## InputMonitor.action_to_key("jump")  # Returns "A" on xBox, "Cross" on PlayStation
+## InputMonitor.action_to_button_image("jump")  # Returns SVG path for visual prompts
+##
+## # Connect to device changes for UI updates
+## InputMonitor.connect("input_changed", Callable(self, "_update_hints"))
+## [/codeblock]
 
-signal input_changed()
+## Emitted when the input device changes (keyboard ↔ gamepad).
+signal input_changed
 
-# ====================================================================================
-# Device State
-# ====================================================================================
-# 0 = keyboard/mouse, >0 = gamepad device ID (supports multiple gamepads)
+## Current input device ID. 0 = keyboard/mouse, >0 = gamepad device ID.
 var device_id: int = 0
-var device_name: String = "Keyboard"  # "xBox", "PlayStation", "Nintendo", "Unknown"
 
-# ====================================================================================
-# Gamepad Button Name Mappings
-# ====================================================================================
-# Maps SDL button indices to platform-specific button data for different gamepad brands.
-# Each button entry contains both display text and image path for visual button prompts.
-# These mappings ensure that button prompts show correct labels and images
-# (A/B/X/Y vs Cross/Circle/Square/Triangle, etc.)
-# Integration note: Used by UI systems that need to display control hints, similar to how
+## Current device platform name ("Keyboard", "xBox", "PlayStation", "Nintendo", "Unknown").
+var device_name: String = "Keyboard"
+
+## Platform-specific button mappings with display names and image paths.
+## Maps SDL button indices to localized names and SVG image paths for different platforms.
+## Ensures correct button labels (A/B/X/Y vs Cross/Circle/Square/Triangle) and provides
+## visual button prompts for rich UI experiences.
 const BUTTON_NAMES := {
 	"xBox": {
 		0: {"text": "A", "image": "res://autoload/input_visualizer/xBox/a.svg"},
@@ -80,18 +85,14 @@ const BUTTON_NAMES := {
 }
 
 
-# ====================================================================================
-# Input Event Processing - Core Device Detection Engine
-# ====================================================================================
-# Monitors all input events to automatically detect the most recently used input device.
-# This enables dynamic UI updates for control hints and ensures players see relevant button prompts.
-#
-# PERFORMANCE CONSIDERATIONS:
-# - Only emits signal when device actually changes (prevents UI spam)
-# - Processes all input events, but returns early for non-device-changing events
-# - Critical path: Must be efficient as it runs for every input event
-#
-# @param event: InputEvent from Godot's input system
+## Processes input events to automatically detect the current input device.
+## Monitors all input events and updates device tracking when keyboard or gamepad input is detected.
+## Only emits [signal input_changed] when the device actually changes to prevent UI update spam.
+##
+## This enables dynamic UI updates for control hints and ensures players see relevant,
+## platform-specific button prompts throughout the game.
+##
+## [param event] InputEvent from Godot's input system
 func _input(event: InputEvent) -> void:
 	var prev_device := device_id
 
@@ -112,29 +113,17 @@ func _input(event: InputEvent) -> void:
 	if device_id != prev_device:
 		input_changed.emit()  # Triggers UI updates across the game
 
-# ====================================================================================
-# Gamepad Type Detection - Platform Recognition Engine
-# ====================================================================================
-# Analyzes gamepad's GUID (Globally Unique Identifier) to determine platform/brand.
-# This is CRITICAL for proper button localization and ensures players see correct labels.
-#
-# CRITICAL REQUIREMENTS:
-# - Must be called with actual device index (0-based), not display device_id
-# - Handles multiple connected gamepads correctly
-# - Robust fallback to "Unknown" for unsupported devices
-#
-# PATTERN MATCHING: Platform detection with specificity priority
-# Order matters: More specific patterns checked before generic ones
-#
-# DETECTION PRIORITY: Most specific patterns checked first to avoid false positives
-# Example: "xBox" checked before generic "xinput" to ensure correct categorization
-#
-# SUPPORTED PLATFORMS:
-# - xBox: Microsoft controllers (including third-party)
-# - PlayStation: Sony DualSense, DualShock, etc.
-# - Nintendo: Switch Pro Controller, Joy-Con, etc.
-#
-# @param device_index: Raw Godot device index (0-based, from Input.get_connected_joypads())
+## Detects the platform type of a connected gamepad using its GUID.
+## Analyzes the gamepad's Globally Unique Identifier to determine if it's xBox, PlayStation,
+## Nintendo, or unknown. This ensures proper button localization and correct labels for players.
+##
+## [br][br]
+## [b]Supported Platforms:[/b]
+## - xBox: Microsoft controllers (including third-party)
+## - PlayStation: Sony DualSense, DualShock, etc.
+## - Nintendo: Switch Pro Controller, Joy-Con, etc.
+##
+## [param device_index] Raw Godot device index (0-based, from Input.get_connected_joypads())
 func _detect_device_type(device_index: int) -> void:
 	# CRITICAL: Bounds checking prevents crashes with invalid device indices
 	if device_index < 0 or device_index >= Input.get_connected_joypads().size():
@@ -154,21 +143,22 @@ func _detect_device_type(device_index: int) -> void:
 	else:
 		device_name = "Unknown"  # Fallback for unsupported controllers
 
-# ====================================================================================
-# Action to Button Name Conversion - Primary API Method
-# ====================================================================================
-# Converts an input action name to a human-readable button/key name based on current device.
-# This is the PRIMARY API METHOD used by UI systems to display control hints throughout the game.
-#
-# ALGORITHM: Two-pass lookup system for robust device matching
-# 1. Primary pass: Find exact device type match (keyboard vs gamepad)
-# 2. Fallback pass: Return first available event if no exact match
-#
-# ERROR HANDLING: Graceful degradation with warnings for debugging
-# Returns "Undefined" for invalid actions instead of crashing
-#
-# @param action_name: Input action name from Project Settings -> Input Map
-# @return: Localized button/key name, or "Undefined" if action not found
+## Converts an input action name to a localized button/key name based on current device.
+## This is the primary API method for displaying control hints in UI systems.
+## Returns platform-specific button names (A/B/X/Y vs Cross/Circle/Square/Triangle).
+##
+## Uses a two-pass lookup system: first tries device-specific events, then falls back
+## to any available event. Returns "Undefined" for invalid actions instead of crashing.
+##
+## [br][br]
+## [codeblock]
+## # Examples:
+## action_to_key("jump")  # Returns "A" on xBox, "Cross" on PlayStation, "Space" on keyboard
+## action_to_key("attack") # Returns "X" on xBox, "Square" on PlayStation
+## [/codeblock]
+##
+## [param action_name] Input action name from Project Settings -> Input Map
+## [return] Localized button/key name, or "Undefined" if action not found
 func action_to_key(action_name: String) -> String:
 	var events := InputMap.action_get_events(action_name)
 
@@ -197,25 +187,15 @@ func action_to_key(action_name: String) -> String:
 
 	return "Undefined"
 
-# ====================================================================================
-# Gamepad Button Name Resolution - Platform Localization Engine
-# ====================================================================================
-# Converts raw SDL button index to platform-specific button name using current device type.
-# This is CRITICAL for proper localization - ensures players see correct labels:
-# - xBox: A, B, X, Y, LB, RB, etc.
-# - PlayStation: Cross, Circle, Square, Triangle, L1, R1, etc.
-# - Nintendo: A, B, X, Y, L, R, etc.
-#
-# CRITICAL BUG FIX HISTORY:
-# Previous implementation created InputEventJoypadButton without setting button_index,
-# causing all buttons to return default "Button 0" text instead of actual names.
-# This broke gamepad UI prompts completely.
-#
-# DATA STRUCTURE: BUTTON_NAMES dictionary provides platform-specific mappings
-# Each button entry contains both display text and image path for rich UI
-#
-# @param button_idx: SDL button index (0-14 typically, matches standard gamepad layout)
-# @return: Localized button name or fallback SDL description if unmapped
+## Converts raw SDL button index to platform-specific button name.
+## Returns localized button names ensuring players see correct labels for their platform:
+## xBox (A, B, X, Y, LB, RB), PlayStation (Cross, Circle, Square, Triangle, L1, R1),
+## Nintendo (A, B, X, Y, L, R), etc.
+##
+## Falls back to SDL-standard description ("Button 0", "Button 1", etc.) for unmapped buttons.
+##
+## [param button_idx] SDL button index (0-14 typically, matches standard gamepad layout)
+## [return] Localized button name or fallback SDL description if unmapped
 func _joy_button_name(button_idx: int) -> String:
 	var names_dict = BUTTON_NAMES.get(device_name, {})
 
@@ -232,17 +212,12 @@ func _joy_button_name(button_idx: int) -> String:
 	var fallback_event := InputEventJoypadButton.new()
 	return fallback_event.as_text()  # Returns "Button 0", "Button 1", etc.
 
-# ====================================================================================
-# Keyboard Key Name Formatting
-# ====================================================================================
-# Formats keyboard key names for display, removing unnecessary modifiers and extra text.
-# Ensures clean, readable key names in UI prompts (e.g., "Space" instead of "Space (Physical)").
-#
-# Integration note: Like how KLKey provides clean state management, this method provides
-# clean, user-friendly key names for UI display.
-#
-# @param key_event: InputEventKey to format
-# @return: Clean key name suitable for UI display
+## Formats keyboard key names for clean UI display.
+## Removes unnecessary suffixes like "(Physical)" and "(Unicode)" to ensure
+## readable key names in UI prompts (e.g., "Space" instead of "Space (Physical)").
+##
+## [param key_event] InputEventKey to format
+## [return] Clean key name suitable for UI display
 func _get_key_display_name(key_event: InputEventKey) -> String:
 	var full_text := key_event.as_text()
 	# Remove common suffixes that clutter the display
@@ -252,47 +227,24 @@ func _get_key_display_name(key_event: InputEventKey) -> String:
 			return full_text.substr(0, full_text.length() - suffix.length())
 	return full_text
 
-# ====================================================================================
-# Button Image Methods - Visual Input Prompt System
-# ====================================================================================
-# Methods for retrieving button images to create rich, visual input prompts.
-# Enables both text and image-based UI hints for enhanced user experience.
-#
-# CRITICAL INTEGRATION:
-# - Works alongside action_to_key() for hybrid text+image displays
-# - Used by UI systems that need visual button representations
-# - Similar to how key-lock system provides state feedback, this provides visual feedback
-#
-# IMAGE SYSTEM ARCHITECTURE:
-# - Platform-specific subdirectories: xBox/, PlayStation/, Nintendo/, PC/
-# - SVG format for crisp scaling at any UI size
-# - File naming matches button names (a.svg, cross.svg, space.svg, etc.)
-# - Graceful fallback to empty string if images unavailable
-#
-# USAGE PATTERNS:
-# - Load images: var texture = load(InputMonitor.action_to_button_image("jump"))
-# - UI Integration: Assign to TextureRect, Sprite, or custom UI components
-# - Fallback: Combine with text if images fail to load
-
-# Converts an input action name to a button image path based on current device.
-# This is the VISUAL COUNTERPART to action_to_key() - returns image paths instead of text.
-#
-# CRITICAL INTEGRATION POINTS:
-# - BOXES SYSTEM: Creates visual combat tutorials with button images
-# - KEY-LOCK SYSTEM: Shows visual hints for key activation requirements
-# - MULTICHECKER: Displays navigation button images in menus
-#
-# ALGORITHM: Mirrors action_to_key() but returns image paths for visual UI
-# Same two-pass lookup system ensures device-specific image selection
-#
-# IMAGE LOADING: Use with load() or ResourceLoader for Texture creation
-# Example: var texture = load(InputMonitor.action_to_button_image("jump"))
-#
-# ERROR HANDLING: Returns empty string for graceful degradation
-# UI systems should fallback to text-only prompts if images unavailable
-#
-# @param action_name: Input action name from Project Settings -> Input Map
-# @return: Full image path string, or empty string if unavailable
+## Converts an input action name to a button image path based on current device.
+## This is the visual counterpart to [method action_to_key] - returns SVG image paths
+## instead of text for rich, visual input prompts.
+##
+## Uses platform-specific subdirectories (xBox/, PlayStation/, Nintendo/, PC/) with
+## SVG format for crisp scaling. File naming matches button names (a.svg, cross.svg, space.svg, etc.).
+##
+## [br][br]
+## [codeblock]
+## # Load and use button image:
+## var image_path = InputMonitor.action_to_button_image("jump")
+## if image_path:
+##     var texture = load(image_path)
+##     button_sprite.texture = texture
+## [/codeblock]
+##
+## [param action_name] Input action name from Project Settings -> Input Map
+## [return] Full image path string, or empty string if unavailable
 func action_to_button_image(action_name: String) -> String:
 	var events := InputMap.action_get_events(action_name)
 	# CRITICAL: Input validation prevents crashes from invalid actions
@@ -318,15 +270,14 @@ func action_to_button_image(action_name: String) -> String:
 			return _joy_button_image(event.button_index)
 	return ""  # Graceful degradation - no image available
 
-# Converts SDL button index to platform-specific button image path.
-# This ensures players see correct button images (A/B/X/Y vs Cross/Circle/Square/Triangle).
-#
-# @param button_idx: SDL button index (0-14 typically)
-# @return: Image path string or empty string if no image available
+## Converts SDL button index to platform-specific button image path.
+## Returns SVG image paths for visual button prompts.
+##
+## [param button_idx] SDL button index (0-14 typically)
+## [return] Image path string or empty string if no image available
 func joy_button_image(button_idx: int) -> String:
 	return _joy_button_image(button_idx)
 
-# Internal method to get button image path
 func _joy_button_image(button_idx: int) -> String:
 	var names_dict = BUTTON_NAMES.get(device_name, {})
 
@@ -360,25 +311,21 @@ func _get_key_image_path(key_event: InputEventKey) -> String:
 
 	return key_mappings.get(key_name, "")
 
-# ====================================================================================
-# Utility Methods for Gameplay Integration
-# ====================================================================================
-
-# Returns true if currently using keyboard/mouse input
+## Returns true if currently using keyboard/mouse input.
 func is_keyboard_input() -> bool:
 	return device_id == 0
 
-# Returns true if currently using gamepad input
+## Returns true if currently using gamepad input.
 func is_gamepad_input() -> bool:
 	return device_id > 0
 
-# Returns the actual device index (0-based) for gamepad operations
-# Useful when interfacing with other systems that need the raw device index
+## Returns the actual device index (0-based) for gamepad operations.
+## Useful when interfacing with other systems that need the raw device index.
 func get_device_index() -> int:
 	return device_id - 1 if device_id > 0 else -1
 
-# Forces a specific device type (useful for debugging or forced input modes)
-# @param device_type: 0 for keyboard, >0 for gamepad device ID
+## Forces a specific device type for debugging or forced input modes.
+## [param device_type] 0 for keyboard, >0 for gamepad device ID
 func force_device(device_type: int) -> void:
 	var prev_device := device_id
 	device_id = device_type
@@ -388,130 +335,3 @@ func force_device(device_type: int) -> void:
 		_detect_device_type(device_type - 1)
 	if device_id != prev_device:
 		input_changed.emit()
-
-# ====================================================================================
-# Integration Notes with Gameplay Systems - Spector Art Architecture
-# ====================================================================================
-# InputMonitor is a CORE SYSTEM that enables device-aware UI across the entire game.
-# It works alongside all major game systems to provide contextual, localized input hints.
-#
-# ================================================================================
-# 1. MULTICHECKER SYSTEM INTEGRATION - Menu Navigation
-# ================================================================================
-# Enables device-aware menu systems with proper navigation hints:
-#
-# INTEGRATION PATTERNS:
-# - Menu navigation: Show correct D-pad/analog stick hints
-# - Selection confirmation: Device-specific confirm/cancel buttons
-# - Conditional options: Button prompts that match multichecker logic
-# - Dynamic expressions: Input hints that respond to game state changes
-#
-# ================================================================================
-# 2. IMAGE-BASED UI INTEGRATION - Rich Visual Prompts
-# ================================================================================
-# Dual-mode system supporting both text and visual button representations:
-#
-# VISUAL SYSTEM ARCHITECTURE:
-# - action_to_key(): Returns localized text labels
-# - action_to_button_image(): Returns SVG image paths for visual prompts
-# - Platform directories: xBox/, PlayStation/, Nintendo/, PC/
-# - Hybrid displays: Combine text + images for maximum accessibility
-#
-# LOADING PATTERNS:
-# ```gdscript
-# # Text-only prompt
-# var hint = "Press " + InputMonitor.action_to_key("jump")
-#
-# # Image prompt
-# var image_path = InputMonitor.action_to_button_image("jump")
-# var texture = load(image_path) if image_path else null
-#
-# # Hybrid prompt (recommended)
-# var text_hint = InputMonitor.action_to_key("jump")
-# var image_path = InputMonitor.action_to_button_image("jump")
-# ```
-#
-# ================================================================================
-# 3. SIGNAL CONNECTIONS - Event-Driven Architecture
-# ================================================================================
-# Follows Godot's signal pattern for loose coupling with other systems:
-#
-# PRIMARY SIGNAL: input_changed
-# - Emitted only when device actually changes (prevents UI spam)
-# - Connect to UI update methods across all systems
-#
-# CONNECTION EXAMPLES:
-# ```gdscript
-# # Connect in UI systems
-# InputMonitor.connect("input_changed", Callable(self, "_update_control_hints"))
-#
-# func _update_control_hints():
-#     hint_label.text = "Press " + InputMonitor.action_to_key("interact")
-# ```
-#
-# ================================================================================
-# 4. SUPPORTED PLATFORMS & LOCALIZATION
-# ================================================================================
-# Comprehensive platform support with accurate button mapping:
-#
-# XBOX ECOSYSTEM:
-# - Face buttons: A, B, X, Y (not Cross, Circle, Square, Triangle)
-# - Bumpers: LB, RB (not L1, R1)
-# - Special: Back, Guide, Start
-#
-# PLAYSTATION ECOSYSTEM:
-# - Face buttons: Cross, Circle, Square, Triangle (not A, B, X, Y)
-# - Bumpers: L1, R1 (not LB, RB)
-# - Special: Share, PS, Options
-#
-# NINTENDO ECOSYSTEM:
-# - Face buttons: B, A, Y, X (inverted from xBox)
-# - Bumpers: L, R
-# - Special: -, Home, +
-#
-# PC ECOSYSTEM:
-# - Standard keys: Space, Enter, Escape, WASD
-# - Modifiers: Shift, Ctrl
-# - Navigation: Arrow keys
-#
-# ================================================================================
-# 5. IMAGE FILE SPECIFICATIONS
-# ================================================================================
-# Optimized for game UI with consistent quality across platforms:
-#
-# FORMAT: SVG (Scalable Vector Graphics)
-# - Crisp scaling at any resolution
-# - Small file sizes
-# - Consistent visual quality
-#
-# ORGANIZATION: autoload/input_visualizer/{platform}/
-# - xBox/: Microsoft-style button icons
-# - PlayStation/: Sony-style button icons
-# - Nintendo/: Nintendo-style button icons
-# - PC/: Keyboard key icons
-#
-# NAMING: Matches button text labels
-# - Face buttons: a.svg, b.svg, x.svg, y.svg, cross.svg, circle.svg, etc.
-# - Special buttons: start.svg, select.svg, guide.svg, ps.svg, home.svg
-# - D-pad: up.svg, down.svg, left.svg, right.svg
-#
-# ================================================================================
-# 6. PERFORMANCE & RELIABILITY CONSIDERATIONS
-# ================================================================================
-# Designed for high-performance, real-time operation:
-#
-# EFFICIENCY:
-# - Minimal processing per input event
-# - Lazy loading of button names (computed on demand)
-# - Signal emission only on actual device changes
-#
-# RELIABILITY:
-# - Graceful fallbacks for unmapped buttons
-# - Warning system for debugging invalid actions
-# - Platform detection with robust pattern matching
-# - Bounds checking prevents crashes
-#
-# MEMORY MANAGEMENT:
-# - Static BUTTON_NAMES dictionary (no dynamic allocation)
-# - Image paths are strings (textures loaded on demand)
-# - No persistent state beyond device tracking
