@@ -74,7 +74,7 @@ func _physics_process(delta: float) -> void:
 ## Override this method to implement the primary action behavior.
 ##
 ## [param delta] Time elapsed since the last physics frame in seconds
-func _action(delta: float) -> void:
+func _action(_delta: float) -> void:
 	pass
 
 ## Abstract method for alternative action logic.
@@ -82,7 +82,7 @@ func _action(delta: float) -> void:
 ## Override this method for conditional behavior when the main action shouldn't run.
 ##
 ## [param delta] Time elapsed since the last physics frame in seconds
-func _not_action(delta: float) -> void:
+func _not_action(_delta: float) -> void:
 	pass
 
 ## Abstract method for additional logic that always executes.
@@ -90,5 +90,5 @@ func _not_action(delta: float) -> void:
 ## Override this method for logic that should always happen regardless of conditions.
 ##
 ## [param delta] Time elapsed since the last physics frame in seconds
-func _addition(delta: float) -> void:
+func _addition(_delta: float) -> void:
 	pass

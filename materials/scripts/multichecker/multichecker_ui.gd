@@ -103,6 +103,9 @@ func _ready() -> void:
 	# Build the main menu collection UI (scrollable button container)
 	#region collection
 	collection = ScrollContainer.new()
+	collection.follow_focus=true
+	collection.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	collection.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	collection.name = "collection"
 	collection.custom_minimum_size = Vector2(196, 32)  # Minimum display size
 	collection.draw_focus_border = true  # Visual focus indicator
@@ -210,6 +213,7 @@ func _build_buttons(items: Array[MulticheckerItem]) -> void:
 		btn.custom_minimum_size.y = 32  # Consistent button height
 		btn.toggle_mode = data.toggled  # Toggle behavior for persistent options
 		btn.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Controller-only interaction
+		btn.focus_entered.connect(_on_focused.bind(btn))
 
 		# Connect visibility changes from item configuration
 		data.visible_changed.connect(func(value: bool) -> void: btn.visible = value)
@@ -231,7 +235,7 @@ func _build_buttons(items: Array[MulticheckerItem]) -> void:
 		# Handle multichecker changes - clean up old connections
 		multichecker_changed.connect(
 			func(_to: Multichecker) -> void:
-				if key.active.is_connected(bound_callable):
+				if key!=null and key.active.is_connected(bound_callable):
 					key.active.disconnect(bound_callable)
 		)
 
@@ -247,6 +251,10 @@ func _build_buttons(items: Array[MulticheckerItem]) -> void:
 			else:
 				btn.button_pressed = false  # Reset on invalid state
 		)
+
+func _on_focused(btn:Button):
+	collection.scroll_horizontal=int(btn.position.x)
+	collection.scroll_vertical=int(btn.position.y)
 
 ## Handle UI updates when a key is activated through the Key-Lock system.
 ## Manages menu visibility states and pause behavior based on selection results.
@@ -268,7 +276,7 @@ func _on_ui_key_active(_activated: bool, items: Array[MulticheckerItem]) -> void
 		return
 
 	# CRITICAL: Manage UI visibility based on menu configuration and item count
-	if items.size() > 1:  # Multi-choice menu
+	if _get_visible_buttons().size() > 1:  # Multi-choice menu
 		# Show collection if staying open after choice, otherwise hide it
 		collection.visible = not current_multichecker.close_after_choice
 		# Show prompt if auto-closing after choice, otherwise hide it
@@ -277,6 +285,16 @@ func _on_ui_key_active(_activated: bool, items: Array[MulticheckerItem]) -> void
 	# Auto-close behavior for single-action menus
 	if current_multichecker.close_after_choice:
 		FNC.set_pause(false)  # Resume game time when auto-closing
+
+## Find the nearest visible button to a given index for focus management.
+## Used during keyboard/controller navigation to ensure focus stays on interactive elements.
+## Expands search radius until a visible button is found, prioritizing buttons to the right.
+## [br][br]
+## [param id] The target button index to search around
+## [return] The index of the nearest visible button, or -1 if none found
+func _get_visible_buttons() -> Array[Node]:
+	var btns = button_container.get_children()
+	return btns.filter((func(x:Button): return x.visible))
 
 ## Find the nearest visible button to a given index for focus management.
 ## Used during keyboard/controller navigation to ensure focus stays on interactive elements.
@@ -351,11 +369,17 @@ func set_showed(value: bool) -> void:
 		prompt.visible = not showed
 
 func _physics_process(_delta: float) -> void:
+
+	if Engine.is_editor_hint() and current_multichecker: return
 	_update_position()
 	if Input.is_action_just_pressed(menu_exit) and showed:
 		showed=false
 	if Input.is_action_just_pressed(prompt_action) and not showed:
-		showed=true
+		if _get_visible_buttons().size()==1:
+			button_container.get_child(0).pressed.emit()
+			#set_showed(false)
+		if _get_visible_buttons().size()>1:
+			showed=true
 
 func _update_position():
 	var pn:=current_multichecker.get_parent()

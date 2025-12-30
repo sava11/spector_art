@@ -161,10 +161,29 @@ func _physics_process(delta: float) -> void:
 ## Resets jump counters when landing on ground.
 ##
 ## [param delta] Time elapsed since the last physics frame (currently unused)
-func update_ground_and_timers(delta: float) -> void:
+func update_ground_and_timers(_delta: float) -> void:
 	if is_on_floor():
 		_on_ground = true
 		jump_count = 0  # Reset jump counter on ground contact
 		is_jumping = false  # Clear jumping state
 	else:
 		_on_ground = false  # Not on ground
+
+
+func _vec3_to_angle(vec:Vector3)->Vector3:
+	var up = vec.normalized()
+	var forward = Vector3.FORWARD  # Or your desired forward
+	var right = up.cross(forward).normalized()
+	forward = right.cross(up).normalized()  # Orthogonalize
+	var _basis = Basis(right, up, -forward)  # -forward for typical +Z forward
+	
+	# Get Euler angles in radians (X, Y, Z order)
+	var euler = _basis.get_euler()
+	
+	# Convert to degrees if needed
+	var euler_deg = Vector3(
+		rad_to_deg(euler.x),
+		rad_to_deg(euler.y),
+		rad_to_deg(euler.z)
+	)
+	return euler_deg

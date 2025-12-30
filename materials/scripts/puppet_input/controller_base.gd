@@ -72,7 +72,7 @@ func reset() -> void:
 ## CRITICAL: This is the main update loop that processes input and applies it to the pawn.
 ## [br][br]
 ## [param delta] Time elapsed since the last physics frame (unused but kept for consistency)
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if enabled:
 		input_control()  # Process input when enabled
 	else:

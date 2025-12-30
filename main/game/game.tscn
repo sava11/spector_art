@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ukbdxptj5okt"]
+[gd_scene load_steps=17 format=3 uid="uid://ukbdxptj5okt"]
 
 [ext_resource type="Script" uid="uid://sapoe0n5j21" path="res://main/game/game.gd" id="1_en41u"]
 [ext_resource type="PackedScene" uid="uid://c0ngdihkjv7pj" path="res://main/levels/test_lvl_1.tscn" id="2_ej72j"]
@@ -7,10 +7,23 @@
 [ext_resource type="Script" uid="uid://1q1hjchwqfq7" path="res://materials/scripts/puppet_input/player_controller.gd" id="3_ej72j"]
 [ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/pawn/3d/pawn.tscn" id="3_en41u"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
+[ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="8_u7x3r"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_yo04u"]
 
 [sub_resource type="Resource" id="Resource_2wwl3"]
 script = ExtResource("6_6lqia")
+
+[sub_resource type="Resource" id="Resource_6lqia"]
+script = ExtResource("8_u7x3r")
+size = 4.355
+metadata/_custom_type_script = "uid://b8hhnqsugykly"
+
+[sub_resource type="Gradient" id="Gradient_u7x3r"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6lqia"]
+gradient = SubResource("Gradient_u7x3r")
+fill_from = Vector2(0.41025642, 0.03846154)
+fill_to = Vector2(0, 0.982906)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ej72j"]
 
@@ -20,6 +33,13 @@ sky_material = SubResource("ProceduralSkyMaterial_ej72j")
 [sub_resource type="Environment" id="Environment_u7x3r"]
 background_mode = 2
 sky = SubResource("Sky_en41u")
+tonemap_mode = 2
+ssr_depth_tolerance = 12.01
+glow_enabled = true
+adjustment_brightness = 1.25
+adjustment_contrast = 1.19
+adjustment_saturation = 2.78
+adjustment_color_correction = SubResource("GradientTexture2D_6lqia")
 
 [node name="game" type="Node"]
 script = ExtResource("1_en41u")
@@ -37,7 +57,7 @@ unique_name_in_owner = true
 [node name="test_lvl1" parent="world/lvls" instance=ExtResource("2_ej72j")]
 
 [node name="player" parent="world" instance=ExtResource("3_en41u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0629542, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0629542, 2.2401931, 0)
 
 [node name="PlayerController" type="Node" parent="world/player" node_paths=PackedStringArray("puppet_pawn")]
 script = ExtResource("3_ej72j")
@@ -60,7 +80,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="PhantomCamera" type="Node3D" parent="." node_paths=PackedStringArray("follow_target", "look_at_target")]
-transform = Transform3D(1, 0, 0, 0, 0.55470014, 0.8320504, 0, -0.8320504, 0.55470014, -1.0629542, 3.1, 2)
+transform = Transform3D(0.99999034, 0, 0, 0, 0.31622064, 0.9486618, 0, -0.9486618, 0.31622064, -1.0629542, 5.340193, 1)
 top_level = true
 script = ExtResource("3_458dk")
 priority = 5
@@ -70,13 +90,16 @@ look_at_mode = 2
 look_at_target = NodePath("../world/player/markers/base")
 tween_resource = SubResource("Resource_2wwl3")
 tween_on_load = false
-follow_offset = Vector3(0, 3, 2)
+camera_3d_resource = SubResource("Resource_6lqia")
+follow_offset = Vector3(0, 3, 1)
 follow_damping = true
+follow_damping_value = Vector3(0.05, 0.05, 0.05)
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.55470014, 0.8320504, 0, -0.8320504, 0.55470014, -1.0629542, 3.1, 2)
+transform = Transform3D(1, 0, 0, 0, 0.3162278, 0.94868326, 0, -0.94868326, 0.3162278, -1.0629542, 5.340193, 1)
+size = 4.355
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
 process_priority = 300
@@ -88,5 +111,13 @@ metadata/_custom_type_script = "uid://bd046eokvcnu2"
 environment = SubResource("Environment_u7x3r")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.7036056, 0.7105907, 0, -0.7105907, 0.7036056, 0, 5.014892, 0)
+transform = Transform3D(-4.371139e-08, -0.86602545, 0.49999997, 0, 0.49999997, 0.86602545, -1, 3.7855173e-08, -2.1855692e-08, 0, 18.656237, 0)
+light_bake_mode = 0
 shadow_enabled = true
+shadow_blur = 0.25
+directional_shadow_split_2 = 0.266
+directional_shadow_split_3 = 0.54
+directional_shadow_blend_splits = true
+directional_shadow_fade_start = 0.638
+directional_shadow_max_distance = 34.5
+directional_shadow_pancake_size = 85.4
