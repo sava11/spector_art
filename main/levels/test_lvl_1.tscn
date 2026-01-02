@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=4 uid="uid://c0ngdihkjv7pj"]
+[gd_scene load_steps=23 format=4 uid="uid://c0ngdihkjv7pj"]
 
 [ext_resource type="Script" uid="uid://ba1ew1pw3sudy" path="res://materials/scripts/boxes/3d/custom_detection_box.gd" id="1_28g4p"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_pyyvj"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="4_x8b6i"]
 [ext_resource type="Script" uid="uid://c8q7v2m3x4ab" path="res://materials/scripts/draw_on_ui/draw_on_ui.gd" id="7_x8b6i"]
 [ext_resource type="Texture2D" uid="uid://cw80dim2ixfpf" path="res://materials/images/waypoint_markers/waypoint_pin_black.svg" id="8_8jny7"]
-[ext_resource type="Script" uid="uid://dv3wqrmadp5kx" path="res://materials/scripts/experemental/zip_zones_3d/zip_point_3d.gd" id="8_cqnn8"]
 
 [sub_resource type="Resource" id="Resource_6lqia"]
 script = ExtResource("2_pyyvj")
@@ -99,8 +98,6 @@ plane = Plane(-1, 0, 0, 0)
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_8jny7"]
 plane = Plane(0, 0, -1, 0)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_h5nbd"]
-
 [node name="test_lvl1" type="Node3D"]
 
 [node name="CustomDetectionBox3D" type="Area3D" parent="."]
@@ -162,13 +159,3 @@ metadata/_custom_type_script = "uid://c8q7v2m3x4ab"
 [node name="Sprite2D" type="Sprite2D" parent="way_point/DrawOnUI"]
 texture = ExtResource("8_8jny7")
 offset = Vector2(0, -14)
-
-[node name="ZipPoint3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5486684, 0)
-collision_layer = 256
-collision_mask = 0
-script = ExtResource("8_cqnn8")
-metadata/_custom_type_script = "uid://dv3wqrmadp5kx"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ZipPoint3D"]
-shape = SubResource("SphereShape3D_h5nbd")

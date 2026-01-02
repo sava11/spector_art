@@ -170,14 +170,14 @@ func _process_zip_mode(_delta: float) -> void:
 	
 	# Update zip node and visual feedback
 	if new_zip_node != zip_node:
-		if zip_node:
-			zip_node.img.hide()
+		#if zip_node:
+			#zip_node.img.hide()
 		zip_node = new_zip_node
-		if zip_node:
-			zip_node.img.show()
-			# Orient icon towards player
-			var to_player = (pawn_node.global_position - zip_node.global_position).normalized()
-			zip_node.img.look_at(zip_node.global_position + to_player, Vector3.UP, true)
+		#if zip_node:
+			#zip_node.img.show()
+			## Orient icon towards player
+			#var to_player = (pawn_node.global_position - zip_node.global_position).normalized()
+			#zip_node.img.look_at(zip_node.global_position + to_player, Vector3.UP, true)
 
 ## Process teleportation movement towards selected zip point.
 ## Moves the pawn smoothly towards the zip point using acceleration-based movement.
@@ -213,8 +213,8 @@ func _process_zipping(delta: float) -> void:
 	
 	if distance_squared <= snap_threshold:
 		# Arrived at zip point
-		if zip_node:
-			zip_node.img.hide()
+		#if zip_node:
+			#zip_node.img.hide()
 		pawn_node.global_position = zip_node.global_position
 		pawn_node.velocity = Vector3.ZERO
 		
@@ -232,44 +232,51 @@ func _process_zipping(delta: float) -> void:
 ## Returns normalized direction based on current input device (mouse or gamepad).
 ## [br][br]
 ## Critical input handling:
-## - Keyboard/Mouse (device_id 0): Uses mouse position projected to 3D space
-## - Gamepad (device_id > 0): Uses directional input vector
+## - Keyboard/Mouse (device_id 0): Uses camera ray direction from mouse position
+## - Gamepad (device_id > 0): Uses camera forward direction transformed by input
 ## - Falls back to look_direction if available
 ## [br][br]
-## [return] Normalized Vector3 direction for zip point selection
+## [return] Normalized Vector3 direction for zip point selection (from camera)
 func _generate_direction() -> Vector3:
 	var direction := Vector3.ZERO
+	var cam = get_viewport().get_camera_3d()
 
 	match IV.device_id:
 		0:  # Keyboard/Mouse
-			# Project mouse position to 3D space
-			var cam = get_viewport().get_camera_3d()
+			# Use camera ray direction from mouse position
 			if cam:
 				var mouse_pos = get_viewport().get_mouse_position()
-				var origin = cam.project_ray_origin(mouse_pos)
 				var normal = cam.project_ray_normal(mouse_pos)
-				var target_pos = origin + normal * 100.0  # Arbitrary distance
-				
-				if is_instance_valid(_zip_zone):
-					direction = (target_pos - _zip_zone.global_position).normalized()
-				else:
-					direction = normal
+				direction = normal
 			else:
 				# Fallback to look_direction if camera not available
 				if not pawn_node.look_direction.is_zero_approx():
 					direction = (pawn_node.look_direction - pawn_node.global_position).normalized()
 		1:  # Gamepad (or other device)
-			# Use input direction from pawn
-			if not pawn_node.input_direction.is_zero_approx():
-				var input_3d = Vector3(pawn_node.input_direction.x, 0, pawn_node.input_direction.y)
-				direction = input_3d.normalized()
+			# Use camera forward direction transformed by input
+			if cam:
+				if not pawn_node.input_direction.is_zero_approx():
+					# Get camera's forward and right vectors
+					var cam_forward = -cam.global_transform.basis.z
+					var cam_right = cam.global_transform.basis.x
+					# Combine input direction with camera orientation
+					var input_3d = Vector3(pawn_node.input_direction.x, 0, pawn_node.input_direction.y)
+					direction = (cam_right * input_3d.x + cam_forward * input_3d.z).normalized()
+				else:
+					# Use camera forward direction if no input
+					direction = -cam.global_transform.basis.z
 			else:
-				# Fallback to look_direction
-				if not pawn_node.look_direction.is_zero_approx():
+				# Fallback to input_direction if camera not available
+				if not pawn_node.input_direction.is_zero_approx():
+					var input_3d = Vector3(pawn_node.input_direction.x, 0, pawn_node.input_direction.y)
+					direction = input_3d.normalized()
+				elif not pawn_node.look_direction.is_zero_approx():
 					direction = (pawn_node.look_direction - pawn_node.global_position).normalized()
 		_:
-			# Default: use look_direction or input_direction
-			if not pawn_node.look_direction.is_zero_approx():
+			# Default: use camera forward or fallback to look_direction/input_direction
+			if cam:
+				direction = -cam.global_transform.basis.z
+			elif not pawn_node.look_direction.is_zero_approx():
 				direction = (pawn_node.look_direction - pawn_node.global_position).normalized()
 			elif not pawn_node.input_direction.is_zero_approx():
 				var input_3d = Vector3(pawn_node.input_direction.x, 0, pawn_node.input_direction.y)
@@ -343,8 +350,8 @@ func _should_clear_zip() -> bool:
 ## - Clears zip node reference
 ## - Should be called when exiting zip state
 func clear_zip() -> void:
-	if is_instance_valid(zip_node):
-		zip_node.img.hide()
+	#if is_instance_valid(zip_node):
+		#zip_node.img.hide()
 	zip_node = null
 	zipping = false
 	zipped = false

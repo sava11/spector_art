@@ -86,8 +86,8 @@ func _physics_process(delta: float) -> void:
 		_on_not_action(delta)
 	_additional(delta)
 
-func _additional(delta:float): pass
+func _additional(_delta:float): pass
 
-func _on_not_action(delta:float): pass
+func _on_not_action(_delta:float): pass
 
-func _on_action(delta:float): pass
+func _on_action(_delta:float): pass
