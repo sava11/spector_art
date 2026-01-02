@@ -22,6 +22,8 @@
 class_name PlayerController
 extends BaseController
 
+const RAY_LENGTH = 1000
+
 ## Camera rotation angle in radians for 3D camera-relative movement.
 ## This allows movement to be relative to camera orientation rather than world space.
 ## Set this to your camera's Y rotation for proper 3D movement.
@@ -62,9 +64,14 @@ func input_control() -> void:
 		look_direction = get_parent().get_global_mouse_position() - get_parent().global_position
 	elif get_parent() is Node3D:
 		# 3D: Project pawn world position to screen space for mouse aiming
-		look_direction = Vector2(get_viewport().get_mouse_position()) - \
-			get_viewport().get_camera_3d().unproject_position(
-			get_parent().global_position)
+		var space_state = get_parent().get_world_3d().direct_space_state
+		var cam = get_viewport().get_camera_3d()
+		var mousepos = get_viewport().get_mouse_position()
+		var origin = cam.project_ray_origin(mousepos)
+		var end = origin + cam.project_ray_normal(mousepos) * RAY_LENGTH
+		var query = PhysicsRayQueryParameters3D.create(origin, end)
+		var result = space_state.intersect_ray(query)
+		if result: look_direction=result.position
 
 	# Process action inputs
 	want_attack = Input.is_action_just_pressed("attack")  # Single press detection

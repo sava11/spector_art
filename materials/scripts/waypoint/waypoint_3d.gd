@@ -35,11 +35,11 @@ extends Node3D
 
 ## Minimum distance before waypoint becomes fully opaque.
 ## Creates a fade-in effect as target approaches.
-@export var fade_distance: float = 50.0
+@export var fade_distance: float = 0.0
 
 ## Vertical offset for the waypoint when target is on screen.
 ## Positive values move waypoint up, negative down.
-@export var screen_offset: Vector2 = Vector2(0, -50):
+@export var screen_offset: Vector2 = Vector2(0, 0):
 	set(value):
 		screen_offset = value
 		_update_visual()
@@ -51,7 +51,7 @@ extends Node3D
 		_update_visual()
 
 ## Screen margin for off-screen waypoints (pixels from screen edge).
-@export var screen_margin: float = 50.0
+@export var screen_margin: float = 32.0
 
 
 ## CanvasLayer for screen-space rendering.
@@ -194,8 +194,8 @@ func _process(_delta: float) -> void:
 
 		# Rotate icon to point toward waypoint
 		# Invert Y for screen coordinates (screen has Y growing downward)
-		var angle = atan2(-direction.y, direction.x)
-		_icon.rotation = angle-PI/2.0
+		var angle = -atan2(direction.y, -direction.x)
+		_icon.rotation = angle+PI/2.0
 
 	# Apply final position
 	_icon.position = final_pos
@@ -233,8 +233,7 @@ func _create_visual_elements() -> void:
 ## - Applies color, size, and texture settings to icon
 ## - Updates icon modulation for proper rendering
 func _update_visual() -> void:
-	if _icon == null:
-		return
+	if _icon == null: return
 
 	# Apply color, size and texture
 	_icon.texture = icon_texture

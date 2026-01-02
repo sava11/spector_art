@@ -32,13 +32,17 @@ extends CharacterBody3D
 
 ## Current look direction for aiming/rotation (screen space coordinates).
 ## Used for determining attack direction and character facing.
-@export var look_direction: Vector2 = Vector2.ZERO
+@export var look_direction: Vector3 = Vector3.ZERO
 
 ## Whether the jump button is currently held down.
 @export var jump_held: bool = false
 
 ## Whether the dash button is currently held down.
 @export var dash_held: bool = false
+
+## Whether the zip button is currently held down.
+## Used for zip point selection and teleportation mechanics.
+@export var zip_held: bool = false
 
 ## Whether the pawn wants to perform an attack action.
 @export var want_attack: bool = false
@@ -92,6 +96,15 @@ var dash_released: bool = false
 ## Previous frame's dash_held state for edge detection.
 var _last_dash_held: bool = false
 
+## Whether the pawn wants to initiate a dash (true on dash button press).
+var want_zip: bool = false
+
+## Whether the dash button was just released.
+var zip_released: bool = false
+
+## Previous frame's dash_held state for edge detection.
+var _last_zip_held: bool = false
+
 ## Number of jumps performed since last ground contact (for double jump logic).
 var jump_count: int = 0
 
@@ -133,6 +146,11 @@ func _physics_process(delta: float) -> void:
 	# Update ground collision state
 	_on_ground = is_on_floor()
 
+	# Process zip input with edge detection (detect button press/release)
+	want_zip = !_last_zip_held and zip_held  # True on press
+	zip_released = _last_zip_held and !zip_held  # True on release
+	_last_zip_held = zip_held  # Store for next frame comparison
+
 	# Process dash input with edge detection (detect button press/release)
 	want_dash = !_last_dash_held and dash_held  # True on press
 	dash_released = _last_dash_held and !dash_held  # True on release
@@ -148,10 +166,10 @@ func _physics_process(delta: float) -> void:
 		last_input_direction = input_direction.normalized()
 
 	#var angle = look_direction.angle()
-	$hits.look_at(Vector3(look_direction.x,0,look_direction.y),Vector3(0,1,0),true)
+	$hits.look_at(look_direction+Vector3(0,0.15,0),Vector3(0,1,0),true)
 
 	# Update ground state and timers
-	update_ground_and_timers(delta)
+	update_ground_and_timers()
 
 	# Execute physics movement
 	move_and_slide()
@@ -161,7 +179,7 @@ func _physics_process(delta: float) -> void:
 ## Resets jump counters when landing on ground.
 ##
 ## [param delta] Time elapsed since the last physics frame (currently unused)
-func update_ground_and_timers(_delta: float) -> void:
+func update_ground_and_timers() -> void:
 	if is_on_floor():
 		_on_ground = true
 		jump_count = 0  # Reset jump counter on ground contact

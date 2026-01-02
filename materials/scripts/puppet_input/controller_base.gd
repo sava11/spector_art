@@ -33,7 +33,7 @@ extends Node
 
 ## Current look direction for the pawn (normalized vector).
 ## Typically represents mouse position or right stick direction.
-var look_direction: Vector2 = Vector2.ZERO
+var look_direction
 
 ## Whether the pawn wants to perform an attack action.
 ## Set to true when attack input is detected.
@@ -64,8 +64,10 @@ func input_control() -> void:
 ## Used when the controller is disabled to ensure clean state transitions.
 func reset() -> void:
 	jump_held = false
-	look_direction = Vector2.ZERO
-	input_direction = Vector2.ZERO
+	if puppet_pawn is Node2D:
+		look_direction = Vector2.ZERO
+	elif puppet_pawn is Node3D:
+		look_direction = Vector3.ZERO
 	want_attack = false
 
 ## Physics process for input handling and pawn synchronization.

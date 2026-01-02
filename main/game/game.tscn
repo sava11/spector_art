@@ -13,9 +13,9 @@
 [sub_resource type="Resource" id="Resource_2wwl3"]
 script = ExtResource("6_6lqia")
 
-[sub_resource type="Resource" id="Resource_6lqia"]
+[sub_resource type="Resource" id="Resource_u7x3r"]
 script = ExtResource("8_u7x3r")
-size = 4.355
+size = 0.145
 metadata/_custom_type_script = "uid://b8hhnqsugykly"
 
 [sub_resource type="Gradient" id="Gradient_u7x3r"]
@@ -80,7 +80,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="PhantomCamera" type="Node3D" parent="." node_paths=PackedStringArray("follow_target", "look_at_target")]
-transform = Transform3D(0.99999034, 0, 0, 0, 0.31622064, 0.9486618, 0, -0.9486618, 0.31622064, -1.0629542, 5.340193, 1)
+transform = Transform3D(0.99999, 0, 0, 0, 0.5546851, 0.83202714, 0, -0.83202773, 0.55468464, -1.0629542, 5.340193, 2)
 top_level = true
 script = ExtResource("3_458dk")
 priority = 5
@@ -90,16 +90,16 @@ look_at_mode = 2
 look_at_target = NodePath("../world/player/markers/base")
 tween_resource = SubResource("Resource_2wwl3")
 tween_on_load = false
-camera_3d_resource = SubResource("Resource_6lqia")
-follow_offset = Vector3(0, 3, 1)
+camera_3d_resource = SubResource("Resource_u7x3r")
+follow_offset = Vector3(0, 3, 2)
 follow_damping = true
 follow_damping_value = Vector3(0.05, 0.05, 0.05)
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.3162278, 0.94868326, 0, -0.94868326, 0.3162278, -1.0629542, 5.340193, 1)
-size = 4.355
+transform = Transform3D(1, 0, 0, 0, 0.55470014, 0.8320503, 0, -0.8320503, 0.55470014, -1.0629542, 5.340193, 2)
+size = 0.145
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
 process_priority = 300

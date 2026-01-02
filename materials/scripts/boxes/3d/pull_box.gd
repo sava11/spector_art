@@ -18,7 +18,10 @@ extends Area3D
 
 ## Whether the pull effect is currently active in 3D space.
 ## When disabled, no pulling forces are applied to entering bodies.
-@export var enabled: bool = true
+@export var enabled: bool = true:set=set_enabled
+func set_enabled(value:bool):
+	set_deferred("monitorable",value)
+	set_deferred("monitoring",value)
 
 ## Speed at which bodies are pulled toward the center (units per second).
 ## This value determines the magnitude of the attraction force in 3D space.
@@ -47,6 +50,7 @@ var bs: Array = []
 func _ready():
 	body_exited.connect(_on_body_exited)
 	body_entered.connect(_on_body_entered)
+	set_enabled(enabled)
 
 ## Handles 3D body exit events, removing bodies from the pull list.
 ## This method manages cleanup when bodies leave the PullBox3D area.
@@ -103,12 +107,11 @@ func _physics_process(_delta: float) -> void:
 ##
 ## [param body] The 3D body to apply the pull force to
 func _update(body: Node3D):
-	if enabled:
-		var vec := _move(global_rotation) * speed
-		if body is CharacterBody3D:
-			body.velocity += vec
-		elif body is RigidBody3D:
-			body.linear_velocity += vec
+	var vec := _move(global_rotation) * speed
+	if body is CharacterBody3D:
+		body.velocity += vec
+	elif body is RigidBody3D:
+		body.linear_velocity += vec
 
 ## Creates a unit vector in the direction of the given 3D rotation.
 ## This method converts Euler angles to a normalized direction vector.

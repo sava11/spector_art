@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://0hdbtnnnxe4g"]
 
 [ext_resource type="Script" uid="uid://b3m5l44pipiue" path="res://materials/scripts/boxes/2d/hurt_box.gd" id="1_38f4b"]
-[ext_resource type="Script" uid="uid://hhdsdn37vuf2" path="res://materials/scenes/player_V1/player_v4.gd" id="1_bbqkj"]
+[ext_resource type="Script" uid="uid://hhdsdn37vuf2" path="res://materials/scenes/experemental/player_V1/player_v4.gd" id="1_bbqkj"]
 [ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="3_746xe"]
 [ext_resource type="Script" uid="uid://de7yek0vi8d8f" path="res://materials/scripts/boxes/2d/hit_box.gd" id="4_b3bno"]
 

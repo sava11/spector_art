@@ -1,15 +1,20 @@
-[gd_scene load_steps=14 format=3 uid="uid://cp8ff3a01itg3"]
+[gd_scene load_steps=25 format=3 uid="uid://cp8ff3a01itg3"]
 
 [ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_o6cr0"]
 [ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_q266n"]
 [ext_resource type="Script" uid="uid://c8oaw2k6m3f1p" path="res://materials/scripts/boxes/3d/hurt_box.gd" id="2_vkh0a"]
 [ext_resource type="Script" uid="uid://bqm8x7j4p2v5h" path="res://materials/scripts/boxes/3d/hit_box.gd" id="4_nvtwl"]
+[ext_resource type="Script" uid="uid://cb14v2lyyxpat" path="res://materials/scripts/boxes/3d/pull_box.gd" id="6_iygdc"]
 [ext_resource type="Script" uid="uid://44bqft6foncp" path="res://materials/scenes/pawn/3d/pawn_actions/action_move.gd" id="6_q266n"]
 [ext_resource type="Script" uid="uid://q6w0yadgq6gk" path="res://materials/scenes/pawn/3d/pawn_actions/action_jump.gd" id="7_q266n"]
 [ext_resource type="Script" uid="uid://uok3tse3uwsr" path="res://materials/scenes/pawn/3d/pawn_actions/action_gravity.gd" id="8_q266n"]
 [ext_resource type="Script" uid="uid://dcsvmpd0s06v5" path="res://materials/scenes/pawn/3d/pawn_actions/action_attack.gd" id="10_nvtwl"]
 [ext_resource type="Script" uid="uid://idinh8673lts" path="res://materials/scenes/pawn/3d/pawn_actions/action_dash.gd" id="11_q266n"]
+[ext_resource type="Script" uid="uid://cu6omuhk7k2r1" path="res://materials/scripts/experemental/zip_zones_3d/zip_zone_3d.gd" id="12_2prhi"]
+[ext_resource type="Script" uid="uid://cqnxupqqeq5n5" path="res://materials/scenes/pawn/3d/pawn_actions/action_zip.gd" id="12_lh1re"]
+[ext_resource type="Material" uid="uid://baseobaepnf65" path="res://materials/scripts/experemental/zip_zones_3d/zip_node_3d.tres" id="13_lh1re"]
+[ext_resource type="Shader" uid="uid://bapc7uxg2uq7i" path="res://materials/scripts/experemental/zip_zones_3d/zip_zone_3d.gdshader" id="13_ppka6"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_36fbw"]
 radius = 0.15
@@ -19,6 +24,50 @@ radius = 0.15
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_q266n"]
 size = Vector3(0.3, 0.3, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2prhi"]
+size = Vector3(0.3, 0.3, 0.5)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lh1re"]
+radius = 5.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lmyoi"]
+
+[sub_resource type="Curve" id="Curve_ppka6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.7563655, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_lh1re"]
+curve = SubResource("Curve_ppka6")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lmyoi"]
+render_priority = 0
+shader = ExtResource("13_ppka6")
+shader_parameter/circle_center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.150000007125
+shader_parameter/thickness = 0.002000000095
+shader_parameter/edge_softness = 0.002
+shader_parameter/border_color = Color(1, 1, 1, 1)
+shader_parameter/fill_color = Color(0, 0, 0, 0)
+shader_parameter/unscaled_time = 0.0
+shader_parameter/wave_speed = 0.05000023987499968
+shader_parameter/wave_wavelength = 0.10000000440074
+shader_parameter/wave_decay = 4.0
+shader_parameter/wave_strength = 1.0000000475
+shader_parameter/peak_thresh = 0.7250000344375
+shader_parameter/peak_softness = 0.0110000005225
+shader_parameter/max_distance = 0.350000016625
+shader_parameter/fade_range = 0.08
+shader_parameter/wave_color = Color(0.8, 0.9, 1, 0.8)
+shader_parameter/wave_fade_curve = SubResource("CurveTexture_lh1re")
+shader_parameter/noise_scale_ring = 3.0000001392401203
+shader_parameter/noise_amp_ring = 0.01
+shader_parameter/noise_speed_ring = 2.375000001109129e-07
+shader_parameter/noise_octaves_ring = 3
+shader_parameter/noise_scale_wave = 6.0
+shader_parameter/noise_amp_wave = 0.25
+shader_parameter/noise_speed_wave = 0.01000023797500038
+shader_parameter/noise_octaves_wave = 3
 
 [node name="pupet" type="CharacterBody3D"]
 collision_layer = 33
@@ -60,12 +109,24 @@ shape = SubResource("SphereShape3D_65n5b")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 
 [node name="HitBox3D" type="Area3D" parent="hits"]
+collision_layer = 0
+collision_mask = 8
 script = ExtResource("4_nvtwl")
 metadata/_custom_type_script = "uid://bqm8x7j4p2v5h"
 
 [node name="c" type="CollisionShape3D" parent="hits/HitBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
 shape = SubResource("BoxShape3D_q266n")
+
+[node name="PullBox3D" type="Area3D" parent="hits/HitBox3D"]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("6_iygdc")
+metadata/_custom_type_script = "uid://cb14v2lyyxpat"
+
+[node name="c" type="CollisionShape3D" parent="hits/HitBox3D/PullBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
+shape = SubResource("BoxShape3D_2prhi")
 
 [node name="markers" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
@@ -157,3 +218,32 @@ metadata/_custom_type_script = "uid://dcsvmpd0s06v5"
 script = ExtResource("2_q266n")
 properties = Array[String](["cur_att", "current_time", "current_timer", "attacking"])
 metadata/_custom_type_script = "uid://pd4suh5xjf0m"
+
+[node name="ZipPawnAction3D" type="Node" parent="state" node_paths=PackedStringArray("pawn_node")]
+script = ExtResource("12_lh1re")
+zip_zone_path = NodePath("../../ZipZone3D")
+pawn_node = NodePath("../..")
+expression = "true"
+metadata/_custom_type_script = "uid://cqnxupqqeq5n5"
+
+[node name="ZipZone3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+collision_layer = 0
+collision_mask = 256
+script = ExtResource("12_2prhi")
+min_distance = 0.01
+positive_collision_mask = 9
+metadata/_custom_type_script = "uid://cu6omuhk7k2r1"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ZipZone3D"]
+shape = SubResource("SphereShape3D_lh1re")
+
+[node name="Sprite3D" type="Sprite3D" parent="ZipZone3D"]
+visible = false
+material_override = ExtResource("13_lh1re")
+pixel_size = 0.0155
+texture = ExtResource("1_o6cr0")
+
+[node name="visual" type="MeshInstance3D" parent="ZipZone3D"]
+mesh = SubResource("PlaneMesh_lmyoi")
+surface_material_override/0 = SubResource("ShaderMaterial_lmyoi")
