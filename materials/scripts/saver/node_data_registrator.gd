@@ -33,10 +33,10 @@ signal changed_and_pushed(path, changed_keys)
 
 # Internal variables
 ## Reference to the parent node being tracked.
-var _owner: Node = null
+var _parent: Node = null
 
 ## String path of the parent node for save data identification.
-var _owner_path: String = ""
+var _parent_path: String = ""
 
 ## Cache of serialized property values for change detection.
 ## Stores {property_name: PackedByteArray} for comparison.
@@ -49,32 +49,32 @@ var _t_acc: float = 0.0
 ## Registers the parent node with the global save system and attempts to load existing save data.
 func _enter_tree() -> void:
 	# Ensure parent is ready
-	_owner = get_parent()
-	if not _owner:
+	_parent = get_parent()
+	if not _parent:
 		printerr("SLDLoader: parent not found")
 		return
 
-	_owner_path = str(_owner.get_path())
+	_parent_path = str(_parent.get_path())
 
-	SLD.register_node(_owner, properties)
+	SLD.register_node(_parent, properties)
 
 	# Attempt to load existing save data if available
-	if SLD.saved_data.has(_owner_path):
+	if SLD.saved_data.has(_parent_path):
 		# Load only properties specified in our properties array
-		var stored :Dictionary= SLD.saved_data[_owner_path]
+		var stored :Dictionary= SLD.saved_data[_parent_path]
 		# stored should be a Dictionary by contract
 		if typeof(stored) == TYPE_DICTIONARY:
 			for prop in properties:
 				if stored.has(prop):
 					# Set the value on parent (assuming it's already in readable format)
-					_owner.set(prop, stored[prop])
+					_parent.set(prop, stored[prop])
 			# Update byte cache after loading
-			_update_last_bytes_from_owner()
+			_update_last_bytes_from_parent()
 			emit_signal("loaded")
 	else:
 		# No saved data exists - initialize entry in SLD.saved_data if needed
 		# so other modules can see current values
-		if SLD.saved_data.get(_owner_path, null) == null:
+		if SLD.saved_data.get(_parent_path, null) == null:
 			_save_current_to_global()
 
 	# Enable processing if auto_update is enabled
@@ -95,12 +95,12 @@ func _process(delta: float) -> void:
 ## Check for property changes and push them to the global save system.
 ## Compares current property values with cached values and saves any changes.
 func _check_and_push_changes() -> void:
-	if not _owner:
+	if not _parent:
 		return
 	var changed_keys: Array = []
 	for prop in properties:
 		# Safely get value - returns null if property doesn't exist
-		var val = _owner.get(prop)
+		var val = _parent.get(prop)
 		var bytes: PackedByteArray
 		# Serialize value to bytes with objects
 		bytes = var_to_bytes_with_objects(val)
@@ -113,41 +113,41 @@ func _check_and_push_changes() -> void:
 	# If there are changes - update global SLD.saved_data (only changed fields)
 	if changed_keys.size() > 0:
 		_save_current_to_global(changed_keys)
-		emit_signal("changed_and_pushed", _owner_path, changed_keys)
+		emit_signal("changed_and_pushed", _parent_path, changed_keys)
 
 ## Save current parent node values to global SLD.saved_data.
 ## [param changed_keys] If provided, only update these fields; otherwise update all properties.
 func _save_current_to_global(changed_keys: Array = []) -> void:
 	# Ensure dictionary exists
-	if not SLD.saved_data.has(_owner_path):
-		SLD.saved_data[_owner_path] = {}
-	var node_dict :Dictionary= SLD.saved_data[_owner_path]
+	if not SLD.saved_data.has(_parent_path):
+		SLD.saved_data[_parent_path] = {}
+	var node_dict :Dictionary= SLD.saved_data[_parent_path]
 	# Select keys to update
 	var keys_to_update = changed_keys if not changed_keys.is_empty() else properties.duplicate()
 	for prop in keys_to_update:
 		# Get current value from parent
-		var val = _owner.get(prop)
+		var val = _parent.get(prop)
 		# Save live value (SLD.make_save() will serialize to bytes when writing to file)
 		node_dict[prop] = val
-	SLD.saved_data[_owner_path] = node_dict
+	SLD.saved_data[_parent_path] = node_dict
 	# Don't call SLD.make_save() here - leave file writing responsibility to SLD
 	# (if needed, can add a flag or signal that SLD listens to and saves)
 	# Example: SLD can subscribe to changed_and_pushed signal and do file save as needed.
 
 ## Update the _last_bytes cache based on current owner state (all properties).
-func _update_last_bytes_from_owner() -> void:
+func _update_last_bytes_from_parent() -> void:
 	_last_bytes.clear()
 	for prop in properties:
-		var val = _owner.get(prop)
+		var val = _parent.get(prop)
 		_last_bytes[prop] = var_to_bytes_with_objects(val)
 
 ## Public API: Force push all properties to global save data.
 ## Updates the cache and saves current values to the global save system.
 func force_push() -> void:
-	_update_last_bytes_from_owner()
+	_update_last_bytes_from_parent()
 	_save_current_to_global()
 
 ## Public API: Remove entry from global save data.
 ## Completely erases the save data for this node from the global save system.
 func force_erase_global() -> void:
-	SLD.saved_data.erase(_owner_path)
+	SLD.saved_data.erase(_parent_path)

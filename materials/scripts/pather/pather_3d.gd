@@ -4,12 +4,12 @@ extends PathFollow3D
 signal active(activated: bool)
 
 enum inf_move{greater,none,lesser}
+
 @export var infinite_move:inf_move=inf_move.none:
 	set(v):
 		infinite_move=v
 		if v==inf_move.none:
 			to_position(progress)
-
 @export var enabled: bool = true: set = set_enabled
 @export var blocked: bool = false: set = set_blocked
 @export_range(0.001,99,0.001,"or_greater","hide_slider","suffix:m") 

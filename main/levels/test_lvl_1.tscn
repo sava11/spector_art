@@ -1,13 +1,12 @@
-[gd_scene load_steps=25 format=4 uid="uid://c0ngdihkjv7pj"]
+[gd_scene load_steps=24 format=4 uid="uid://c0ngdihkjv7pj"]
 
 [ext_resource type="Script" uid="uid://ba1ew1pw3sudy" path="res://materials/scripts/boxes/3d/custom_detection_box.gd" id="1_28g4p"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_pyyvj"]
 [ext_resource type="Script" uid="uid://dq7yfu2kd83wh" path="res://materials/scripts/dynamic_expression/dynamic_expression.gd" id="2_pyyvj"]
 [ext_resource type="Script" uid="uid://ciaekacdop5h2" path="res://materials/scripts/multichecker/multichecker.gd" id="3_mtvmc"]
 [ext_resource type="Script" uid="uid://p0unqgsqck4h" path="res://materials/scripts/multichecker/item.gd" id="4_x8b6i"]
-[ext_resource type="Texture2D" uid="uid://cw80dim2ixfpf" path="res://materials/images/waypoint_markers/waypoint_pin_black.svg" id="8_8jny7"]
+[ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="7_x8b6i"]
 [ext_resource type="Script" uid="uid://dxm1n0tas2n8c" path="res://materials/scripts/pather/pather_3d.gd" id="8_cqnn8"]
-[ext_resource type="Script" uid="uid://c8q7v2m3x4ab" path="res://materials/scripts/draw_on_ui/draw_on_ui.gd" id="8_h5nbd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_76e1d"]
 resource_name = "Material"
@@ -165,18 +164,6 @@ enabled = false
 items = Array[ExtResource("4_x8b6i")]([SubResource("Resource_8jny7")])
 metadata/_custom_type_script = "uid://ciaekacdop5h2"
 
-[node name="Node3D" type="Node3D" parent="CSGBox3D/CustomDetectionBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4000001, 0)
-
-[node name="DrawOnUI" type="CanvasLayer" parent="CSGBox3D/CustomDetectionBox3D/Node3D"]
-script = ExtResource("8_h5nbd")
-fade_distance = 10.0
-metadata/_custom_type_script = "uid://c8q7v2m3x4ab"
-
-[node name="Sprite2D" type="Sprite2D" parent="CSGBox3D/CustomDetectionBox3D/Node3D/DrawOnUI"]
-texture = ExtResource("8_8jny7")
-offset = Vector2(0, -14)
-
 [node name="p3d" type="Path3D" parent="."]
 curve = SubResource("Curve3D_8jny7")
 
@@ -193,3 +180,8 @@ transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -
 remote_path = NodePath("../../../CSGBox3D")
 update_rotation = false
 update_scale = false
+
+[node name="SaveLoader" type="Node" parent="p3d/cpf"]
+script = ExtResource("7_x8b6i")
+properties = Array[String](["enabled", "blocked", "progress", "to_point", "to_rotation", "_target_raw", "_raw_progress", "infinite_move"])
+metadata/_custom_type_script = "uid://pd4suh5xjf0m"

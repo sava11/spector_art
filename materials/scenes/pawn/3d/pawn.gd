@@ -32,7 +32,7 @@ extends CharacterBody3D
 
 ## Current look direction for aiming/rotation (screen space coordinates).
 ## Used for determining attack direction and character facing.
-@export var look_direction: Vector3 = Vector3.ZERO
+@export var look_direction: Vector3 = Vector3.FORWARD
 
 ## Whether the jump button is currently held down.
 @export var jump_held: bool = false

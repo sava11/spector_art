@@ -60,7 +60,6 @@ unique_name_in_owner = true
 [node name="test_lvl1" parent="world/lvls" instance=ExtResource("2_ej72j")]
 
 [node name="player" parent="world" instance=ExtResource("3_en41u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0629542, 0.10899949, 0)
 
 [node name="PlayerController" type="Node" parent="world/player" node_paths=PackedStringArray("puppet_pawn")]
 script = ExtResource("3_ej72j")
@@ -83,7 +82,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="PhantomCamera" type="Node3D" parent="." node_paths=PackedStringArray("follow_target", "look_at_target")]
-transform = Transform3D(0.9999831, 0, 0, 0, 0.55468255, 0.83202225, 0, -0.832024, 0.55468136, -1.0629542, 3.2089994, 2)
+transform = Transform3D(0.9999831, 0, 0, 0, 0.55468255, 0.83202225, 0, -0.832024, 0.55468136, 0, 3.1, 2)
 top_level = true
 script = ExtResource("3_458dk")
 priority = 5
@@ -101,7 +100,7 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.55470014, 0.8320504, 0, -0.8320504, 0.55470014, -1.0629542, 3.2089994, 2)
+transform = Transform3D(1, 0, 0, 0, 0.55470014, 0.8320504, 0, -0.8320504, 0.55470014, 0, 3.1, 2)
 size = 0.118
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
