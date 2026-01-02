@@ -110,6 +110,11 @@ func _ready() -> void:
 
 ## Calculate distance to target from camera position.
 ## Returns the distance in world units. Used for distance-based visibility and fading.
+## Uses Vector3 distance calculation for accurate 3D space measurements.
+## [br][br]
+## Critical distance calculation:
+## - Calculates Vector3 distance between camera and target global positions
+## - Returns 0.0 if camera or parent is invalid or not Node3D
 ## [br][br]
 ## [return] Distance to target in world units, or 0.0 if calculation fails
 func _get_distance_to_target() -> float:
@@ -126,6 +131,12 @@ func _get_distance_to_target() -> float:
 
 ## Calculate opacity based on distance and fade settings.
 ## Returns a value between 0.0 and 1.0 based on distance to target and fade_distance setting.
+## Creates smooth fade-in effect as target approaches camera.
+## [br][br]
+## Opacity calculation:
+## - If fade_distance <= 0: Always returns 1.0 (fully opaque)
+## - If distance >= fade_distance: Returns 1.0 (fully opaque)
+## - Otherwise: Linear interpolation from 0.0 to 1.0 based on distance
 ## [br][br]
 ## [return] Opacity value from 0.0 (transparent) to 1.0 (opaque)
 func _calculate_opacity() -> float:
@@ -141,59 +152,96 @@ func _calculate_opacity() -> float:
 
 ## Calculate position on screen edge pointing toward off-screen target.
 ## When target is off screen, positions waypoint on the nearest screen edge pointing toward target.
+## Handles all camera angles including vertical orientations correctly.
+## [br][br]
+## Critical edge calculation:
+## - Uses normalized direction from screen center to target screen position
+## - Calculates intersection with screen edges using aspect ratio-aware scaling
+## - Handles edge cases for horizontal/vertical alignment
+## - Applies screen margin to keep waypoint visible
 ## [br][br]
 ## [param screen_pos] Screen position of target (may be outside viewport)
 ## [param viewport_size] Size of the viewport
 ## [return] Position on screen edge with margin applied
 func _calculate_edge_position(screen_pos: Vector2, viewport_size: Vector2) -> Vector2:
 	var center = viewport_size / 2.0
-	var direction = (screen_pos - center).normalized()
+	var direction = (screen_pos - center)
 	
-	# Calculate intersection with screen edges
-	var slope = direction.y / direction.x if direction.x != 0 else 999999.0
-	var edge_pos: Vector2
+	# Handle zero direction case
+	if direction.length_squared() < 0.0001:
+		return center
 	
-	# Determine which edge to use based on direction
-	if abs(direction.x) > abs(direction.y):
-		# Horizontal edge (left or right)
-		var x = viewport_size.x if direction.x > 0 else 0.0
-		var y = center.y + slope * (x - center.x)
-		edge_pos = Vector2(x, clamp(y, 0.0, viewport_size.y))
+	direction = direction.normalized()
+	
+	# Calculate position on screen edge
+	var edge_pos = center
+	var half_width = viewport_size.x / 2.0 - screen_margin
+	var half_height = viewport_size.y / 2.0 - screen_margin
+
+	# Find intersection with screen edges using aspect ratio-aware calculation
+	var abs_x = abs(direction.x)
+	var abs_y = abs(direction.y)
+
+	if abs_x > 0.0001 and abs_y > 0.0001:  # Avoid division by zero
+		# Calculate scale factors to reach each edge
+		# This handles vertical camera angles correctly
+		var scale_x = half_width / abs_x
+		var scale_y = half_height / abs_y
+		var scale = min(scale_x, scale_y)
+
+		# Position on the edge that would be hit first
+		edge_pos = center + direction * scale
 	else:
-		# Vertical edge (top or bottom)
-		var y = viewport_size.y if direction.y > 0 else 0.0
-		var x = center.x + (y - center.y) / slope if slope != 0 else center.x
-		edge_pos = Vector2(clamp(x, 0.0, viewport_size.x), y)
-	
-	# Apply margin by moving away from edge
-	var margin_offset = (edge_pos - center).normalized() * screen_margin
-	return edge_pos - margin_offset
+		# Handle edge cases where direction is aligned with axes
+		if abs_x > abs_y:
+			edge_pos.x = center.x + half_width * sign(direction.x)
+			edge_pos.y = center.y
+		else:
+			edge_pos.x = center.x
+			edge_pos.y = center.y + half_height * sign(direction.y)
+
+	# Clamp to screen margins to ensure waypoint stays visible
+	edge_pos.x = clamp(edge_pos.x, screen_margin, viewport_size.x - screen_margin)
+	edge_pos.y = clamp(edge_pos.y, screen_margin, viewport_size.y - screen_margin)
+	return edge_pos
 
 ## Calculate rotation angle for off-screen waypoint pointing toward target.
 ## Returns angle in radians for rotating waypoint to point toward off-screen target.
+## Adjusts angle by -PI/2 to account for sprite orientation (pointing up by default).
 ## [br][br]
 ## [param screen_pos] Screen position of target
 ## [param edge_pos] Position of waypoint on screen edge
-## [return] Rotation angle in radians
+## [return] Rotation angle in radians (adjusted for sprite orientation)
 func _calculate_rotation_angle(screen_pos: Vector2, edge_pos: Vector2) -> float:
-	var direction = (screen_pos - edge_pos).normalized()
-	return direction.angle()
+	var direction = (screen_pos - edge_pos)
+	if direction.length_squared() < 0.0001:
+		return 0.0
+	direction = direction.normalized()
+	return direction.angle() - PI / 2.0
 
 ## Main update loop for waypoint screen-space positioning and visual updates.
 ## This method calculates target position in screen space, determines if target is in camera frustum,
 ## and positions waypoint accordingly (above target or on screen edge pointing toward target).
 ## [br][br]
 ## Critical update operations:
-## - Updates camera reference if needed
+## - Validates camera, nodes, and parent before processing
+## - Updates camera reference if needed (handles camera changes dynamically)
 ## - Calculates distance to target and checks max_distance limit
+## - Checks if target is in front of camera (prevents reverse display bug)
 ## - Calculates screen space position using 3D camera projection
 ## - Uses camera frustum checking for accurate visibility determination
+## - Handles targets behind camera by calculating world-space direction projection
 ## - Positions waypoint on screen edge or above target for off-screen objects
-## - Calculates rotation for off-screen waypoints
+## - Calculates rotation for off-screen waypoints pointing toward target
 ## - Applies opacity based on distance and fade settings
 ## - Handles visibility state changes and emits appropriate signals
 ## - Updates all visual nodes with proper positioning, rotation, and opacity
-##
+## [br][br]
+## Fixes reverse display issue:
+## - Detects when target is behind camera using dot product with camera forward
+## - Projects world-space direction to screen space for correct edge positioning
+## - Prevents waypoint from appearing on opposite side when target is far away
+## [br][br]
 ## [param delta] Time elapsed since last frame (unused but kept for _process signature)
 func _process(_delta: float) -> void:
 	if _camera == null or _nodes.is_empty():
@@ -239,12 +287,42 @@ func _process(_delta: float) -> void:
 	if viewport == null:
 		return
 
-	var screen_pos_2d = _camera.unproject_position(waypoint_pos)
 	var viewport_size = viewport.get_visible_rect().size
+	
+	# Check if target is in front of camera to prevent reverse display
+	# This fixes the issue where objects behind camera appear on opposite side
+	var camera_forward = -_camera.global_transform.basis.z
+	var camera_to_target = (waypoint_pos - _camera.global_position).normalized()
+	var dot_product = camera_forward.dot(camera_to_target)
+	
+	# Target is behind camera if dot product is negative
+	var is_behind_camera = dot_product < 0.0
+	
+	var screen_pos_2d: Vector2
+	if is_behind_camera:
+		# Calculate direction from camera to target in world space
+		# Project this direction onto screen to get correct edge position
+		var world_direction = (waypoint_pos - _camera.global_position).normalized()
+		var center_screen = viewport_size / 2.0
+		
+		# Calculate screen-space direction from world direction
+		# Use camera's basis vectors to convert world direction to screen space
+		var right_world = _camera.global_transform.basis.x
+		var up_world = _camera.global_transform.basis.y
+		var screen_dir_x = world_direction.dot(right_world)
+		var screen_dir_y = -world_direction.dot(up_world)  # Negative because screen Y is inverted
+		
+		# Create screen position based on direction from center
+		# Use max viewport dimension to ensure position is off-screen
+		var max_dimension = max(viewport_size.x, viewport_size.y)
+		screen_pos_2d = center_screen + Vector2(screen_dir_x, screen_dir_y) * max_dimension * 2.0
+	else:
+		screen_pos_2d = _camera.unproject_position(waypoint_pos)
 
 	# Check if waypoint is in camera frustum (visible area)
+	# If behind camera, always treat as off-screen
 	var is_in_frustum = _camera.is_position_in_frustum(waypoint_pos)
-	var is_on_screen = (is_in_frustum and
+	var is_on_screen = (not is_behind_camera and is_in_frustum and
 						screen_pos_2d.x >= 0 and screen_pos_2d.x <= viewport_size.x and
 						screen_pos_2d.y >= 0 and screen_pos_2d.y <= viewport_size.y)
 

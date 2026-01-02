@@ -113,6 +113,7 @@ metadata/_custom_type_script = "uid://pd4suh5xjf0m"
 
 [node name="JumpAction3D" type="Node" parent="state" node_paths=PackedStringArray("pawn_node")]
 script = ExtResource("7_q266n")
+jump_count_max = 2
 distance = 3.0
 pawn_node = NodePath("../..")
 expression = "not d.dashing"

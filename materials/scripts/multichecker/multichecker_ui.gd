@@ -138,7 +138,8 @@ func _is_available() -> bool:
 ## [param multichecker] The Multichecker instance to display, or null to clear
 func set_multichecker(multichecker: Multichecker) -> void:
 	current_multichecker = multichecker
-	multichecker_changed.emit(current_multichecker)
+	if multichecker!=null and is_instance_valid(multichecker):
+		multichecker_changed.emit(current_multichecker)
 
 	# Clean up existing button instances efficiently
 	if button_container:
