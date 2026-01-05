@@ -1,6 +1,10 @@
 extends PawnAction
 class_name AttackPawnAction3D
 
+signal on_reset
+signal on_end(id:int,time:float)
+signal on_start(id:int,time:float)
+
 @export var attacks_paths:Array[HitBox3D]
 @export var attacks:Dictionary[int,float]
 
@@ -11,6 +15,7 @@ var current_time:float=0.0
 var current_timer:float=0.0
 
 func _ready() -> void:
+	super._ready()
 	if attacks.size() > 0:
 		var keys = attacks.keys()
 		keys.sort()
@@ -24,6 +29,7 @@ func _on_action(delta:float) -> void:
 		current_timer += delta
 		if current_timer >= current_time:
 			# Finish current attack
+			on_end.emit(cur_att,attacks_paths[cur_att])
 			var n := attacks_paths[cur_att]
 			n.monitoring = false
 			n.monitorable = false
@@ -40,6 +46,7 @@ func _on_action(delta:float) -> void:
 	if attack_buffer.should_run_action() and not attacking:
 		if attacks.size() > 0 and cur_att < attacks.size() and \
 			attacks.has(cur_att) and cur_att < attacks_paths.size():
+			on_start.emit(cur_att,attacks[cur_att])
 			current_time = attacks[cur_att]
 			var n := attacks_paths[cur_att]
 			n.monitoring = true
@@ -52,6 +59,7 @@ func _on_action(delta:float) -> void:
 	if attack_buffer.get_post_buffer_time_passed() == 0.0 and \
 	   attack_buffer.get_pre_buffer_time_passed() == attack_buffer.pre_buffer_max_time:
 		if attacks.size() > 0:
+			on_reset.emit()
 			cur_att = 0
 
 func _additional(delta:float) -> void:

@@ -1,6 +1,8 @@
 extends Node
 class_name PawnAction
 
+@export var enabled:=true
+
 @export var pawn_node:Node
 
 ## Expression string to execute (mathematical, logical)
@@ -79,12 +81,13 @@ func _convert_nodepaths_in_array(array: Array, from_what: Node) -> void:
 			_convert_nodepaths_in_array(value, from_what)
 
 func _physics_process(delta: float) -> void:
-	if not executable or ( executable and \
-		expression_object.execute(modified_data.values()) ):
-		_on_action(delta)
-	else:
-		_on_not_action(delta)
-	_additional(delta)
+	if enabled:
+		if not executable or ( executable and \
+			expression_object.execute(modified_data.values()) ):
+			_on_action(delta)
+		else:
+			_on_not_action(delta)
+		_additional(delta)
 
 func _additional(_delta:float): pass
 

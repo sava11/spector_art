@@ -114,7 +114,7 @@ point_count = 2
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="Cube" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+transform = Transform3D(-2.1855694e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.1855694e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_jel8b")
 surface_material_override/0 = SubResource("StandardMaterial3D_pyyvj")
 
@@ -122,7 +122,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_pyyvj")
 navigation_mesh = SubResource("NavigationMesh_28g4p")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+transform = Transform3D(-2.1855694e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.1855694e-08, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_pyyvj")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]

@@ -105,12 +105,6 @@ var zip_released: bool = false
 ## Previous frame's dash_held state for edge detection.
 var _last_zip_held: bool = false
 
-## Number of jumps performed since last ground contact (for double jump logic).
-var jump_count: int = 0
-
-## Whether the pawn is currently in a jumping state.
-var is_jumping: bool = false
-
 ## Initialize the 3D pawn and calculate physics parameters.
 ## CRITICAL: Performs automatic physics parameter calculation based on jump action settings.
 ## This ensures consistent movement, jumping, and gravity that match the designed jump arc.
@@ -142,9 +136,7 @@ func _ready() -> void:
 ## This method coordinates all pawn behavior each physics frame.
 ##
 ## [param delta] Time elapsed since the last physics frame in seconds
-func _physics_process(delta: float) -> void:
-	# Update ground collision state
-	_on_ground = is_on_floor()
+func _physics_process(_delta: float) -> void:
 
 	# Process zip input with edge detection (detect button press/release)
 	want_zip = !_last_zip_held and zip_held  # True on press
@@ -174,18 +166,14 @@ func _physics_process(delta: float) -> void:
 	# Execute physics movement
 	move_and_slide()
 
-## Update ground contact state and jump counters.
-## Manages jump state transitions and ground contact detection.
-## Resets jump counters when landing on ground.
-##
-## [param delta] Time elapsed since the last physics frame (currently unused)
+## Update ground contact state.
 func update_ground_and_timers() -> void:
-	if is_on_floor():
-		_on_ground = true
-		jump_count = 0  # Reset jump counter on ground contact
-		is_jumping = false  # Clear jumping state
-	else:
-		_on_ground = false  # Not on ground
+	_on_ground = is_on_floor()
+
+
+func _on_attack_on_start(id: int, time: float) -> void:
+	match id:
+		0: $hits/sword/ap.play("attack")
 
 
 func _vec3_to_angle(vec:Vector3)->Vector3:
