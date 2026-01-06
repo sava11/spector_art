@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://cp8ff3a01itg3"]
+[gd_scene load_steps=21 format=4 uid="uid://cp8ff3a01itg3"]
 
 [ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
 [ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_o6cr0"]
@@ -16,9 +16,6 @@ radius = 0.15
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_65n5b"]
 radius = 0.15
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_q266n"]
-size = Vector3(0.3, 0.3, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lca4j"]
 resource_name = "Material"
@@ -94,9 +91,6 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ajr75")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_nvtwl"]
-size = Vector3(2.5, 0.25, 0.1)
-
 [sub_resource type="Animation" id="Animation_q266n"]
 length = 0.001
 tracks/0/type = "value"
@@ -159,6 +153,9 @@ _data = {
 &"attack": SubResource("Animation_nvtwl")
 }
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_nvtwl"]
+size = Vector3(2.5, 0.25, 0.1)
+
 [node name="pupet" type="CharacterBody3D"]
 collision_layer = 33
 collision_mask = 33
@@ -198,24 +195,18 @@ shape = SubResource("SphereShape3D_65n5b")
 [node name="hits" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 
-[node name="HitBox3D" type="Area3D" parent="hits"]
-visible = false
-collision_layer = 0
-collision_mask = 16
-script = ExtResource("4_nvtwl")
-metadata/_custom_type_script = "uid://bqm8x7j4p2v5h"
-
-[node name="c" type="CollisionShape3D" parent="hits/HitBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
-shape = SubResource("BoxShape3D_q266n")
-
 [node name="sword" type="MeshInstance3D" parent="hits"]
-transform = Transform3D(-0.0143106785, 0.024786811, 0.14724402, -0.073622026, 0.1275171, -0.02862134, -0.1299038, -0.074999996, -6.436241e-09, -0.15, -0.1, 0.114)
+transform = Transform3D(-0.014310676, 0.0247868, 0.14724398, -0.07362201, 0.12751704, -0.02862133, -0.12990376, -0.074999966, -6.4362387e-09, -0.15, -0.1, 0.114)
 mesh = SubResource("ArrayMesh_somax")
 skeleton = NodePath("")
 
+[node name="ap" type="AnimationPlayer" parent="hits/sword"]
+libraries = {
+&"": SubResource("AnimationLibrary_iygdc")
+}
+
 [node name="HitBox3D" type="Area3D" parent="hits/sword"]
-transform = Transform3D(0.9999998, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, -1.7083952, 0, 0)
+transform = Transform3D(0.99999994, 0, -7.543822e-09, 0, 1.0000001, 6.552977e-09, -1.4062387e-09, -9.106245e-09, 1.0000001, -1.7083956, 0, -1.1920929e-07)
 collision_layer = 0
 collision_mask = 16
 script = ExtResource("4_nvtwl")
@@ -224,11 +215,6 @@ metadata/_custom_type_script = "uid://bqm8x7j4p2v5h"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="hits/sword/HitBox3D"]
 transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0.0710001, 0.06300001, 0)
 shape = SubResource("BoxShape3D_nvtwl")
-
-[node name="ap" type="AnimationPlayer" parent="hits/sword"]
-libraries = {
-&"": SubResource("AnimationLibrary_iygdc")
-}
 
 [node name="markers" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)

@@ -22,9 +22,16 @@
 class_name Pawn3D
 extends CharacterBody3D
 
+
+## Whether this pawn is an enemy (affects collision layers and interactions).
+## When true, changes collision masks to interact with players instead of other enemies.
+@export var enemy: bool = false: set = set_enemy
+
 # ====================================================================================
 # Input Variables - External Control Interface
 # ====================================================================================
+
+@export_group("input")
 
 ## Current movement input direction (normalized 2D vector).
 ## Controls horizontal movement: (1,0) = right, (-1,0) = left, (0,1) = forward, etc.
@@ -46,10 +53,6 @@ extends CharacterBody3D
 
 ## Whether the pawn wants to perform an attack action.
 @export var want_attack: bool = false
-
-## Whether this pawn is an enemy (affects collision layers and interactions).
-## When true, changes collision masks to interact with players instead of other enemies.
-@export var enemy: bool = false: set = set_enemy
 
 ## Setter for enemy property that updates collision layers and masks.
 ## CRITICAL: Configures collision detection for player vs enemy interactions:
@@ -173,7 +176,7 @@ func update_ground_and_timers() -> void:
 
 func _on_attack_on_start(id: int, time: float) -> void:
 	match id:
-		0: $hits/sword/ap.play("attack")
+		0: $sword/ap.play("attack")
 
 
 func _vec3_to_angle(vec:Vector3)->Vector3:

@@ -2,7 +2,7 @@ extends PawnAction
 class_name AttackPawnAction3D
 
 signal on_reset
-signal on_end(id:int,time:float)
+signal on_end(id:int)
 signal on_start(id:int,time:float)
 
 @export var attacks_paths:Array[HitBox3D]
@@ -29,7 +29,7 @@ func _on_action(delta:float) -> void:
 		current_timer += delta
 		if current_timer >= current_time:
 			# Finish current attack
-			on_end.emit(cur_att,attacks_paths[cur_att])
+			on_end.emit(cur_att)
 			var n := attacks_paths[cur_att]
 			n.monitoring = false
 			n.monitorable = false
