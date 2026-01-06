@@ -54,6 +54,10 @@ extends CharacterBody3D
 ## Whether the pawn wants to perform an attack action.
 @export var want_attack: bool = false
 
+@export_group("etc")
+
+@export var hitboxes:Array[HitBox3D]
+
 ## Setter for enemy property that updates collision layers and masks.
 ## CRITICAL: Configures collision detection for player vs enemy interactions:
 ## - Players detect layer 3 (allies), enemies detect layer 4 (players)
@@ -67,7 +71,7 @@ func set_enemy(value: bool) -> void:
 	hurt_box.flags = 1 + 4 * int(!enemy) + 8 * int(enemy)
 
 	# Configure hit box collision layers (what this pawn can hit)
-	for hit_box in $hits.get_children():
+	for hit_box in hitboxes:
 		hit_box.set_collision_layer_value(3, enemy)   # Hit allies when enemy
 		hit_box.set_collision_layer_value(4, !enemy)  # Hit players when player
 
@@ -133,6 +137,7 @@ func _ready() -> void:
 
 	# Calculate maximum movement speed based on jump distance
 	move_action.max_speed = jump_action.distance / (jump_action.time_to_apex + jump_action.time_to_land)
+	set_enemy(enemy)
 
 ## Main physics process for pawn movement and state updates.
 ## CRITICAL: Handles input processing, state management, and physics integration.
@@ -176,7 +181,7 @@ func update_ground_and_timers() -> void:
 
 func _on_attack_on_start(id: int, time: float) -> void:
 	match id:
-		0: $sword/ap.play("attack")
+		0: $hits/sword/ap.play("attack")
 
 
 func _vec3_to_angle(vec:Vector3)->Vector3:
@@ -196,3 +201,11 @@ func _vec3_to_angle(vec:Vector3)->Vector3:
 		rad_to_deg(euler.z)
 	)
 	return euler_deg
+
+
+func _on_health_changed(value: float, _delta: float) -> void:
+	$hb/Node3D/DrawOnUI/pb.value=value
+
+
+func _on_max_health_changed(value: float, _delta: float) -> void:
+	$hb/Node3D/DrawOnUI/pb.max_value=value

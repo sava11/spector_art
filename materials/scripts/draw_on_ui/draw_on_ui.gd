@@ -47,6 +47,8 @@ signal position_changed(new_position: Vector2)
 ## When disabled, waypoint will be hidden and no calculations will be performed.
 @export var enabled: bool = true
 
+@export var draw_on_corners:=true
+
 ## Maximum distance at which the waypoint is visible.
 ## Set to 0 for unlimited range. Waypoint will be hidden if target is beyond this distance.
 @export var max_distance: float = 0.0
@@ -382,7 +384,7 @@ func _process(_delta: float) -> void:
 	var rotation_angle: float = 0.0
 	var opacity: float = 1.0
 
-	if is_on_screen:
+	if is_on_screen or not draw_on_corners:
 		# Position at the waypoint location with offset
 		final_pos = screen_pos_2d + screen_offset
 		rotation_angle = 0.0

@@ -1,14 +1,14 @@
 [gd_scene load_steps=17 format=3 uid="uid://ukbdxptj5okt"]
 
-[ext_resource type="Script" uid="uid://sapoe0n5j21" path="res://main/game/game.gd" id="1_en41u"]
+[ext_resource type="Script" uid="uid://bp4r7krxcfnka" path="res://main/game/game.gd" id="1_en41u"]
 [ext_resource type="PackedScene" uid="uid://c0ngdihkjv7pj" path="res://main/levels/test_lvl_1.tscn" id="2_ej72j"]
-[ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_en41u"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_458dk"]
-[ext_resource type="Script" uid="uid://1q1hjchwqfq7" path="res://materials/scripts/puppet_input/player_controller.gd" id="3_ej72j"]
+[ext_resource type="Script" uid="uid://dfxiu3h8vbt16" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_en41u"]
+[ext_resource type="Script" uid="uid://c705xtgl6xsah" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_458dk"]
+[ext_resource type="Script" uid="uid://dn5pihw73q2fp" path="res://materials/scripts/puppet_input/player_controller.gd" id="3_ej72j"]
 [ext_resource type="PackedScene" uid="uid://cp8ff3a01itg3" path="res://materials/scenes/pawn/3d/pawn.tscn" id="3_en41u"]
-[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
-[ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="8_u7x3r"]
-[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_yo04u"]
+[ext_resource type="Script" uid="uid://cesyc2qi4g7sq" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="6_6lqia"]
+[ext_resource type="Script" uid="uid://bvwu4flskpila" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="8_u7x3r"]
+[ext_resource type="Script" uid="uid://cav4ra2g0f6yh" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_yo04u"]
 
 [sub_resource type="Resource" id="Resource_2wwl3"]
 script = ExtResource("6_6lqia")
@@ -50,7 +50,6 @@ script = ExtResource("1_en41u")
 [node name="SaveLoader" type="Node" parent="."]
 script = ExtResource("2_en41u")
 properties = Array[String](["current_levels", "current_location_name"])
-metadata/_custom_type_script = "uid://pd4suh5xjf0m"
 
 [node name="world" type="Node" parent="."]
 
@@ -61,11 +60,11 @@ unique_name_in_owner = true
 
 [node name="player" parent="world" instance=ExtResource("3_en41u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2464371, 10.594764, 0)
+collision_layer = 32
 
 [node name="PlayerController" type="Node" parent="world/player" node_paths=PackedStringArray("puppet_pawn")]
 script = ExtResource("3_ej72j")
 puppet_pawn = NodePath("..")
-metadata/_custom_type_script = "uid://1q1hjchwqfq7"
 
 [node name="ui" type="CanvasLayer" parent="."]
 
@@ -97,7 +96,6 @@ camera_3d_resource = SubResource("Resource_u7x3r")
 follow_offset = Vector3(0, 3, 2)
 follow_damping = true
 follow_damping_value = Vector3(0.05, 0.05, 0.05)
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
@@ -108,7 +106,6 @@ size = 0.118
 process_priority = 300
 process_physics_priority = 300
 script = ExtResource("8_yo04u")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_u7x3r")

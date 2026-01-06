@@ -1,21 +1,53 @@
-[gd_scene load_steps=21 format=4 uid="uid://cp8ff3a01itg3"]
+[gd_scene load_steps=24 format=4 uid="uid://cp8ff3a01itg3"]
 
-[ext_resource type="Script" uid="uid://b224oc577hhyv" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
-[ext_resource type="Texture2D" uid="uid://dpdcs7q50lpww" path="res://icon.svg" id="1_o6cr0"]
-[ext_resource type="Script" uid="uid://pd4suh5xjf0m" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_q266n"]
-[ext_resource type="Script" uid="uid://c8oaw2k6m3f1p" path="res://materials/scripts/boxes/3d/hurt_box.gd" id="2_vkh0a"]
-[ext_resource type="Script" uid="uid://bqm8x7j4p2v5h" path="res://materials/scripts/boxes/3d/hit_box.gd" id="4_nvtwl"]
-[ext_resource type="Script" uid="uid://44bqft6foncp" path="res://materials/scenes/pawn/3d/pawn_actions/action_move.gd" id="6_q266n"]
-[ext_resource type="Script" uid="uid://q6w0yadgq6gk" path="res://materials/scenes/pawn/3d/pawn_actions/action_jump.gd" id="7_q266n"]
-[ext_resource type="Script" uid="uid://uok3tse3uwsr" path="res://materials/scenes/pawn/3d/pawn_actions/action_gravity.gd" id="8_q266n"]
-[ext_resource type="Script" uid="uid://dcsvmpd0s06v5" path="res://materials/scenes/pawn/3d/pawn_actions/action_attack.gd" id="10_nvtwl"]
-[ext_resource type="Script" uid="uid://idinh8673lts" path="res://materials/scenes/pawn/3d/pawn_actions/action_dash.gd" id="11_q266n"]
+[ext_resource type="Script" uid="uid://d0cng6vwo0qfb" path="res://materials/scenes/pawn/3d/pawn.gd" id="1_65n5b"]
+[ext_resource type="Texture2D" uid="uid://bfnb5ftweajm3" path="res://icon.svg" id="1_o6cr0"]
+[ext_resource type="Script" uid="uid://dfxiu3h8vbt16" path="res://materials/scripts/saver/node_data_registrator.gd" id="2_q266n"]
+[ext_resource type="Script" uid="uid://07mdkm0xdhvf" path="res://materials/scripts/boxes/3d/hurt_box.gd" id="2_vkh0a"]
+[ext_resource type="Script" uid="uid://bgcs7yw51nm3k" path="res://materials/scripts/boxes/3d/hit_box.gd" id="4_nvtwl"]
+[ext_resource type="Script" uid="uid://bekl0wvjs2f7d" path="res://materials/scripts/draw_on_ui/draw_on_ui.gd" id="5_q266n"]
+[ext_resource type="Script" uid="uid://7vre3ujr5pmt" path="res://materials/scenes/pawn/3d/pawn_actions/action_move.gd" id="6_q266n"]
+[ext_resource type="Script" uid="uid://b2h5ef45h8iyf" path="res://materials/scenes/pawn/3d/pawn_actions/action_jump.gd" id="7_q266n"]
+[ext_resource type="Script" uid="uid://opqox3cy05qb" path="res://materials/scenes/pawn/3d/pawn_actions/action_gravity.gd" id="8_q266n"]
+[ext_resource type="Script" uid="uid://cc363nydta6f6" path="res://materials/scenes/pawn/3d/pawn_actions/action_attack.gd" id="10_nvtwl"]
+[ext_resource type="Script" uid="uid://bnc7ow2k38oyq" path="res://materials/scenes/pawn/3d/pawn_actions/action_dash.gd" id="11_q266n"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_36fbw"]
 radius = 0.15
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_65n5b"]
 radius = 0.15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q266n"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.3764706, 0.3764706, 0.3764706, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 6
+anti_aliasing_size = 0.25
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iygdc"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 6
+anti_aliasing_size = 0.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lca4j"]
 resource_name = "Material"
@@ -156,16 +188,15 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_nvtwl"]
 size = Vector3(2.5, 0.25, 0.1)
 
-[node name="pupet" type="CharacterBody3D"]
-collision_layer = 33
-collision_mask = 33
+[node name="pupet" type="CharacterBody3D" node_paths=PackedStringArray("hitboxes")]
+collision_layer = 0
 floor_constant_speed = true
 script = ExtResource("1_65n5b")
+hitboxes = [NodePath("hits/sword/HitBox3D")]
 
 [node name="SaveLoader" type="Node" parent="."]
 script = ExtResource("2_q266n")
 properties = Array[String](["last_input_direction", "_on_ground", "jump_count", "global_position", "velocity"])
-metadata/_custom_type_script = "uid://pd4suh5xjf0m"
 
 [node name="sp" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
@@ -183,20 +214,42 @@ shape = SubResource("SphereShape3D_36fbw")
 
 [node name="hb" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
-collision_layer = 8
+collision_layer = 0
 collision_mask = 0
 script = ExtResource("2_vkh0a")
 flags = 9
-metadata/_custom_type_script = "uid://c8oaw2k6m3f1p"
 
 [node name="c" type="CollisionShape3D" parent="hb"]
 shape = SubResource("SphereShape3D_65n5b")
+
+[node name="Node3D" type="Node3D" parent="hb"]
+
+[node name="DrawOnUI" type="CanvasLayer" parent="hb/Node3D"]
+script = ExtResource("5_q266n")
+draw_on_corners = false
+fade_distance = 0.0
+metadata/_custom_type_script = "uid://bekl0wvjs2f7d"
+
+[node name="pb" type="ProgressBar" parent="hb/Node3D/DrawOnUI"]
+self_modulate = Color(0.76862746, 0, 0, 0.49803922)
+custom_minimum_size = Vector2(128, 0)
+offset_left = -64.0
+offset_top = 12.0
+offset_right = 64.0
+offset_bottom = 36.0
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(64, 12)
+theme_override_styles/background = SubResource("StyleBoxFlat_q266n")
+theme_override_styles/fill = SubResource("StyleBoxFlat_iygdc")
+max_value = 1.0
+value = 0.5
+show_percentage = false
 
 [node name="hits" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 
 [node name="sword" type="MeshInstance3D" parent="hits"]
-transform = Transform3D(-0.014310676, 0.0247868, 0.14724398, -0.07362201, 0.12751704, -0.02862133, -0.12990376, -0.074999966, -6.4362387e-09, -0.15, -0.1, 0.114)
+transform = Transform3D(-0.014310676, 0.024786796, 0.14724398, -0.07362201, 0.12751703, -0.02862133, -0.12990376, -0.07499995, -6.4362387e-09, -0.15, -0.1, 0.114)
 mesh = SubResource("ArrayMesh_somax")
 skeleton = NodePath("")
 
@@ -208,9 +261,11 @@ libraries = {
 [node name="HitBox3D" type="Area3D" parent="hits/sword"]
 transform = Transform3D(0.99999994, 0, -7.543822e-09, 0, 1.0000001, 6.552977e-09, -1.4062387e-09, -9.106245e-09, 1.0000001, -1.7083956, 0, -1.1920929e-07)
 collision_layer = 0
-collision_mask = 16
+collision_mask = 0
+monitoring = false
+monitorable = false
 script = ExtResource("4_nvtwl")
-metadata/_custom_type_script = "uid://bqm8x7j4p2v5h"
+single_detect = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="hits/sword/HitBox3D"]
 transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0.0710001, 0.06300001, 0)
@@ -237,7 +292,6 @@ data = Dictionary[String, Variant]({
 "a": NodePath("../AttackAction3D"),
 "d": NodePath("../DashAction3D")
 })
-metadata/_custom_type_script = "uid://44bqft6foncp"
 
 [node name="JumpAction3D" type="Node" parent="state" node_paths=PackedStringArray("pawn_node")]
 script = ExtResource("7_q266n")
@@ -248,7 +302,6 @@ expression = "not d.dashing"
 data = Dictionary[String, Variant]({
 "d": NodePath("../DashAction3D")
 })
-metadata/_custom_type_script = "uid://q6w0yadgq6gk"
 
 [node name="DashAction3D" type="Node" parent="state" node_paths=PackedStringArray("pawn_node")]
 script = ExtResource("11_q266n")
@@ -259,7 +312,6 @@ expression = "not a.attacking"
 data = Dictionary[String, Variant]({
 "a": NodePath("../AttackAction3D")
 })
-metadata/_custom_type_script = "uid://idinh8673lts"
 
 [node name="AttackAction3D" type="Node" parent="state" node_paths=PackedStringArray("attacks_paths", "pawn_node")]
 script = ExtResource("10_nvtwl")
@@ -272,7 +324,6 @@ expression = "not d.dashing "
 data = Dictionary[String, Variant]({
 "d": NodePath("../DashAction3D")
 })
-metadata/_custom_type_script = "uid://dcsvmpd0s06v5"
 
 [node name="GravityAction3D" type="Node" parent="state" node_paths=PackedStringArray("pawn_node")]
 script = ExtResource("8_q266n")
@@ -282,6 +333,7 @@ data = Dictionary[String, Variant]({
 "j": NodePath("../JumpAction3D"),
 "mn": NodePath("../..")
 })
-metadata/_custom_type_script = "uid://uok3tse3uwsr"
 
+[connection signal="health_changed" from="hb" to="." method="_on_health_changed"]
+[connection signal="max_health_changed" from="hb" to="." method="_on_max_health_changed"]
 [connection signal="on_start" from="state/AttackAction3D" to="." method="_on_attack_on_start"]
